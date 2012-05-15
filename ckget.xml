@@ -1,0 +1,24 @@
+<project>
+  <macrodef name="ckget">
+    <attribute name="url" />
+    <attribute name="dir" />
+    <attribute name="checksum" />
+    <attribute name="algorithm" default="md5" />
+    <attribute name="skipexisting" default="true" />
+    <sequential>
+      <local name="filename" />
+      <basename property="filename" file="@{url}" />
+      <get dest="@{dir}" skipexisting="@{skipexisting}">
+        <url url="@{url}"/>
+      </get>
+      <local name="checksum.matches"/>
+      <local name="checksum.matches.fail"/>
+      <checksum file="@{dir}/${filename}" algorithm="@{algorithm}"
+                property="@{checksum}" verifyproperty="checksum.matches" />
+      <condition property="checksum.matches.ok">
+        <istrue value="${checksum.matches}" />
+      </condition>
+      <fail unless="checksum.matches.ok">Checksum failed downloading @{url}</fail>
+    </sequential>
+  </macrodef>
+</project>

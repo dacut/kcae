@@ -1,0 +1,198 @@
+<project name="kcae" default="build">
+  <!-- Where the main source code lives -->
+  <property name="src.dir" location="src" />
+
+  <!-- Where the unit test code lives -->
+  <property name="test.dir" location="test" />
+
+  <!-- Top level directory where build artifacts go -->
+  <property name="build.dir" location="build" />
+
+  <!-- Where main class files go -->
+  <property name="class.dir" location="${build.dir}/classes" />
+
+  <!-- Where coverage instrumented class files go -->
+  <property name="instclass.dir" location="${build.dir}/instclasses" />
+  <property name="cobertura.file" location="${build.dir}/cobertura.ser" />
+
+  <!-- Where unit test class files go -->
+  <property name="testclass.dir" location="${build.dir}/testclasses" />
+
+  <!-- Where documentation goes -->
+  <property name="doc.dir" location="${build.dir}/docs" />
+  <property name="javadoc.dir" location="${doc.dir}/javadoc" />
+  <property name="report.dir" location="${doc.dir}/reports" />
+  <property name="coverage.dir" location="${report.dir}/coverage" />
+  <property name="findbugs.html" location="${report.dir}/findbugs.html" />
+
+  <!-- Where external dependencies live -->
+  <property name="ext.dir" location="ext" />
+
+  <!-- The URL for downloading external dependencies -->
+  <property name="ext.url" value="http://www.kanga.org/kcae/ext" />
+
+  <!-- FindBugs has a lot of weird dependencies; we don't pull it all in
+       willy nilly. -->
+  <property name="findbugs.dir" location="findbugs-2.0.1-rc2" />
+  <property name="findbugs.jar" location="${findbugs.dir}/lib/findbugs.jar" />
+
+  <!-- Where distribution files go -->
+  <property name="dist.dir" location="dist" />
+
+  <!-- The JAR file containing the main classes -->
+  <property name="jar.file" location="${dist.dir}/kcae.jar" />
+
+  <include file="ckget.xml" />
+
+  <!-- All Java source code files -->
+  <path id="src.path" cache="true">
+    <fileset dir="${src.dir}" includes="**/*.java" />
+  </path>
+
+  <!-- Main class files -->
+  <path id="main.class.path" cache="false">
+    <fileset dir="${class.dir}" includes="**/*.class" />
+  </path>
+
+  <!-- Instrumented class files -->
+  <path id="inst.class.path" cache="false">
+    <fileset dir="${instclass.dir}" includes="**/*.class" />
+  </path>
+
+  <!-- Test class files -->
+  <path id="test.classes" cache="false">
+    <fileset dir="${testclass.dir}" includes="**/*.class"
+             excludes="**/*$*.class"/>
+  </path>
+
+  <!-- External dependencies classpath -->
+  <path id="ext.class.path" cache="false">
+    <fileset dir="${ext.dir}" includes="**/*.jar" />
+  </path>
+
+  <!-- Findbugs classpath -->
+  <path id="findbugs.class.path" cache="false">
+    <fileset dir="${findbugs.dir}/lib" includes="**/*.jar" />
+  </path>
+
+  <!-- Load any ant tasks defined by the external dependencies -->
+  <taskdef classpathref="ext.class.path" resource="tasks.properties" />
+
+  <target name="build" depends="jar,coverage" />
+  <target name="dist" depends="jar" />
+  <target name="jar" depends="test">
+    <jar destfile="${jar.file}" basedir="${class.dir}" includes="**/*.class" />
+  </target>
+
+  <target name="coverage" depends="test">
+    <cobertura-report format="html" datafile="${cobertura.file}"
+                      destdir="${coverage.dir}" srcdir="${src.dir}" />
+  </target>
+
+  <target name="findbugs" depends="jar">
+    <java jar="${findbugs.jar}" fork="true" maxmemory="1024M">
+      <classpath>
+        <path refid="findbugs.class.path" />
+      </classpath>
+      <arg value="-textui" />
+      <arg value="-sourcepath" /><arg value="${src.dir}" />
+      <arg value="-auxclasspath" /><arg pathref="ext.class.path" />
+      <arg value="-low" />
+      <arg value="-html" />
+      <arg value="-output" /><arg file="${findbugs.html}" />
+      <arg file="${jar.file}" />
+    </java>
+  </target>
+
+  <target name="test" depends="compile,instrument,test-compile">
+    <junit fork="on" forkmode="once" haltonfailure="true"
+           includeantruntime="false">
+      <classpath>
+        <path refid="ext.class.path" />
+        <pathelement path="${instclass.dir}" />
+        <pathelement path="${testclass.dir}" />
+        <pathelement path="${ant.library.dir}/ant-junit.jar" />
+        <pathelement path="${ant.library.dir}/ant-junit4.jar" />
+        <pathelement path="${ant.library.dir}/ant.jar" />
+      </classpath>
+      <jvmarg value="-Dnet.sourceforge.cobertura.datafile=${cobertura.file}" />
+      <batchtest>
+        <path refid="test.classes" />
+      </batchtest>
+      <formatter type="plain" usefile="false" />
+    </junit>
+  </target>
+
+  <target name="test-compile" depends="compile,instrument">
+    <javac srcdir="${test.dir}" destdir="${testclass.dir}" fork="true"
+           includes="**/*.java" debug="true" target="1.6" source="1.6"
+           includeantruntime="false">
+      <classpath>
+        <path refid="ext.class.path" />
+        <pathelement path="${instclass.dir}" />
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="instrument" depends="compile">
+    <delete file="${cobertura.file}" />
+
+    <cobertura-instrument datafile="${cobertura.file}"
+                          todir="${instclass.dir}">
+      <includeClasses regex=".*" />
+      <instrumentationClasspath>
+        <path refid="main.class.path" />
+      </instrumentationClasspath>
+    </cobertura-instrument>
+
+    <!-- Copy over any interface classes (Cobertura doesn't instrument them or
+         copy them over). -->
+    <copy todir="${instclass.dir}" overwrite="false">
+      <path refid="main.class.path" />
+    </copy>
+  </target>
+
+  <target name="compile" depends="init">
+    <javac srcdir="${src.dir}" destdir="${class.dir}" fork="true"
+           includes="**/*.java" debug="true" target="1.6" source="1.6"
+           includeantruntime="false">
+      <classpath>
+        <fileset dir="${ext.dir}">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="init">
+    <mkdir dir="${build.dir}" />
+    <mkdir dir="${class.dir}" />
+    <mkdir dir="${instclass.dir}" />
+    <mkdir dir="${testclass.dir}" />
+    <mkdir dir="${doc.dir}" />
+    <mkdir dir="${javadoc.dir}" />
+    <mkdir dir="${report.dir}" />
+    <mkdir dir="${coverage.dir}" />
+    <mkdir dir="${ext.dir}" />
+    <mkdir dir="${dist.dir}" />
+
+    <ckget dir="${ext.dir}" url="${ext.url}/commons-lang3-3.1.jar"
+           checksum="71b48e6b3e1b1dc73fe705604b9c7584" />
+    <ckget dir="${ext.dir}" url="${ext.url}/asm-3.0.jar"
+           checksum="e1f92f5aeae04b8e1ebdc5d46c5225f0" />
+    <ckget dir="${ext.dir}" url="${ext.url}/asm-tree-3.0.jar"
+           checksum="f1e52edb3419a56f42949aecd27720cd" />
+    <ckget dir="${ext.dir}" url="${ext.url}/cobertura-1.9.4.1.jar"
+           checksum="312cc39a5dbedccc17c3a3855732044e" />
+    <ckget dir="${ext.dir}" url="${ext.url}/findbugs-annotations-2.0.1-rc2.jar"
+           checksum="eb4867fa212ea876b9bc1127ed42a17b" />
+    <ckget dir="${ext.dir}" url="${ext.url}/jakarta-oro-2.0.8.jar"
+           checksum="42e940d5d2d822f4dc04c65053e630ab" />
+    <ckget dir="${ext.dir}" url="${ext.url}/jsr305.jar"
+           checksum="144c0767e2aaf0c21a935908d0e52c68" />
+    <ckget dir="${ext.dir}" url="${ext.url}/junit-4.10.jar"
+           checksum="972c3b8fb2cc26008cbceb01ff889ec4" />
+    <ckget dir="${ext.dir}" url="${ext.url}/log4j-1.2.9.jar"
+           checksum="6a44d84b72897f28189f4792e2015b93" />
+  </target>
+</project>
