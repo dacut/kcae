@@ -1,11 +1,10 @@
 package kanga.kcae.object;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import static java.util.Collections.unmodifiableSet;
 
-import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
@@ -76,7 +75,7 @@ public class Schematic implements Comparable<Schematic> {
             throw new NullPointerException("wire cannot be null.");
         }
 
-        if (! this.wires.remove(w)) {
+        if (! this.wires.remove(wire)) {
             throw new IllegalArgumentException(
                 "wire is not present in this schematic.");
         }
@@ -105,26 +104,41 @@ public class Schematic implements Comparable<Schematic> {
         if (otherObj.getClass() != this.getClass()) { return false; }
 
         final Schematic other = (Schematic) otherObj;
-        return new EqualsBuilder().appendSuper(super.equals(other))
-            .append(this.elements, other.elements)
-            .append(this.wires, other.wires)
-            .isEquals();
+        if (! this.getElements().equals(other.getElements())) { return false; }
+        if (! this.getWires().equals(other.getWires())) { return false; }
+        if (! this.getNets().equals(other.getNets())) { return false; }
+        
+        return true;
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(27901, 48967)
-            .append(this.elements)
-            .append(this.wires)
+            .append(this.getElements())
+            .append(this.getWires())
+            .append(this.getNets())
             .toHashCode();
     }
 
     @Override
     public int compareTo(Schematic other) {
-        return new CompareToBuilder()
-            .append(this.elements, other.elements)
-            .append(this.wires, other.wires)
-            .toComparison();
+        final Iterator<CircuitElement> cels1, cels2;
+
+        cels1 = this.getElements().iterator();
+        cels2 = other.getElements().iterator();
+
+        while (cels1.hasNext() && cels2.hasNext()) {
+            final CircuitElement cel1 = cels1.next();
+            final CircuitElement cel2 = cels2.next();
+            final int result = cel1.compareTo(cel2);
+
+            if (result != 0) { return result; }
+        }
+
+        if      (cels1.hasNext()) { return +1; }
+        else if (cels2.hasNext()) { return -1; }
+
+        return 0;
     }
 
     @Override

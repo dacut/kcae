@@ -1,9 +1,10 @@
 package kanga.kcae.object;
 
-public abstract interface Shape {
+import java.awt.Graphics2D;
+
+public interface Shape {
     public Rectangle getBoundingBox();
-    public LineStyle getLineStyle();
     public void setLineStyle(LineStyle lineStyle);
-    public FillStyle getFillStyle();
     public void setFillStyle(FillStyle fillStyle);
+    public void draw(Graphics2D graphics);
 }

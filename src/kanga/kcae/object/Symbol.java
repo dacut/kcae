@@ -1,85 +1,112 @@
-package kanga.kcae;
+package kanga.kcae.object;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import static java.util.Collections.unmodifiableList;
+import java.util.Set;
 import static java.util.Collections.unmodifiableMap;
 
-public class Symbol implements Comparable<Symbol> {
+import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
+public class Symbol implements Shape, Comparable<Symbol> {
     public Symbol(final String name) {
-        this.name(name);
+        this.name = name;
+        this.shapes = new ShapeGroup();
         return;
     }
 
-    public List<Shape> getShapes() {
-        return unmodifiableList(this.shapes);
+    public String getName() {
+        return this.name;
     }
 
-    public void addShape(final Shape shape) {
-        if (shape == null) {
-            throw new NullPointerException("shape cannot be null.");
-        }
-
-        if (this.shapes.contains(shape)) {
-            throw new IllegalArgumentException(
-                "shape is already present in this sybol");
-        }
-
-        this.shapes.add(shape);
+    public void setName(final String name) {
+        this.name = name;
     }
 
-    public void addShapeAbove(final Shape shape, final Shape above) {
-        final int aboveIndex;
-
-        if (shape == null) {
-            throw new NullPointerException("shape cannot be null.");
-        }
-
-        if (above == null) {
-            throw new NullPointerException("above cannot be null.");
-        }
-
-        if (this.shapes.contains(shape)) {
-            throw new IllegalArgumentException(
-                "shape is already present in this sybol");
-        }
-
-        if ((aboveIndex = this.shapes.indexOf(above)) == -1) {
-            throw new IllegalArgumentException(
-                "above is not contained in this symbol.");
-        }
-
-        this.shapes.add(aboveIndex, shape);
+    protected Collection<Port> getPortsModifiable() {
+        return this.portsByName.values();
     }
 
-    public void raiseShape(final Shape shape, final Shape above) {
-        final int aboveIndex;
+    public final Set<Port> getPorts() {
+        return new HashSet<Port>(this.getPortsModifiable());
+    }
 
-        if (shape == null) {
-            throw new NullPointerException("shape cannot be null.");
-        }
+    public ShapeGroup getShapes() {
+        return this.shapes;
+    }
 
-        if (above == null) {
-            throw new NullPointerException("above cannot be null.");
-        }
+    public void setShapes(final ShapeGroup shapes) {
+        this.shapes = shapes;
+    }
 
-        if ((aboveIndex = this.shapes.indexOf(above)) == -1) {
-            throw new IllegalArgumentException(
-                "above is not contained in this symbol.");
-        }
+    @Override
+    public Rectangle getBoundingBox() {
+        return this.getShapes().getBoundingBox();
+    }
 
-        if (! this.shapes.remove(shape)) {
-            throw new IllegalArgumentException(
-                "Shape " + shape + " was not present in this symbol.");
-        }
+    @Override
+    public void setLineStyle(final LineStyle lineStyle) {
+        this.getShapes().setLineStyle(lineStyle);
+    }
 
-        this.shapes.add(aboveIndex, shape);
-        return;
+    @Override
+    public void setFillStyle(final FillStyle fillStyle) {
+        this.getShapes().setFillStyle(fillStyle);
+    }
+
+    @Override
+    public void draw(final Graphics2D graphics) {
+        this.getShapes().draw(graphics);
+    }
+
+    @Override
+    public boolean equals(final Object otherObj) {
+        if (otherObj == null) { return false; }
+        if (otherObj == this) { return true; }
+        if (otherObj.getClass() != this.getClass()) { return false; }
+
+        final Symbol other = (Symbol) otherObj;
+        return new EqualsBuilder()
+            .append(this.getName(), other.getName())
+            .append(this.getShapes(), other.getShapes())
+            .append(this.getPortsModifiable(), other.getPortsModifiable())
+            .isEquals();
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(8271, 61687)
+            .append(this.getName())
+            .append(this.getShapes())
+            .append(this.getPortsModifiable())
+            .toHashCode();
+    }
+
+    @Override
+    public int compareTo(final Symbol other) {
+        return new CompareToBuilder()
+            .append(this.getName(), other.getName())
+            .append(this.getShapes(), other.getShapes())
+            .append(this.getPortsModifiable(), other.getPortsModifiable())
+            .toComparison();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
+            .append("name", this.getName())
+            .append("shapes", this.getShapes())
+            .append("ports", this.getPortsModifiable())
+            .toString();
     }
 
     private String name;
-    private final List<Shape> shapes = new ArrayList<Shape>();
-    private final Map<Port> portsByName = new HashMap<String, Port>();
+    private ShapeGroup shapes;
+    private final Map<String, Port> portsByName = new HashMap<String, Port>();
 }

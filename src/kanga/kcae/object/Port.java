@@ -3,15 +3,12 @@ package kanga.kcae.object;
 import java.util.Set;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
-Pimport org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class Port
-    extends CircuitElementAdapter
-    implements Connectable, Comparable<Port>
-{
+public class Port extends CircuitElementAdapter implements Connectable {
     public Port(
         final String name,
         final SignalDirection direction,
@@ -65,7 +62,16 @@ public class Port
     }
 
     @Override
-    public int compareTo(final Port other) {
+    public int compareTo(final CircuitElement otherObj) {
+        final Class<? extends Port> myClass = this.getClass();
+        final Class<? extends CircuitElement> otherClass = otherObj.getClass();
+
+        if (myClass != otherClass) {
+            return myClass.getName().compareTo(otherClass.getName());
+        }
+
+        final Port other = myClass.cast(otherObj);
+
         return new CompareToBuilder()
             .append(this.getName(), other.getName())
             .append(this.getDirection(), other.getDirection())

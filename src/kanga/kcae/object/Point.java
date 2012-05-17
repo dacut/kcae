@@ -51,6 +51,9 @@ public final class Point implements Comparable<Point> {
         return "Point(" + this.x + ", " + this.y + ")";
     }
 
-    public final long x;
-    public final long y;
+    public long getX() { return this.x; }
+    public long getY() { return this.y; }
+
+    private final long x;
+    private final long y;
 }
