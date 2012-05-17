@@ -13,7 +13,18 @@ public class Path implements Shape {
 
     @Override
     public Rectangle getBoundingBox() {
-        this.points.iterator();
+        final Iterator<Point> i = this.points.iterator();
+        final Point firstPoint;
+        Rectangle result;
+
+        if (! i.hasNext()) { return null; }
+        
+        firstPoint = i.next();
+        result = new Rectangle(firstPoint, firstPoint);
+
+        while (i.hasNext()) {
+            result = result.union
+
         Rectangle result = null;
 
         for (final Shape shape : this.getShapes()) {
