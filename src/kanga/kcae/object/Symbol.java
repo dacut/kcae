@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import static java.util.Collections.unmodifiableMap;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -57,11 +56,6 @@ public class Symbol implements Shape, Comparable<Symbol> {
     @Override
     public void setFillStyle(final FillStyle fillStyle) {
         this.getShapes().setFillStyle(fillStyle);
-    }
-
-    @Override
-    public void draw(final Graphics2D graphics) {
-        this.getShapes().draw(graphics);
     }
 
     @Override

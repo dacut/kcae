@@ -7,6 +7,7 @@ import java.util.Iterator;
 public class CollectionComparator<T extends Comparable<T>>
     implements Comparator<Collection<T>>
 {
+	@Override
     public int compare(
         final Collection<T> c1,
         final Collection<T> c2)

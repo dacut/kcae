@@ -81,7 +81,8 @@
   <target name="build" depends="jar,coverage" />
   <target name="dist" depends="jar" />
   <target name="jar" depends="test">
-    <jar destfile="${jar.file}" basedir="${class.dir}" includes="**/*.class" />
+    <jar destfile="${jar.file}" basedir="${class.dir}"
+         includes="**/*.class,**/*.properties" />
   </target>
 
   <target name="coverage" depends="test">
@@ -162,6 +163,11 @@
         </fileset>
       </classpath>
     </javac>
+    <copy todir="${class.dir}" force="true" includeEmptyDirs="false">
+      <fileset dir="${src.dir}">
+        <include name="**/*.properties" />
+      </fileset>
+    </copy>
   </target>
 
   <target name="init">
@@ -176,14 +182,20 @@
     <mkdir dir="${ext.dir}" />
     <mkdir dir="${dist.dir}" />
 
-    <ckget dir="${ext.dir}" url="${ext.url}/commons-lang3-3.1.jar"
-           checksum="71b48e6b3e1b1dc73fe705604b9c7584" />
     <ckget dir="${ext.dir}" url="${ext.url}/asm-3.0.jar"
            checksum="e1f92f5aeae04b8e1ebdc5d46c5225f0" />
     <ckget dir="${ext.dir}" url="${ext.url}/asm-tree-3.0.jar"
            checksum="f1e52edb3419a56f42949aecd27720cd" />
     <ckget dir="${ext.dir}" url="${ext.url}/cobertura-1.9.4.1.jar"
            checksum="312cc39a5dbedccc17c3a3855732044e" />
+    <ckget dir="${ext.dir}" url="${ext.url}/commons-lang3-3.1.jar"
+           checksum="71b48e6b3e1b1dc73fe705604b9c7584" />
+    <ckget dir="${ext.dir}" url="${ext.url}/commons-logging-1.1.1.jar"
+           checksum="e2c390fe739b2550a218262b28f290ce" />
+    <ckget dir="${ext.dir}" url="${ext.url}/commons-logging-adapters-1.1.1.jar"
+           checksum="d955f7cdb65df53936654db488084ea1" />
+    <ckget dir="${ext.dir}" url="${ext.url}/commons-logging-api-1.1.1.jar"
+           checksum="4ec8e1d8171e578b3151e898311a8710" />
     <ckget dir="${ext.dir}" url="${ext.url}/findbugs-annotations-2.0.1-rc2.jar"
            checksum="eb4867fa212ea876b9bc1127ed42a17b" />
     <ckget dir="${ext.dir}" url="${ext.url}/jakarta-oro-2.0.8.jar"

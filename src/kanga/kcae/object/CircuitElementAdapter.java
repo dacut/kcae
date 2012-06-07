@@ -1,8 +1,5 @@
 package kanga.kcae.object;
 
-import java.util.Set;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
@@ -12,10 +9,12 @@ public abstract class CircuitElementAdapter implements CircuitElement {
         this.name = name;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -39,7 +38,7 @@ public abstract class CircuitElementAdapter implements CircuitElement {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
+        return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
             .append("name", this.getName())
             .toString();
     }

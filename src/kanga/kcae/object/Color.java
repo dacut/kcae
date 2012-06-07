@@ -1,5 +1,7 @@
 package kanga.kcae.object;
 
+import java.util.Formatter;
+
 public class Color {
     public static final int MIN_VALUE = 0;
     public static final int MAX_VALUE = 255;
@@ -22,42 +24,31 @@ public class Color {
         final int blue,
         final int alpha)
     {
-        this.setRed(red);
-        this.setGreen(green);
-        this.setBlue(blue);
-        this.setAlpha(alpha);
+        this.rgba = (
+            (rangeCheck(alpha) << 24) |
+            (rangeCheck(red)   << 16) |
+            (rangeCheck(green) <<  8) |
+            (rangeCheck(blue)));
     }
 
     public int getRed() {
-        return this.red;
-    }
-
-    public void setRed(final int red) {
-        this.red = rangeCheck(red);
+        return (this.rgba >>> 16) & 0xff;
     }
 
     public int getGreen() {
-        return this.green;
-    }
-
-    public void setGreen(final int green) {
-        this.green = rangeCheck(green);
+        return (this.rgba >>> 8) & 0xff;
     }
 
     public int getBlue() {
-        return this.blue;
-    }
-
-    public void setBlue(final int blue) {
-        this.blue = rangeCheck(blue);
+        return this.rgba & 0xff;
     }
 
     public int getAlpha() {
-        return this.alpha;
+        return (this.rgba >>> 24) & 0xff;
     }
 
-    public void setAlpha(final int alpha) {
-        this.alpha = rangeCheck(alpha);
+    public int getRGBA() {
+        return this.rgba;
     }
 
     public static int rangeCheck(final int value) {
@@ -68,12 +59,8 @@ public class Color {
 
     @Override
     public String toString() {
-        return ("Color(" + this.getRed() + ", " + this.getGreen() + ", " +
-                this.getBlue() + ", " + this.getAlpha() + ")");
+        return new Formatter().format("#%08x", this.getRGBA()).toString();
     }
 
-    private int red;
-    private int green;
-    private int blue;
-    private int alpha;
+    private int rgba;
 }

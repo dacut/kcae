@@ -19,18 +19,22 @@ public class Port extends CircuitElementAdapter implements Connectable {
         this.net = net;
     }
 
+    @Override
     public SignalDirection getDirection() {
         return this.direction;
     }
 
+    @Override
     public void setDirection(final SignalDirection direction) {
         this.direction = direction;
     }
 
+    @Override
     public Net getNet() {
         return this.net;
     }
 
+    @Override
     public void setNet(final Net net) {
         this.net = net;
     }

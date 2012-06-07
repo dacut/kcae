@@ -1,13 +1,10 @@
 package kanga.kcae.object;
 
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import static java.util.Collections.unmodifiableList;
 
-import org.apache.commons.lang3.builder.CompareToBuilder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
@@ -112,13 +109,6 @@ public class ShapeGroup implements Shape {
     public void setFillStyle(final FillStyle fillStyle) {
         for (final Shape shape : this.shapes) {
             shape.setFillStyle(fillStyle);
-        }
-    }
-
-    @Override
-    public void draw(final Graphics2D graphics) {
-        for (final Shape shape : this.getShapes()) {
-            shape.draw(graphics);
         }
     }
 
