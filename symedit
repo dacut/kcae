@@ -1,0 +1,12 @@
+#! /bin/sh
+root=`dirname $0`;
+JVMARGS=""
+
+while [ "$#" -gt 0 ]; do
+    case $1 in
+        -* ) JVMARGS="${JVMARGS} $1"; shift;;
+        * ) break;;
+    esac;
+done;
+
+exec $root/run-java $JVMARGS kanga.kcae.view.swing.SymbolEditorFrame "$@"
