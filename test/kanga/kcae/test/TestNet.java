@@ -1,6 +1,5 @@
 package kanga.kcae.test;
 
-import kanga.kcae.object.Connectable;
 import kanga.kcae.object.Net;
 import kanga.kcae.object.Port;
 import kanga.kcae.object.SignalDirection;
@@ -8,7 +7,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class TestNet {
     @Test
@@ -47,6 +45,7 @@ public class TestNet {
         n.getConnections().add(p1);
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testComparisons() {
         Net n1a = new Net("net1");
@@ -71,10 +70,11 @@ public class TestNet {
         assertTrue(n2.compareTo(n1a) > 0);
 
         Net n1c = new Net("net1") {
-                public int hashCode() {
-                    return super.hashCode();
-                }
-            };
+            @Override
+            public int hashCode() {
+                return super.hashCode();
+            }
+        };
         assertFalse(n1a.equals(n1c));
         assertFalse(n1c.equals(n1a));
         
