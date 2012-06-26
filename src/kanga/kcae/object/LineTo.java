@@ -3,6 +3,10 @@ package kanga.kcae.object;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class LineTo extends SinglePointInstruction {
+    public LineTo(final long x, final long y) {
+        super(new Point(x, y));
+    }
+    
     public LineTo(final Point point) {
         super(point);
     }

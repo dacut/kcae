@@ -21,9 +21,8 @@ public abstract class ShapePainter {
     }
 
     public static void paint(final Graphics2D g, final Shape s) {
-        if (s instanceof Path) {
-            paint(g, (Path) s);
-        }
+        if      (s instanceof Path) { paint(g, (Path) s); }
+        else if (s instanceof ShapeGroup) { paint(g, (ShapeGroup) s); }
         
         return;
     }
@@ -81,6 +80,8 @@ public abstract class ShapePainter {
         for (final PathInstruction pi : instructions) {
             pi.paint(pp);
         }
+        
+        g.draw(awtPath);
 
         return;
     }

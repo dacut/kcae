@@ -11,28 +11,25 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 
+import kanga.kcae.object.BaseUnit;
+import kanga.kcae.object.EngFormatter;
+import kanga.kcae.object.Extents;
+
 import static java.awt.Color.BLACK;
 import static java.awt.Color.WHITE;
 import static java.lang.Math.abs;
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
 import static java.lang.Math.log10;
+import static java.lang.Math.max;
 import static java.lang.Math.PI;
 import static java.lang.Math.pow;
+import static java.lang.Math.round;
 import static javax.swing.SwingConstants.HORIZONTAL;
 import static javax.swing.SwingConstants.VERTICAL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 public class Ruler extends JPanel {
-    private static final Log log = LogFactory.getLog(Ruler.class);
-    private static final Log fmtlog = LogFactory.getLog(
-        Ruler.class.getName() + ".format");
     private static final long serialVersionUID = 5770541034442330291L;
-
-    public static final long MM = 1000000;
-    public static final long INCH = 25400000;
 
     public static final int MARGIN = 1;
     public static final Color BACKGROUND_COLOR = WHITE;
@@ -41,22 +38,22 @@ public class Ruler extends JPanel {
     public static final double R_DESIRED_TICK_SPACING =
             1.0 / DESIRED_TICK_SPACING;
 
-    public Ruler(final int orientation) {
-        this(0L, 0L, orientation, MM);
+    public Ruler(final int orientation, final BaseUnit baseUnit) {
+        this(0L, 0L, orientation, baseUnit);
     }
 
-    public Ruler(final long min, final long max, final int orientation) {
-        this(min, max, orientation, MM);
-    }
-
-    public Ruler(final long min, final long max, final int orientation,
-            final long baseUnit) {
+    public Ruler(
+        final long min,
+        final long max,
+        final int orientation,
+        final BaseUnit baseUnit)
+    {
         super(true);
         this.min = min;
         this.max = max;
         this.setOrientation(orientation);
         this.setBaseUnit(baseUnit);
-        this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 8);
+        this.font = new Font(Font.SANS_SERIF, Font.PLAIN, 9);
         return;
     }
 
@@ -69,17 +66,18 @@ public class Ruler extends JPanel {
                            bounds.width : bounds.height);
         final int height = (orientation == HORIZONTAL ?
                             bounds.height : bounds.width);
-        final double start = this.getStart();
-        final double end = this.getEnd();
+        final Extents.Double extents = this.getUserExtents();
+        final double start = extents.min;
+        final double end = extents.max;
+        final double range = end - start;
         final FontMetrics fontMetrics;
         final double tickSpacing = this.getMajorTickSpacing(width);
-
-        log.debug("Ruler.paintComponent(" + bounds + ") start=" + start + " end=" + end);
+        final int tickSpacingFigs = (int) floor(log10(tickSpacing));
+        
         g2.setColor(BACKGROUND_COLOR);
         if (orientation != HORIZONTAL) {
             g2.translate(0, bounds.height);
             g2.rotate(- 0.5 * PI);
-            log.debug("translate/rotate");
         }
         g2.fill(new Rectangle2D.Double(0, 0, width, height));
 
@@ -90,11 +88,15 @@ public class Ruler extends JPanel {
         
         // Draw the ticks.
         for (double tick = (ceil(start / tickSpacing) - 1.0) * tickSpacing;
-             tick < end + tickSpacing; tick += tickSpacing)
+             tick <= end + tickSpacing;
+             tick += tickSpacing)
         {
-            final int offset = (int) ((tick - start) * width / this.getRange());
+            final int offset = (int) ((tick - start) * width / range);
             final int x = (orientation == HORIZONTAL ? offset : width - offset);
-            final String tickLabel = formatTick(tick);
+            final int sigFigs = max(1, ((int) floor(log10(abs(tick)))) -
+                                       tickSpacingFigs + 1);
+            final String tickLabel = EngFormatter.format(
+                tick, sigFigs, this.getBaseUnit().unitName);
             final Rectangle2D labelBounds = fontMetrics.getStringBounds(
                 tickLabel, g);
             final int labelWidth = (int) labelBounds.getWidth();
@@ -103,16 +105,9 @@ public class Ruler extends JPanel {
             g2.draw(new Line2D.Double(x, 2, x, height - 2));
 
             // Center the label over the line.
-            int labelx = x - labelWidth / 2;
-            if (labelx < 0)
-                labelx = 0;
-            else if (labelx + labelWidth > width)
-                labelx = width - labelWidth;
+            final int labelx = x - labelWidth / 2;
             final int labely = height - 7;
             
-            log.debug("tick=" + tick + "; offset=" + offset + "; x=" + x + "; tickLabel=" + tickLabel + "; " +
-                      "labelx=" + labelx + "; labely=" + labely);
-                
             // Erase the background.
             g2.setColor(BACKGROUND_COLOR);
             g2.fill(new Rectangle2D.Double(
@@ -137,9 +132,6 @@ public class Ruler extends JPanel {
     public double getMajorTickSpacing(final int width) {
         final double range = this.getRange();
 
-        fmtlog.debug("getMajorTickSpacing: range=" + range + "; min=" +
-                     this.getMin() + "; max=" + this.getMax());
-
         if (range <= 0) {
             // Degenerate case -- no ruler possible.
             return 0;
@@ -157,10 +149,6 @@ public class Ruler extends JPanel {
         final int rangeScale = (int) floor(log10(perfectRangeSpacing));
         final double normalizedRangeSpacing =
                 perfectRangeSpacing / pow(10.0, rangeScale);
-
-        fmtlog.debug("desiredTicks=" + desiredTicks + "; perfectRangeSpacing=" +
-                     perfectRangeSpacing + "; rangeScale=" + rangeScale +
-                     "; normalizedRangeSpacing=" + normalizedRangeSpacing);      
 
         // Move this to a number a human can interpret on a scale.  We allow
         // 1, 2, 5, and 10 here.  In our example, bestSpacing == 5,
@@ -182,9 +170,6 @@ public class Ruler extends JPanel {
             bestDiff = diff;
         }
 
-        fmtlog.debug("Before denormalization: bestSpacing=" + bestSpacing +
-                     "; bestDiff=" + bestDiff);
-
         // Scale this back up to our denormalized range.  In our example,
         // bestSpacing == 500.0.
         if (rangeScale > 0) {
@@ -197,8 +182,6 @@ public class Ruler extends JPanel {
                 bestSpacing *= 0.1;
             }
         }
-
-        fmtlog.debug("After denormalization: bestSpacing=" + bestSpacing);
 
         return bestSpacing;
     }
@@ -216,105 +199,61 @@ public class Ruler extends JPanel {
         this.orientation = orientation;
     }
 
-    public long getBaseUnit() {
+    public BaseUnit getBaseUnit() {
         return this.baseUnit;
     }
 
-    public void setBaseUnit(long baseUnit) {
-        if (baseUnit <= 0) {
-            throw new IllegalArgumentException("baseUnit must be >= 0.");
-        }
-
+    public void setBaseUnit(BaseUnit baseUnit) {
         this.baseUnit = baseUnit;
-        this.rBaseUnit = 1.0 / (double) baseUnit;
     }
 
     /** Returns the range of the ruler in user units. */
     public double getRange() {
-        return ((double) (this.max - this.min)) * this.rBaseUnit;
+        return this.getBaseUnit().nanometersToUnits(this.max - this.min);
     }
-
-    /** Returns the left/top edge of the ruler in user units. */
-    public double getStart() {
-        return ((double) this.min) * this.rBaseUnit;
-    }
-
-    /** Sets the left/top edge of the ruler in user units. */
-    public void setStart(final double start) {
-        this.min = (long) (start * this.baseUnit);
-    }
-
-    /** Returns the right/bottom edge of the ruler in user units. */
-    public double getEnd() {
-        return ((double) this.max) * this.rBaseUnit;
-    }
-
-    /** Sets the right/bottom edge of the ruler in user units. */
-    public void setEnd(final double end) {
-        this.max = (long) (end * this.baseUnit);
-    }
-
-    /** Returns the left/top edge of the ruler in quanta. */
-    public long getMin() {
-        return this.min;
-    }
-
-    /** Sets the left/top edge of the ruler in quanta. */
-    public void setMin(final long min) {
-        this.min = min;
-    }
-
-    /** Returns the right/bottom edge of the ruler in quanta. */
-    public long getMax() {
-        return this.max;
-    }
-
-    /** Sets the right/bottom edge of the ruler in quanta. */
-    public void setMax(final long max) {
-        this.max = max;
-    }
-
-    private static char engPrefixes[] = {
-        'p', 'n', 'u', 'm', '\0', 'k', 'M', 'G', 'T',
-    };
     
-    public static String formatTick(final double tick) {
-        final double absTick = abs(tick);
+    /** Returns the extents of the ruler in user units. */
+    public Extents.Double getUserExtents() {
+        final BaseUnit bu = this.getBaseUnit();
         
-        if (absTick < 1e-12) {
-            return "0";
-        }
+        return new Extents.Double(
+            bu.nanometersToUnits(this.min),
+            bu.nanometersToUnits(this.max));
+    }
+    
+    /** Sets the extents of the ruler in user units. */
+    public void setUserExtents(final Extents.Double extents) {
+        final BaseUnit bu = this.getBaseUnit();
+        
+        this.min = bu.unitsToNanometers(extents.min);
+        this.max = bu.unitsToNanometers(extents.max);
+        this.repaint();
+    }
+    
+    /** Returns the extents of the ruler in quanta. */
+    public Extents.Long getQuantaExtents() {
+        return new Extents.Long(this.min, this.max);
+    }
 
-        // Interpret this on an engineering scale
-        final int scale = ((int) floor(log10(absTick) / 3));
-        final int engPrefixIdx = scale + 4;
-        
-        fmtlog.debug("tick=" + tick + "; scale=" + scale);
-        
-        if (engPrefixIdx < 0) {
-            // Smaller than pico
-            return String.valueOf(tick * 1e12) + " p";
-        }
-        else if (engPrefixIdx >= engPrefixes.length) {
-            // Greater than tera
-            return String.valueOf((int) tick * 1e-12) + " T";
-        }
-        
-        final char prefix = engPrefixes[engPrefixIdx];
-        if (prefix == '\0') {
-            // No prefix used (0-1000)
-            return String.valueOf((int) tick);
-        }
-        else {
-            return String.valueOf((int) (tick * pow(10.0, -scale * 3))) +
-                    ' ' + prefix;
-        }
+    /** Sets the extents of the ruler in quanta. */
+    public void setQuantaExtents(final Extents.Long extents) {
+        this.min = extents.min;
+        this.max = extents.max;
+        this.repaint();
+    }
+    
+    /** Returns the number of quanta pixel represents. */
+    public long getQuantaPerPixel() {
+        final long range = this.max - this.min;
+        final long dimension = 
+            this.getOrientation() == HORIZONTAL ?
+            this.getWidth() : this.getHeight();
+        return round(((double) range) / ((double) dimension));
     }
 
     private long min;
     private long max;
     private int orientation;
-    private long baseUnit;
-    private double rBaseUnit;
+    private BaseUnit baseUnit;
     private Font font;
 }

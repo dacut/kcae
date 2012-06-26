@@ -1,0 +1,26 @@
+#! /bin/sh
+root=`dirname $0`;
+classpath="$root/dist/kcae.jar"
+classpath="${classpath}:$root/ext/commons-lang3-3.1.jar"
+classpath="${classpath}:$root/ext/commons-logging-1.1.1.jar"
+classpath="${classpath}:$root/ext/commons-logging-adapters-1.1.1.jar"
+classpath="${classpath}:$root/ext/commons-logging-api-1.1.1.jar"
+classpath="${classpath}:$root/ext/jackson-core-asl-1.9.7.jar"
+classpath="${classpath}:$root/ext/jackson-mapper-asl-1.9.7.jar"
+classpath="${classpath}:$root/ext/jython-2.7a2.jar"
+classpath="${classpath}:$root/ext/log4j-1.2.9.jar"
+logger="org.apache.commons.logging.impl.Log4JLogger"
+java=java
+
+if [ "$1" = "-debug" ]; then
+    shift;
+    java=jdb
+fi;
+
+$java -Dapple.awt.application.name="Kanga CAE" \
+    -Dapple.laf.useScreenMenuBar=true \
+    -Dapple.awt.graphics.UseQuartz=true \
+    -Dorg.apache.commons.logging.Log="$logger" \
+    -Dpython.verbose=debug \
+    -classpath "$classpath" \
+    "$@"

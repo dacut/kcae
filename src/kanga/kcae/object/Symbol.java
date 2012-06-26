@@ -12,6 +12,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class Symbol implements Shape, Comparable<Symbol> {
     public Symbol(final String name) {
         this.name = name;
@@ -19,10 +21,12 @@ public class Symbol implements Shape, Comparable<Symbol> {
         return;
     }
 
+    @JsonProperty
     public String getName() {
         return this.name;
     }
 
+    @JsonProperty
     public void setName(final String name) {
         this.name = name;
     }
@@ -31,16 +35,33 @@ public class Symbol implements Shape, Comparable<Symbol> {
         return this.portsByName.values();
     }
 
+    @JsonProperty
     public final Set<Port> getPorts() {
         return new HashSet<Port>(this.getPortsModifiable());
     }
+    
+    @JsonProperty
+    public void setPorts(final Collection<Port> ports) {
+        this.portsByName.clear();
+        for (final Port port : ports) {
+            this.portsByName.put(port.getName(), port);
+        }
+        
+        return;
+    }
 
+    @JsonProperty
     public ShapeGroup getShapes() {
         return this.shapes;
     }
 
+    @JsonProperty
     public void setShapes(final ShapeGroup shapes) {
-        this.shapes = shapes;
+        if (shapes == null) {
+            this.shapes = new ShapeGroup();
+        } else {
+            this.shapes = shapes.clone();
+        }
     }
 
     @Override

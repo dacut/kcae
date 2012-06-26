@@ -10,5 +10,6 @@ public class SchematicEditor extends JPanel {
         this.schematic = schematic;
     }
 
+    @SuppressWarnings("unused")
     private final Schematic schematic;
 }

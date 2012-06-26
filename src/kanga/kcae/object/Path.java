@@ -42,7 +42,7 @@ public class Path implements Shape, Comparable<Path> {
     }
 
     /**
-     * FIXME
+     * FIXME: implement
      */
     @Override
     public Rectangle getBoundingBox() {

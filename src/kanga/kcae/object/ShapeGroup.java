@@ -9,13 +9,18 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class ShapeGroup implements Shape {
+public class ShapeGroup implements Shape, Cloneable {
     public ShapeGroup() {
         this.shapes = new ArrayList<Shape>();
     }
 
     public ShapeGroup(final Collection<Shape> shapes) {
         this.shapes = new ArrayList<Shape>(shapes);
+    }
+    
+    @Override
+    public ShapeGroup clone() {
+        return new ShapeGroup(this.getShapes());
     }
 
     public List<Shape> getShapes() {
@@ -135,6 +140,6 @@ public class ShapeGroup implements Shape {
             .append("shapes", this.getShapes())
             .toString();
     }
-
+    
     private final List<Shape> shapes;
 }
