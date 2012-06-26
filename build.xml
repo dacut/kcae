@@ -80,7 +80,9 @@
 
   <target name="build" depends="jar,coverage" />
   <target name="dist" depends="jar" />
-  <target name="jar" depends="test">
+  <target name="fast" depends="fast-jar" />
+  <target name="jar" depends="fast-jar" />
+  <target name="fast-jar" depends="compile">
     <jar destfile="${jar.file}" basedir="${class.dir}"
          includes="**/*.class,**/*.properties" />
   </target>
@@ -107,16 +109,20 @@
 
   <target name="test" depends="compile,instrument,test-compile">
     <junit fork="on" forkmode="once" haltonfailure="true"
-           includeantruntime="false">
+           includeantruntime="false" showoutput="true">
       <classpath>
-        <path refid="ext.class.path" />
         <pathelement path="${instclass.dir}" />
         <pathelement path="${testclass.dir}" />
+        <path refid="ext.class.path" />
         <pathelement path="${ant.library.dir}/ant-junit.jar" />
         <pathelement path="${ant.library.dir}/ant-junit4.jar" />
         <pathelement path="${ant.library.dir}/ant.jar" />
       </classpath>
+      <jvmarg value="-Dfile.encoding=UTF8" />
       <jvmarg value="-Dnet.sourceforge.cobertura.datafile=${cobertura.file}" />
+      <jvmarg value="-Dorg.apache.commons.logging.Log=org.apache.commons.logging.impl.SimpleLog" />
+      <jvmarg value="-Dorg.apache.commons.logging.simplelog.defaultlog=debug" />
+      <jvmarg value="-ea" />
       <batchtest>
         <path refid="test.classes" />
       </batchtest>
@@ -127,7 +133,7 @@
   <target name="test-compile" depends="compile,instrument">
     <javac srcdir="${test.dir}" destdir="${testclass.dir}" fork="true"
            includes="**/*.java" debug="true" target="1.6" source="1.6"
-           includeantruntime="false">
+           includeantruntime="false" encoding="UTF-8">
       <classpath>
         <path refid="ext.class.path" />
         <pathelement path="${instclass.dir}" />
@@ -151,12 +157,19 @@
     <copy todir="${instclass.dir}" overwrite="false">
       <path refid="main.class.path" />
     </copy>
+
+    <!-- Copy over any property files -->
+    <copy todir="${instclass.dir}" force="true" includeEmptyDirs="false">
+      <fileset dir="${src.dir}">
+        <include name="**/*.properties" />
+      </fileset>
+    </copy>
   </target>
 
   <target name="compile" depends="init">
     <javac srcdir="${src.dir}" destdir="${class.dir}" fork="true"
            includes="**/*.java" debug="true" target="1.6" source="1.6"
-           includeantruntime="false">
+           includeantruntime="false" encoding="UTF-8">
       <classpath>
         <fileset dir="${ext.dir}">
           <include name="**/*.jar" />
@@ -198,6 +211,10 @@
            checksum="4ec8e1d8171e578b3151e898311a8710" />
     <ckget dir="${ext.dir}" url="${ext.url}/findbugs-annotations-2.0.1-rc2.jar"
            checksum="eb4867fa212ea876b9bc1127ed42a17b" />
+    <ckget dir="${ext.dir}" url="${ext.url}/jackson-core-asl-1.9.7.jar"
+           checksum="0839b0bf5845e1385f17f234ea8e847f" />
+    <ckget dir="${ext.dir}" url="${ext.url}/jackson-mapper-asl-1.9.7.jar"
+           checksum="bd9b018b997742b57063578f6402c52a" />
     <ckget dir="${ext.dir}" url="${ext.url}/jakarta-oro-2.0.8.jar"
            checksum="42e940d5d2d822f4dc04c65053e630ab" />
     <ckget dir="${ext.dir}" url="${ext.url}/jsr305.jar"
