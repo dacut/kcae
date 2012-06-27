@@ -11,6 +11,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import kanga.kcae.object.BaseUnit;
 import kanga.kcae.object.EngFormatter;
 import kanga.kcae.object.Extents;
@@ -29,6 +32,8 @@ import static javax.swing.SwingConstants.HORIZONTAL;
 import static javax.swing.SwingConstants.VERTICAL;
 
 public class Ruler extends JPanel {
+    @SuppressWarnings("unused")
+    private static final Log log = LogFactory.getLog(Ruler.class);
     private static final long serialVersionUID = 5770541034442330291L;
 
     public static final int MARGIN = 1;
