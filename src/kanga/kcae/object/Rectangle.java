@@ -1,12 +1,14 @@
 package kanga.kcae.object;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.min;
 import static java.lang.Math.max;
+import static java.lang.Math.round;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-/** A rectangle in Cartesian 2-D space whose corners can be specified to the
- *  nearest nanometer.
+/** A rectangle in Cartesian 2-D space whose points lie on integral quanta
+ *  (typically nanometers, as used by the rest of KCAE).
  * 
  *  @see Point
  */
@@ -17,14 +19,14 @@ public final class Rectangle implements Comparable<Rectangle> {
      *  the upper-left corner and ({@code x1}, {@code y1}) represents the
      *  lower-right corner.  No checking is performed.
      *  
-     *  @param left	The horizontal position of the left edge of the rectangle,
-     *  			in nanometers.
-     *  @param top	The vertical position of the top edge of the rectangle,
-     *  			in nanometers.
-     *  @param right   The horizontal position of the right edge of the rectangle,
-     *  			in nanometers.
-     *  @param bottom	The vertical position of the bottom edge of the rectangle,
-     *  			in nanometers.
+     *  @param left     The horizontal position of the left edge of the
+     *                  rectangle, in quanta (nanometers).
+     *  @param top      The vertical position of the top edge of the rectangle,
+     *                  in quanta (nanometers).
+     *  @param right    The horizontal position of the right edge of the
+     *                  rectangle, in quanta (nanometers).
+     *  @param bottom	The vertical position of the bottom edge of the
+     *                  rectangle, in quanta (nanometers).
      */
     Rectangle(
         final long left,
@@ -40,14 +42,14 @@ public final class Rectangle implements Comparable<Rectangle> {
 
     /** Create a new rectangle.
      *
-     *  @param x0	The horizontal position of one corner of the rectangle, in
-     *  			nanometers.
-     *  @param y0	The vertical position of one corner of the rectangle, in
-     *  			nanometers.
+     *  @param x0	The horizontal position of one corner of the rectangle,
+     *                  in quanta (nanometers).
+     *  @param y0	The vertical position of one corner of the rectangle,
+     *                  in quanta (nanometers).
      *  @param x1	The horizontal position of the opposite corner of the
-     *  			rectangle, in nanometers.
+     *                  rectangle, in quanta (nanometers).
      *  @param y1	The vertical position of the opposite corner of the
-     *  			rectangle, in nanometers.
+     *  		rectangle, in quanta (nanometers).
      */
     public static Rectangle fromPoints(
         final long x0,
@@ -100,10 +102,24 @@ public final class Rectangle implements Comparable<Rectangle> {
         return new Rectangle(hExtents.min, vExtents.min,
                              hExtents.max, vExtents.max);
     }
+    
+    /** Create a new rectangle with the top left corner at the origin and
+     *  of the specified size.
+     *  
+     *  @param size     The size of the rectangle.
+     *  @throws NullPointerException if {@code size} is {@code null}.
+     */
+    public static Rectangle atOrigin(final Dimension size) {
+        if (size == null) {
+            throw new NullPointerException("size cannot be null");
+        }
+        
+        return new Rectangle(0, 0, size.getWidth(), size.getHeight());
+    }
 
     /** Find the smallest rectangle encompassing this and another rectangle.
      * 
-     *  @param other	The other rectangle to encompass.
+     *  @param other    The other rectangle to encompass.
      *  @return	The smallest rectangle encompassing this and {@code other}.
      *  @throws NullPointerException if {@code other} is {@code null}.
      */
@@ -120,9 +136,9 @@ public final class Rectangle implements Comparable<Rectangle> {
 
     /** Find the smallest rectangle encompassing this rectangle and a point.
      * 
-     *  @param other	The point to encompass.
+     *  @param other    The point to encompass.
      *  @return	The smallest rectangle encompassing this rectangle and the
-     *  		point {@code other}.
+     *                  point {@code other}.
      *  @throws NullPointerException if {@code other} is {@code null}.
      */
     public Rectangle union(Point other) {
@@ -255,6 +271,14 @@ public final class Rectangle implements Comparable<Rectangle> {
      */    
     public Point getBottomRight() { return new Point(this.right, this.bottom); }
     
+    /** Returns the center of the rectangle.
+     *  The returned value is within a quanta of the actual center.
+     */
+    public Point getCenter() {
+        return new Point((this.left + this.right) / 2,
+                         (this.top + this.bottom) / 2);
+    }
+    
     /** Returns the horizontal extents of the rectangle.
      * 
      *  @return The horizontal extents of the rectangle.
@@ -269,6 +293,129 @@ public final class Rectangle implements Comparable<Rectangle> {
      */
     public Extents.Long getVerticalExtents() {
         return new Extents.Long(this.top, this.bottom);
+    }
+    
+    /** Returns the aspect ratio (width to height) of the rectangle.
+     * 
+     */
+    public double getAspectRatio() {
+        final long width = this.getWidth();
+        final long height = this.getHeight();
+        if (height == 0) {
+            if (width >= 0) {
+                return Double.POSITIVE_INFINITY;
+            } else {
+                return Double.NEGATIVE_INFINITY;
+            }
+        }
+        
+        return ((double) width) / ((double) height);
+    }
+    
+    /** Return a copy of this rectangle fitted to the specified aspect ratio.
+     * 
+     *  The fitting algorithm adjusts both the height and width minimally to
+     *  meet the desired ratio.
+     * 
+     *  @param aspectRatio      The aspect ratio (width over height) to fit
+     *                          this rectangle to.
+     *  @return A copy of this rectangle with its coordinates adjusted to meet
+     *          the specified aspectRatio (to the nearest quanta).
+     */
+    public Rectangle fitToAspect(final double aspectRatio) {
+        /*  Skip this section if you're not interested in the mathematical 
+         *  details.
+         *  
+         *  If we were to graph the aspectRatio a on an X-Y plot where the
+         *  x coordinate represents the width and the y coordinate represents
+         *  the height, the allowable rectangle sizes would fit along a line L
+         *  with slope m = 1 / a, intersecting at the origin.
+         *  
+         *  Our current size is a point P = (w, h) (where w = width,
+         *  h = height), which is not likely to be on L.  We want to find a
+         *  point P' = (w', h') on L closest to P.  The line L' between P and P'
+         *  is the normal to L, with slope -1/m.
+         *  
+         *   height
+         *    |         \         __/ <- L
+         *    |     P -> X     __/
+         *    |           \ __/
+         *    |          __X <--- P'
+         *    |       __/   \
+         *    |    __/       \
+         *    | __/           \  <-- L'
+         *    |/               \
+         *    +-----------------------------------
+         *    
+         *  The equations for the two lines are:
+         *  L:   y = m x = x / a
+         *  L':  (y - h) = (- 1 / m) (x - w)
+         *        y      = -a (x - w) + h
+         *
+         *  By setting these equal, we find the intersection, P':
+         *        x / a       = -a (x - w) + h
+         *        x / a + a x = a w + h
+         *        (a^2 + 1) x = a^2 w + a h
+         *        w' = x = (a^2 w + a h) / (a^2 + 1)
+         *               = a (a w + h) / (a^2 + 1)
+         *        h' = y = w' / a
+         */
+        final long width = this.getWidth();
+        final long height = this.getHeight();
+        final Point center = this.getCenter();
+        final long xc = center.getX();
+        final long yc = center.getY();
+        
+        final double aspSq = aspectRatio * aspectRatio;
+        final double nWidth = (aspSq * width + aspectRatio * height) /
+                              (1 + aspSq);
+        final double nHeight = nWidth / aspectRatio;
+        
+        System.err.println("fitToAspect(" + aspectRatio + "): " + width + ", " + height +
+                 " -> " + round(nWidth) + ", " + round(nHeight));
+        
+        return new Rectangle(
+            round(xc - 0.5 * nWidth), round(yc - 0.5 * nHeight),
+            round(xc + 0.5 * nWidth), round(yc + 0.5 * nHeight));
+    }
+    
+    /** Returns a new rectangle zoomed by the specified amount.
+     *  
+     *  The center of the zoomed rectangle is coincident (within a quanta) with
+     *  this rectangle.
+     */
+    public Rectangle zoom(final double factor) {
+        final Point center = this.getCenter();
+        final long xc = center.getX();
+        final long yc = center.getY();
+        final long halfWidth = this.getWidth() / 2;
+        final long halfHeight = this.getHeight() / 2;
+        final long zoomWidth = (long) (factor * halfWidth);
+        final long zoomHeight = (long) (factor * halfHeight);
+        
+        return new Rectangle(xc - zoomWidth, yc - zoomHeight,
+                             xc + zoomWidth, yc + zoomHeight);
+    }
+    
+    /** Returns a new rectangle zoomed by the specified amount while keeping an
+     *  arbitrary point coincident between this and the zoomed rectangle.
+     */
+    public Rectangle zoom(final double factor, final Point point) {
+        final long xc = point.getX();
+        final long yc = point.getY();
+        final long xoffset = xc - this.getLeft();
+        final long yoffset = yc - this.getTop();
+        final long width = this.getWidth();
+        final long height = this.getHeight();
+        final long zoomWidth = (long) (factor * width);
+        final long zoomHeight = (long) (factor * height);
+        final double xrel = ((double) xoffset) / ((double) width);
+        final double yrel = ((double) yoffset) / ((double) height);
+        
+        return new Rectangle(xc - (long) (zoomWidth * xrel),
+                             yc - (long) (zoomHeight * yrel),
+                             xc + (long) (zoomWidth * (1.0 - xrel)),
+                             yc + (long) (zoomHeight * (1.0 - yrel)));
     }
 
     private final long left;

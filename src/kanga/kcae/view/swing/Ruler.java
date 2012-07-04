@@ -7,6 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import javax.swing.JPanel;
@@ -44,7 +45,7 @@ public class Ruler extends JPanel {
             1.0 / DESIRED_TICK_SPACING;
 
     public Ruler(final int orientation, final BaseUnit baseUnit) {
-        this(0L, 0L, orientation, baseUnit);
+        this(Long.MIN_VALUE, Long.MIN_VALUE, orientation, baseUnit);
     }
 
     public Ruler(
@@ -72,13 +73,22 @@ public class Ruler extends JPanel {
         final int height = (orientation == HORIZONTAL ?
                             bounds.height : bounds.width);
         final Extents.Double extents = this.getUserExtents();
-        final double start = extents.min;
-        final double end = extents.max;
-        final double range = end - start;
         final FontMetrics fontMetrics;
         final double tickSpacing = this.getMajorTickSpacing(width);
-        final int tickSpacingFigs = (int) floor(log10(tickSpacing));
+        // Determine the scale of the tick spacing, i.e. what is the smallest
+        // integer i such that 10**i <= tickSpacing < 10**(i+1)?
+        //
+        // tickSpacing       scale(tickSpacing)
+        // --------------------------------------
+        //   0.01 to    0.10    -2
+        //   0.10 to    1       -1
+        //   1    to   10        0
+        //  10    to  100        1
+        // 100    to 1000        2   etc.
+        final int tickSpacingScale = (int) floor(log10(tickSpacing));
         
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                            RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(BACKGROUND_COLOR);
         if (orientation != HORIZONTAL) {
             g2.translate(0, bounds.height);
@@ -91,6 +101,14 @@ public class Ruler extends JPanel {
         fontMetrics = g2.getFontMetrics();
         g2.draw(new Line2D.Double(0, height - 2, width, height - 2));
         
+        if (extents == null) {
+            return;
+        }
+
+        final double start = extents.min;
+        final double end = extents.max;
+        final double range = end - start;
+
         // Draw the ticks.
         for (double tick = (ceil(start / tickSpacing) - 1.0) * tickSpacing;
              tick <= end + tickSpacing;
@@ -98,8 +116,30 @@ public class Ruler extends JPanel {
         {
             final int offset = (int) ((tick - start) * width / range);
             final int x = (orientation == HORIZONTAL ? offset : width - offset);
-            final int sigFigs = max(1, ((int) floor(log10(abs(tick)))) -
-                                       tickSpacingFigs + 1);
+            
+            // Calculate the number of significant figures we need to print.
+            // This can be a bit tricky!  There are two cases we need to
+            // consider:
+            //   tickSpacingScale >= tickScale
+            //     e.g. tickSpacing = 20, ticks = {-40, -20, 0, 20, 40, 60}
+            //     In this case, we need only one significant figure.
+            //  tickSpacingScale < tickScale
+            //     e.g. tickSpacing = 2, ticks = {55710, 55712, 55714, 55716}
+            //     In this case, we need to print enough significant figures to
+            //     distinguish between each tick
+            //       (tickScale - tickSpacingScale + 1)
+            final double tickScaleFlt = floor(log10(abs(tick)));
+            
+            // Caution: if tickScaleFlt is -Inf (e.g. tick=0.0), then
+            // (int) tickScaleFlt == Integer.MIN_VALUE, but we then subtract
+            // tickSpacingScale -- wrapping around to positive infinity.  Hence
+            // the explicit check for tickScaleFlt being less than
+            // tickSpacingScale.  Don't blindly try to fold this into the
+            // max() logic.
+            final int sigFigs = (
+                tickScaleFlt < 0 ? 1 :
+                max(1, ((int) tickScaleFlt) - tickSpacingScale + 1));
+
             final String tickLabel = EngFormatter.format(
                 tick, sigFigs, this.getBaseUnit().unitName);
             final Rectangle2D labelBounds = fontMetrics.getStringBounds(
@@ -214,11 +254,19 @@ public class Ruler extends JPanel {
 
     /** Returns the range of the ruler in user units. */
     public double getRange() {
+        if (this.min == Long.MIN_VALUE && this.max == Long.MIN_VALUE) {
+            return 0.0;
+        }
+        
         return this.getBaseUnit().nanometersToUnits(this.max - this.min);
     }
     
     /** Returns the extents of the ruler in user units. */
     public Extents.Double getUserExtents() {
+        if (this.min == Long.MIN_VALUE && this.max == Long.MIN_VALUE) {
+            return null;
+        }
+        
         final BaseUnit bu = this.getBaseUnit();
         
         return new Extents.Double(
@@ -228,10 +276,15 @@ public class Ruler extends JPanel {
     
     /** Sets the extents of the ruler in user units. */
     public void setUserExtents(final Extents.Double extents) {
-        final BaseUnit bu = this.getBaseUnit();
+        if (extents != null) {
+            final BaseUnit bu = this.getBaseUnit();
         
-        this.min = bu.unitsToNanometers(extents.min);
-        this.max = bu.unitsToNanometers(extents.max);
+            this.min = bu.unitsToNanometers(extents.min);
+            this.max = bu.unitsToNanometers(extents.max);
+        } else {
+            this.min = this.max = Long.MIN_VALUE;
+        }
+        
         this.repaint();
     }
     
@@ -242,8 +295,13 @@ public class Ruler extends JPanel {
 
     /** Sets the extents of the ruler in quanta. */
     public void setQuantaExtents(final Extents.Long extents) {
-        this.min = extents.min;
-        this.max = extents.max;
+        if (extents != null) {
+            this.min = extents.min;
+            this.max = extents.max;
+        } else {
+            this.min = this.max = Long.MIN_VALUE;
+        }
+        
         this.repaint();
     }
     

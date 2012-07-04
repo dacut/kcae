@@ -7,10 +7,14 @@ import java.awt.GraphicsEnvironment;
 import static java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment;
 
 import kanga.kcae.object.BaseUnit;
+import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Symbol;
+import static kanga.kcae.object.PaperDimension.MinA4AnsiA;
 
 public class SymbolEditor extends MeasuredViewer<SymbolView> {
     private static final long serialVersionUID = -6398202983953748987L;
+    public static final Rectangle defaultViewArea =
+        Rectangle.atOrigin(MinA4AnsiA.landscape);
     
     public SymbolEditor() {
         this(null);
@@ -21,12 +25,22 @@ public class SymbolEditor extends MeasuredViewer<SymbolView> {
     }
 
     public SymbolEditor(final Symbol symbol, final BaseUnit baseUnit) {
-        super(new SymbolView(symbol), baseUnit);
+        super(new SymbolView(symbol), getInitialViewArea(symbol), baseUnit);
         final GraphicsEnvironment gfxEnv = getLocalGraphicsEnvironment();
         final GraphicsDevice gfxDev = gfxEnv.getDefaultScreenDevice();
         final DisplayMode dm = gfxDev.getDisplayMode();
         final Dimension mySize = new Dimension(
             dm.getWidth(), (int) (dm.getHeight() * 0.7));
         this.setPreferredSize(mySize);
+    }
+    
+    private static Rectangle getInitialViewArea(final Symbol symbol) {
+        if (symbol == null)
+            return defaultViewArea;
+        
+        final Rectangle result = symbol.getBoundingBox();
+        if (result == null)
+            return defaultViewArea;
+        return result;
     }
 }

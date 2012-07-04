@@ -8,6 +8,8 @@ import static java.lang.Math.rint;
 import static java.lang.Math.round;
 import static java.lang.Math.signum;
 
+import org.apache.commons.logging.LogFactory;
+
 /** Utility class for formatting values in engineering notation.
  */
 public abstract class EngFormatter {
@@ -101,6 +103,7 @@ public abstract class EngFormatter {
         }
 
         if (value < epsilon && value > -epsilon) {
+            LogFactory.getLog(EngFormatter.class).debug("formatting " + value + ", sigfig=" + significantFigures);
             return (String.format("%." + (significantFigures - 1) + "f" , 0.0) +
                     interspace + units);
         }

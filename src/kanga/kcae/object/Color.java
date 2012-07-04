@@ -5,6 +5,11 @@ import java.util.Formatter;
 public class Color {
     public static final int MIN_VALUE = 0;
     public static final int MAX_VALUE = 255;
+    public static final Color black = new Color(
+        MIN_VALUE, MIN_VALUE, MIN_VALUE, MIN_VALUE);
+    public static final Color white = new Color(
+        MAX_VALUE, MAX_VALUE, MAX_VALUE, MIN_VALUE);
+    
 
     public Color() {
         this(MIN_VALUE, MIN_VALUE, MIN_VALUE, MIN_VALUE);

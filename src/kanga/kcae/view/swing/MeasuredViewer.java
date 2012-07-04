@@ -6,14 +6,17 @@ import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import javax.swing.JPanel;
+import static java.lang.Math.pow;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import kanga.kcae.object.BaseUnit;
 import kanga.kcae.object.Extents;
+import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 import static javax.swing.SwingConstants.HORIZONTAL;
 import static javax.swing.SwingConstants.VERTICAL;
@@ -21,12 +24,11 @@ import static javax.swing.SwingConstants.VERTICAL;
 public abstract class MeasuredViewer<T extends Component & MeasuredView>
     extends JPanel
 {
-    @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(SymbolEditorFrame.class);
+    static final Log log = LogFactory.getLog(MeasuredViewer.class);
     
     class PanningListener
         extends MouseAdapter
-        implements MouseMotionListener
+        implements MouseMotionListener, MouseWheelListener
     {
         private boolean enabled = true;
         private int lastX = Integer.MIN_VALUE;
@@ -35,6 +37,8 @@ public abstract class MeasuredViewer<T extends Component & MeasuredView>
         @Override
         public void mouseDragged(final MouseEvent e) {
             final int x, y;
+            
+            log.debug("mouseDragged: " + e);
             
             if (! this.isEnabled()) {
                 return;
@@ -57,10 +61,11 @@ public abstract class MeasuredViewer<T extends Component & MeasuredView>
                 final long dxQua = -hRuler.getQuantaPerPixel() * dxPix;
                 final long dyQua = -vRuler.getQuantaPerPixel() * dyPix;
              
-                final Rectangle originalView = MeasuredViewer.this.getView();
+                final Rectangle originalView = MeasuredViewer.this.getViewArea();
                 final Rectangle newView = originalView.translate(dxQua, dyQua);
 
-                MeasuredViewer.this.setView(newView);
+                log.debug("pan: oldView=" + originalView + "; newView=" + newView);
+                MeasuredViewer.this.setViewArea(newView);
             }
             
             this.lastX = x;
@@ -76,11 +81,24 @@ public abstract class MeasuredViewer<T extends Component & MeasuredView>
         @Override
         public void mousePressed(final MouseEvent e) {
             if ((e.getButton() & MouseEvent.BUTTON1) != 0) {
-                System.err.println("mousePressed:" + e);
+                log.debug("mousePressed:" + e);
                 
                 this.lastX = e.getXOnScreen();
                 this.lastY = e.getYOnScreen();
             }
+        }
+        
+        @Override
+        public void mouseWheelMoved(final MouseWheelEvent e) {
+            final int clicks = e.getWheelRotation();
+            final MeasuredView viewer = MeasuredViewer.this.getViewer();
+            final Point zoomPoint = viewer.screenPointToQuanta(e.getPoint());
+            final Rectangle originalView = MeasuredViewer.this.getViewArea();
+            final Rectangle newView = originalView.zoom(
+                pow(1.05, clicks), zoomPoint);
+            
+            log.debug("zoom: oldView=" + originalView + "; newView=" + newView + "; clicks=" + clicks);
+            MeasuredViewer.this.setViewArea(newView);
         }
 
         public boolean isEnabled() {
@@ -91,8 +109,16 @@ public abstract class MeasuredViewer<T extends Component & MeasuredView>
             this.enabled = enabled;
         }
     }
-
+    
     protected MeasuredViewer(final T viewer, final BaseUnit baseUnit) {
+        this(viewer, null, baseUnit);
+    }
+
+    protected MeasuredViewer(
+        final T viewer,
+        final Rectangle viewArea,
+        final BaseUnit baseUnit)
+    {
         super(new GridBagLayout(), true);
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints cpcons = new GridBagConstraints();
@@ -115,9 +141,11 @@ public abstract class MeasuredViewer<T extends Component & MeasuredView>
         vrcons.fill = GridBagConstraints.BOTH;
         vrcons.weighty = 1.0;
 
-        this.hRuler = new Ruler(-200000, 102000, HORIZONTAL, baseUnit);
-        this.vRuler = new Ruler(-200000, 102000, VERTICAL, baseUnit);
+        this.hRuler = new Ruler(HORIZONTAL, baseUnit);
+        this.vRuler = new Ruler(VERTICAL, baseUnit);
         this.viewer = viewer;
+        
+        this.setViewArea(viewArea);
         this.setLayout(layout);
         this.add(this.hRuler, hrcons);
         this.add(this.vRuler, vrcons);
@@ -126,6 +154,7 @@ public abstract class MeasuredViewer<T extends Component & MeasuredView>
         this.panningListener = new PanningListener();
         this.viewer.addMouseListener(this.panningListener);
         this.viewer.addMouseMotionListener(this.panningListener);
+        this.viewer.addMouseWheelListener(this.panningListener);
     }
 
     public Ruler getHorizontalRuler() {
@@ -136,16 +165,30 @@ public abstract class MeasuredViewer<T extends Component & MeasuredView>
         return this.vRuler;
     }
     
-    public Rectangle getView() {
+    public Rectangle getViewArea() {
         final Extents.Long hExtents = this.hRuler.getQuantaExtents();
         final Extents.Long vExtents = this.vRuler.getQuantaExtents();
         
         return Rectangle.fromExtents(hExtents, vExtents);
     }
     
-    public void setView(final Rectangle r) {
-        this.hRuler.setQuantaExtents(r.getHorizontalExtents());
-        this.vRuler.setQuantaExtents(r.getVerticalExtents());
+    public void setViewArea(Rectangle r) {
+        if (r != null) {
+            // Make sure the aspect ratio is correct.
+            java.awt.Rectangle bounds = this.viewer.getBounds();
+        
+            if (bounds != null && bounds.width > 0 && bounds.height > 0) {
+                final double screenAspect = (((double) bounds.width) /
+                                             ((double) bounds.height));
+                r = r.fitToAspect(screenAspect);
+            }
+            this.hRuler.setQuantaExtents(r.getHorizontalExtents());
+            this.vRuler.setQuantaExtents(r.getVerticalExtents());
+        } else {
+            this.hRuler.setQuantaExtents(null);
+            this.vRuler.setQuantaExtents(null);
+        }
+        this.viewer.setViewArea(r);
     }
 
     public T getViewer() {

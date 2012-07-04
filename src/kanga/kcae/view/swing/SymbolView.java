@@ -4,6 +4,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
+import java.awt.RenderingHints;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import kanga.kcae.object.BaseUnit;
 import kanga.kcae.object.Rectangle;
@@ -11,6 +15,7 @@ import kanga.kcae.object.Symbol;
 import static java.awt.Color.WHITE;
 
 public class SymbolView extends MeasuredViewPanel {
+    private static final Log log = LogFactory.getLog(SymbolView.class);
     private static final long serialVersionUID = 6237440111082245444L;
     public SymbolView() {
         this(null, null, true, BaseUnit.meter);
@@ -34,9 +39,7 @@ public class SymbolView extends MeasuredViewPanel {
         final BaseUnit baseUnit)
     {
         this(symbol, layoutManager, isDoubleBuffered,
-             (symbol != null ? symbol.getBoundingBox() :
-                               Rectangle.fromPoints(0, 0, 1, 1)),
-             baseUnit);
+             (symbol != null ? symbol.getBoundingBox() : null), baseUnit);
     }
 
     public SymbolView(
@@ -58,8 +61,18 @@ public class SymbolView extends MeasuredViewPanel {
         final Graphics2D g = (Graphics2D) graphics;
         final Symbol symbol = this.getSymbol();
 
-        if (symbol == null)
+        if (symbol == null) {
+            log.debug("paintComponent: symbol is null (nothing to paint)");
             return;
+        }
+        
+        if (this.getViewArea() == null) {
+            log.debug("paintComponent: viewArea is null");
+            return;
+        }
+        
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON);
         
         ShapePainter.paint(g, symbol.getShapes());
     }

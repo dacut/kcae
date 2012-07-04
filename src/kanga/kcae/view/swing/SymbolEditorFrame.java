@@ -1,8 +1,5 @@
 package kanga.kcae.view.swing;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -15,6 +12,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import kanga.kcae.object.ClosePath;
+import kanga.kcae.object.Color;
+import kanga.kcae.object.LineStyle;
 import kanga.kcae.object.LineTo;
 import kanga.kcae.object.MoveTo;
 import kanga.kcae.object.Path;
@@ -90,6 +89,7 @@ public class SymbolEditorFrame extends JFrame {
         p.addInstruction(new ClosePath());
         sg.addShape(p);
         sym.setShapes(sg);
+        sym.setLineStyle(new LineStyle(100000, Color.black));
         
         app = new SymbolEditorFrame(sym);
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -11,19 +11,23 @@ import javax.swing.JPanel;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import kanga.kcae.object.BaseUnit;
+import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 
 public abstract class MeasuredViewPanel extends JPanel implements MeasuredView {
+    private static final Log log = LogFactory.getLog(MeasuredViewPanel.class);
     private static final long serialVersionUID = -4832792841867215854L;
     
     protected MeasuredViewPanel() {
-        this(null, true, Rectangle.fromPoints(0, 0, 1, 1), BaseUnit.meter);
+        this(null, true, null, BaseUnit.meter);
     }
 
     protected MeasuredViewPanel(final BaseUnit baseUnit) {
-        this(null, true, Rectangle.fromPoints(0, 0, 1, 1), baseUnit);
+        this(null, true, null, baseUnit);
     }
 
     protected MeasuredViewPanel(
@@ -31,8 +35,7 @@ public abstract class MeasuredViewPanel extends JPanel implements MeasuredView {
         final boolean isDoubleBuffered,
         final BaseUnit baseUnit)
     {
-        this(layoutManager, isDoubleBuffered, Rectangle.fromPoints(0, 0, 1, 1),
-             baseUnit);
+        this(layoutManager, isDoubleBuffered, null, baseUnit);
     }
     
     protected MeasuredViewPanel(
@@ -72,20 +75,60 @@ public abstract class MeasuredViewPanel extends JPanel implements MeasuredView {
     
     @Override
     public void setViewArea(final Rectangle viewArea) {
+        log.debug("setViewArea: " + viewArea);
         this.viewArea = viewArea;
+        this.repaint();
+    }
+
+    @Override
+    public Point screenPointToQuanta(java.awt.Point p) {
+        final Rectangle va = this.getViewArea();
+        final java.awt.Rectangle bounds = this.getBounds();
+        final double xrel = (p.getX() - bounds.getX()) / bounds.getWidth();
+        final double yrel = (p.getY() - bounds.getY()) / bounds.getHeight();
+        
+        return new Point(va.getLeft() + (long) (va.getWidth() * xrel),
+                         va.getTop() + (long) (va.getHeight() * yrel));
     }
     
     @Override
+    public java.awt.Point quantaPointToScreen(Point p) {
+        final Rectangle va = this.getViewArea();
+        final java.awt.Rectangle bounds = this.getBounds();
+        final double xrel = ((double) (p.getX() - va.getLeft())) /
+                            (double) va.getWidth();
+        final double yrel = ((double) (p.getY() - va.getTop())) /
+                            (double) va.getHeight();
+        
+        return new java.awt.Point(bounds.x + (int) (bounds.getWidth() * xrel),
+                                  bounds.y + (int) (bounds.getHeight() * yrel));
+    }
+
+    
+    @Override
     protected void paintComponent(final Graphics graphics) {
+        final Rectangle viewArea = this.getViewArea();
+        if (viewArea == null) {
+            log.warn("Cannot paint: viewArea is null");
+            return;
+        }
+        
         final Graphics2D g = (Graphics2D) graphics;
+        final Pair<Long, Long> qpp = this.getQuantaPerPixel();
+        final double ppqX = 1.0 / qpp.getLeft().doubleValue();
+        final double ppqY = 1.0 / qpp.getRight().doubleValue();
+        final java.awt.Rectangle bounds = this.getBounds();
         java.awt.Rectangle clip = g.getClipBounds();
 
         if (clip == null) {
-            clip = this.getBounds();
+            clip = bounds;
         }
 
         g.setColor(this.backgroundColor);
         g.fillRect(clip.x, clip.y, clip.width, clip.height);
+
+        g.scale(ppqX, ppqY);
+        g.translate(-viewArea.getLeft(), -viewArea.getTop());
     }
     
     public BaseUnit getBaseUnit() {
