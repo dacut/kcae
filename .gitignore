@@ -1,4 +1,5 @@
 *~
 build/*
 dist/*
+ext/cachedir/*
 kcae-findbugs.fbp
