@@ -22,6 +22,7 @@ public interface MeasuredView {
      *  @see kanga.kcae.object.Rectangle#adjustAspectRatio(double, kanga.kcae.object.Rectangle.FitMethod) 
      */
     public void setViewArea(Rectangle area);
+
     public void addViewAreaChangeListener(ViewAreaChangeListener vacl);
     public void removeViewAreaChangeListener(ViewAreaChangeListener vacl);
     public Point screenPointToQuanta(java.awt.Point p);

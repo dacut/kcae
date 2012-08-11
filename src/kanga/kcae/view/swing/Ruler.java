@@ -28,10 +28,22 @@ import static java.lang.Math.log10;
 import static java.lang.Math.max;
 import static java.lang.Math.PI;
 import static java.lang.Math.pow;
-import static java.lang.Math.round;
 import static javax.swing.SwingConstants.HORIZONTAL;
 import static javax.swing.SwingConstants.VERTICAL;
 
+/** A ruler component which draws tick marks and labels them.
+ * 
+ *  <p>Rulers have two principal properties describing their state:
+ *  <ul>
+ *    <li>The <b>range</b> of the ruler describes the minimum and maximum
+ *        extents drawn on the screen.  These are integral nanometer
+ *        values.</li>
+ *    <li>The <b>baseUnit</b> of the ruler describes the measurement system
+ *        desired by the user.  Labels and tick marks are drawn at user-friendly
+ *        points in the baseUnit system.</li></p>
+ *        
+ *  @see kanga.kcae.object.BaseUnit
+ */
 public class Ruler extends JPanel {
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(Ruler.class);
@@ -305,15 +317,6 @@ public class Ruler extends JPanel {
         this.repaint();
     }
     
-    /** Returns the number of quanta pixel represents. */
-    public long getQuantaPerPixel() {
-        final long range = this.max - this.min;
-        final long dimension = 
-            this.getOrientation() == HORIZONTAL ?
-            this.getWidth() : this.getHeight();
-        return round(((double) range) / ((double) dimension));
-    }
-
     private long min;
     private long max;
     private int orientation;

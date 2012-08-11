@@ -1,11 +1,16 @@
 package kanga.kcae.view.swing;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import org.apache.commons.logging.Log;
@@ -36,21 +41,56 @@ public class SymbolEditorFrame extends JFrame {
         this.symbolEditor = new SymbolEditor(symbol);
         this.scriptFrame = new ScriptFrame();
         
+        final JPanel top = new JPanel();
+        final BoxLayout topLayout = new BoxLayout(top, BoxLayout.LINE_AXIS);
+        top.setLayout(topLayout);
+        top.add(this.createToolBar());
+        top.add(this.symbolEditor);
+        
         final JSplitPane content = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
-            false, this.symbolEditor, this.scriptFrame);
+            false, top, this.scriptFrame);
         // Resize the JSplitPane when it is initially shown.  Because the size
         // hasn't been computed yet, we can't meaningfully set the divider
         // location.
         content.addComponentListener(new ResizeSplitPane(0.8));
         
         this.getRootPane().setContentPane(content);
-        this.setJMenuBar(this.createMenuBar());
+        this.setJMenuBar(createMenuBar());
         
         this.scriptFrame.getInterpreter().set("app", this);
         this.scriptFrame.getInterpreter().set("dlog", ResizeSplitPane.dlog);
     }
-
-    private JMenuBar createMenuBar() {
+    
+    private JPanel createToolBar() {
+        final JPanel tb = new JPanel();
+        final BoxLayout layout = new BoxLayout(tb, BoxLayout.PAGE_AXIS);
+        tb.setLayout(layout);
+        
+        final JButton navigate = new JButton(
+            new ImageIcon(Resource.getImage("NavigateTool-16x16.png")));
+        final JButton line = new JButton(
+            new ImageIcon(Resource.getImage("LineTool-16x16.png")));
+        
+        tb.add(navigate);
+        tb.add(line);
+        
+        navigate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        
+        line.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+            
+        });
+        
+        return tb;
+    }
+    
+    private static JMenuBar createMenuBar() {
         final JMenuBar mb = new JMenuBar();
         final JMenu mFile = new JMenu("File");
         final JMenu mTools = new JMenu("Tools");
@@ -75,6 +115,10 @@ public class SymbolEditorFrame extends JFrame {
         mb.setVisible(true);
 
         return mb;
+    }
+    
+    public SymbolEditor getSymbolEditor() {
+        return this.symbolEditor;
     }
     
     public static void main(String[] args) {

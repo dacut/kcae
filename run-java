@@ -11,16 +11,36 @@ classpath="${classpath}:$root/ext/jython-2.7a2.jar"
 classpath="${classpath}:$root/ext/log4j-1.2.9.jar"
 logger="org.apache.commons.logging.impl.Log4JLogger"
 java=java
+use_gui=1
 
-if [ "$1" = "-debug" ]; then
-    shift;
-    java=jdb
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -debug )
+            java=jdb;
+            shift;;
+
+        -nw )
+            use_gui=0;
+            shift;;
+
+        * )
+            break;
+    esac;
+done;
+
+if [ $use_gui -ne 0 ]; then
+    $java -Dapple.awt.application.name="Kanga CAE" \
+        -Dapple.laf.useScreenMenuBar=true \
+        -Dapple.awt.graphics.UseQuartz=true \
+        -Dorg.apache.commons.logging.Log="$logger" \
+        -Dpython.verbose=debug \
+        -enableassertions \
+        -classpath "$classpath" \
+        "$@"
+else
+    $java -Dorg.apache.commons.logging.Log="$logger" \
+        -Dpython.verbose=debug \
+        -enableassertions \
+        -classpath "$classpath" \
+        "$@"
 fi;
-
-$java -Dapple.awt.application.name="Kanga CAE" \
-    -Dapple.laf.useScreenMenuBar=true \
-    -Dapple.awt.graphics.UseQuartz=true \
-    -Dorg.apache.commons.logging.Log="$logger" \
-    -Dpython.verbose=debug \
-    -classpath "$classpath" \
-    "$@"

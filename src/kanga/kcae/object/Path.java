@@ -41,12 +41,16 @@ public class Path implements Shape, Comparable<Path> {
         return this.instructions.size();
     }
 
-    /**
-     * FIXME: implement
-     */
     @Override
     public Rectangle getBoundingBox() {
+        Point pos = null;
         Rectangle result = null;
+
+        for (final PathInstruction inst : this.instructions) {
+            result = inst.updateBoundingBox(pos, result);
+            pos = inst.updatePosition(pos);
+        }
+
         return result;
     }
 

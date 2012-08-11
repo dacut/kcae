@@ -61,9 +61,9 @@ public abstract class Extents {
         public boolean equals(final Object otherObj) {
             if      (otherObj == null) { return false; }
             else if (otherObj == this) { return true; }
-            else if (!(otherObj instanceof Double)) { return false; }
+            else if (!(otherObj instanceof Long)) { return false; }
             
-            final Double other = (Double) otherObj;
+            final Long other = (Long) otherObj;
             return this.min == other.min && this.max == other.max;
         }
         

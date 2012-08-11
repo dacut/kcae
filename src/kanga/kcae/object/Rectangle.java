@@ -1,18 +1,31 @@
 package kanga.kcae.object;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.min;
 import static java.lang.Math.max;
 import static java.lang.Math.round;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-/** A rectangle in Cartesian 2-D space whose points lie on integral quanta
- *  (typically nanometers, as used by the rest of KCAE).
+/** A rectangle in Cartesian 2-D space whose points lie on integral nanometer
+ *  quanta.
  * 
+ *  <p>Rectangles are immutable and thread-safe.</p>
+ *  
  *  @see Point
  */
 public final class Rectangle implements Comparable<Rectangle> {
+    /** How the fitting algorithm should work. */
+    public static enum FitMethod {
+        /** Fit to the rectangle most closely matching this one. */
+        NEAREST,
+        
+        /** Shrink the rectangle. */
+        SHRINK,
+        
+        /** Expand the rectangle. */
+        EXPAND;
+    }
+    
     /** Create a new rectangle.
      * 	
      * 	This constructor assumes that ({@code x0}, {@code y0}) represents
@@ -77,7 +90,7 @@ public final class Rectangle implements Comparable<Rectangle> {
             throw new NullPointerException("p2 cannot be null");
         }
 
-        return new Rectangle(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+        return Rectangle.fromPoints(p1.getX(), p1.getY(), p2.getX(), p2.getY());
     }
     
     /** Create a new rectangle.
@@ -195,7 +208,7 @@ public final class Rectangle implements Comparable<Rectangle> {
     }
 
     @Override
-    public int compareTo(Rectangle other) {
+    public int compareTo(Rectangle other) {        
         if      (this.left < other.left)     { return -1; }
         else if (this.left > other.left)     { return +1; }
         else if (this.right < other.right)   { return -1; }
@@ -302,14 +315,52 @@ public final class Rectangle implements Comparable<Rectangle> {
         final long width = this.getWidth();
         final long height = this.getHeight();
         if (height == 0) {
-            if (width >= 0) {
-                return Double.POSITIVE_INFINITY;
+            if (width == 0) {
+                return Double.NaN;
             } else {
-                return Double.NEGATIVE_INFINITY;
+                return Double.POSITIVE_INFINITY;
             }
         }
         
         return ((double) width) / ((double) height);
+    }
+    
+    /** Return a copy of this rectangle fitted to the specified aspect ratio.
+     * 
+     *  @param aspectRatio      The aspect ratio (width over height) to fit
+     *      this rectangle to.
+     *  @param fitMethod        How the rectangle should be adjusted.  This can
+     *      be one of the following values:
+     *      <ul>
+     *        <li>{@link FitMethod#NEAREST}: the rectangle's width and height
+     *            are both adjusted by the minimum amount necessary to meet the
+     *            aspect ratio.</li>
+     *        <li>{@link FitMethod#SHRINK}: either the width or height is
+     *            shunk to meet the aspect ratio.</li>
+     *        <li>{@link FitMethod#EXPAND}: either the width or height is
+     *            expanded to meet the aspect ratio.</li>
+     *      </ul>
+     *  @return A copy of this rectangle with its coordinates adjusted to meet
+     *          the specified aspectRatio (to the nearest quanta).
+     */
+    public Rectangle adjustAspectRatio(
+        final double aspectRatio,
+        final FitMethod fitMethod)
+    {
+        Rectangle result = this; // Eclipse complains if this isn't initialized
+        
+        switch (fitMethod) {
+            case NEAREST:
+            result = this.fitToAspect(aspectRatio);
+            
+            case SHRINK:
+            result = this.shrinkToAspect(aspectRatio);
+            
+            case EXPAND:
+            result = this.expandToAspect(aspectRatio);
+        }
+        
+        return result;
     }
     
     /** Return a copy of this rectangle fitted to the specified aspect ratio.
@@ -371,14 +422,71 @@ public final class Rectangle implements Comparable<Rectangle> {
                               (1 + aspSq);
         final double nHeight = nWidth / aspectRatio;
         
-        System.err.println("fitToAspect(" + aspectRatio + "): " + width + ", " + height +
-                 " -> " + round(nWidth) + ", " + round(nHeight));
-        
         return new Rectangle(
             round(xc - 0.5 * nWidth), round(yc - 0.5 * nHeight),
             round(xc + 0.5 * nWidth), round(yc + 0.5 * nHeight));
     }
-    
+
+    /** Return a copy of this rectangle with one of its dimensions shrunk to
+     *  meet the specified aspect ratio.
+     * 
+     *  @param aspectRatio      The aspect ratio (width over height) to fit
+     *                          this rectangle to.
+     *  @return A copy of this rectangle with its coordinates adjusted to meet
+     *          the specified aspectRatio (to the nearest quanta).
+     */
+    public Rectangle shrinkToAspect(final double aspectRatio) {
+        final double currentAspect = this.getAspectRatio();
+        double width, height;
+        final Point center = this.getCenter();
+        final long xc = center.getX();
+        final long yc = center.getY();
+        
+        if (currentAspect > aspectRatio) {
+            // Too wide.  Shrink the width.
+            height = this.getHeight();
+            width = aspectRatio * height; 
+        } else {
+            // Too high.  Shrink the height.
+            width = this.getWidth();
+            height = width / aspectRatio;
+        }
+        
+        return new Rectangle(
+            round(xc - 0.5 * width), round(yc - 0.5 * height),
+            round(xc + 0.5 * width), round(yc + 0.5 * height));
+    }
+
+    /** Return a copy of this rectangle with one of its dimensions expanded to
+     *  meet the specified aspect ratio.
+     * 
+     *  @param aspectRatio      The aspect ratio (width over height) to fit
+     *                          this rectangle to.
+     *  @return A copy of this rectangle with its coordinates adjusted to meet
+     *          the specified aspectRatio (to the nearest quanta).
+     */
+    public Rectangle expandToAspect(final double aspectRatio) {
+        final double currentAspect = this.getAspectRatio();
+        double width, height;
+        final Point center = this.getCenter();
+        final long xc = center.getX();
+        final long yc = center.getY();
+        
+        if (currentAspect > aspectRatio) {
+            // Too wide.  Expand the height.
+            width = this.getWidth();
+            height = width / aspectRatio;
+        } else {
+            // Too high.  Expand the width.
+            height = this.getHeight();
+            width = aspectRatio * height; 
+        }
+        
+        return new Rectangle(
+            round(xc - 0.5 * width), round(yc - 0.5 * height),
+            round(xc + 0.5 * width), round(yc + 0.5 * height));
+    }
+
     /** Returns a new rectangle zoomed by the specified amount.
      *  
      *  The center of the zoomed rectangle is coincident (within a quanta) with

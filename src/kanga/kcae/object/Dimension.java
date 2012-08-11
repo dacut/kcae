@@ -1,7 +1,7 @@
 package kanga.kcae.object;
 
 /** A rectangular dimension in 2-D space whose width and height are integral
- *  quanta values (typically nanometers, as used by the rest of KCAE).
+ *  quanta values (nanometers).
  * 
  *  @see Rectangle
  */

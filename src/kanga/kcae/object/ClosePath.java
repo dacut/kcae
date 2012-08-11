@@ -7,6 +7,19 @@ public class ClosePath implements PathInstruction {
     public void paint(PathPainter pp) {
         pp.closePath();
     }
+    
+    @Override
+    public Rectangle updateBoundingBox(
+        final Point startPos,
+        final Rectangle bbox)
+    {
+        return bbox;
+    }
+    
+    @Override
+    public Point updatePosition(final Point startPos) {
+        return null;
+    }
 
     @Override
     public boolean equals(Object otherObj) {

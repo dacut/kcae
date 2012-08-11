@@ -5,6 +5,9 @@
   <!-- Where the unit test code lives -->
   <property name="test.dir" location="test" />
 
+  <!-- Where images and other resources live -->
+  <property name="res.dir" location="res" />
+
   <!-- Top level directory where build artifacts go -->
   <property name="build.dir" location="build" />
 
@@ -84,10 +87,13 @@
   <target name="jar" depends="fast-jar" />
   <target name="fast-jar" depends="compile">
     <jar destfile="${jar.file}" basedir="${class.dir}"
-         includes="**/*.class,**/*.properties" />
+         includes="**/*.class,**/*.properties,**/*.png" />
   </target>
 
-  <target name="coverage" depends="test">
+  <target name="coverage" depends="test,coverage-report">
+  </target>
+
+  <target name="coverage-report">
     <cobertura-report format="html" datafile="${cobertura.file}"
                       destdir="${coverage.dir}" srcdir="${src.dir}" />
   </target>
@@ -108,8 +114,9 @@
   </target>
 
   <target name="test" depends="compile,instrument,test-compile">
-    <junit fork="on" forkmode="once" haltonfailure="true"
-           includeantruntime="false" showoutput="true">
+    <junit fork="on" forkmode="once" haltonfailure="false"
+           failureproperty="testfailed" includeantruntime="false"
+           showoutput="true">
       <classpath>
         <pathelement path="${instclass.dir}" />
         <pathelement path="${testclass.dir}" />
@@ -128,6 +135,7 @@
       </batchtest>
       <formatter type="plain" usefile="false" />
     </junit>
+    <fail if="testfailed" message="One or more JUnit tests failed"/>
   </target>
 
   <target name="test-compile" depends="compile,instrument">
@@ -181,11 +189,18 @@
         <include name="**/*.properties" />
       </fileset>
     </copy>
+    <copy todir="${class.dir}/kanga/kcae/res" force="true"
+          includeEmptyDirs="false">
+      <fileset dir="${res.dir}">
+        <include name="**/*.png" />
+      </fileset>
+    </copy>
   </target>
 
   <target name="init">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${class.dir}" />
+    <mkdir dir="${class.dir}/kanga/kcae/res" />
     <mkdir dir="${instclass.dir}" />
     <mkdir dir="${testclass.dir}" />
     <mkdir dir="${doc.dir}" />

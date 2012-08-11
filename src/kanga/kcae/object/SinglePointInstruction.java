@@ -14,6 +14,23 @@ public abstract class SinglePointInstruction implements PathInstruction {
     public Point getPoint() { return this.point; }
 
     @Override
+    public Rectangle updateBoundingBox(Point startPos, Rectangle bbox) {
+        if (bbox == null) {
+            bbox = Rectangle.fromPoints(startPos, this.getPoint());
+        } else {
+            bbox = bbox.union(startPos);
+            bbox = bbox.union(this.getPoint());
+        }
+        
+        return bbox;
+    }
+    
+    @Override
+    public Point updatePosition(final Point startPos) {
+        return this.getPoint();
+    }
+
+    @Override
     public boolean equals(Object otherObj) {
         if (otherObj == null) { return false; }
         if (otherObj == this) { return true; }

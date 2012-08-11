@@ -64,7 +64,14 @@ public class Color {
 
     @Override
     public String toString() {
-        return new Formatter().format("#%08x", this.getRGBA()).toString();
+        final Formatter f = new Formatter();
+        try {
+            final String result = f.format("#%08x", this.getRGBA()).toString();
+            return result;
+        }
+        finally {
+            f.close();
+        }
     }
 
     private int rgba;

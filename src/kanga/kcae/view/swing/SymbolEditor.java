@@ -4,17 +4,38 @@ import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment;
 
 import kanga.kcae.object.BaseUnit;
+import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Symbol;
 import static kanga.kcae.object.PaperDimension.MinA4AnsiA;
 
-public class SymbolEditor extends MeasuredViewer<SymbolView> {
+public class SymbolEditor extends MeasuredViewDecorator<SymbolView> {
     private static final long serialVersionUID = -6398202983953748987L;
     public static final Rectangle defaultViewArea =
         Rectangle.atOrigin(MinA4AnsiA.landscape);
+    
+    public class LineTool extends MeasuredViewToolAdapter {
+        final List<Point> points = new ArrayList<Point>();
+        Point trackingPoint = null;
+        
+        @Override
+        public void mousePressed(MouseEvent e) {
+            final SymbolView sv = SymbolEditor.this.getViewer();
+            final Point p = sv.screenPointToQuanta(e.getPoint());
+            
+            if (e.getButton() == MouseEvent.BUTTON1) {
+                this.trackingPoint = p;
+                sv.repaint();
+            }
+        }
+    }
     
     public SymbolEditor() {
         this(null);
