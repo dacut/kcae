@@ -1,6 +1,8 @@
 package kanga.kcae.object;
 
-public class FillStyle {
+import java.io.Serializable;
+
+public class FillStyle implements Serializable {
     public FillStyle() {
         this(null);
     }
@@ -24,4 +26,5 @@ public class FillStyle {
     }
 
     private Color color;
+    private static final long serialVersionUID = 1L;
 }

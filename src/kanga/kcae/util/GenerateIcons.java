@@ -16,13 +16,13 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 public class GenerateIcons {
-    public static final int SIZE_I = 256;
-    public static final double SIZE = (double) SIZE_I;
-    public static final double MARGIN = SIZE * 0.125;
-    public static final double LINE_WIDTH = MARGIN * 0.75;
-    public static final double OUTLINE_WIDTH = LINE_WIDTH * 0.5;
-    public static final double THIN_OUTLINE_WIDTH = LINE_WIDTH * 0.15;
-    public static final int[] IMAGE_SIZES = { 256, 64, 32, 16 };
+    static final int SIZE_I = 256;
+    static final double SIZE = (double) SIZE_I;
+    static final double MARGIN = SIZE * 0.125;
+    static final double LINE_WIDTH = MARGIN * 0.75;
+    static final double OUTLINE_WIDTH = LINE_WIDTH * 0.5;
+    static final double THIN_OUTLINE_WIDTH = LINE_WIDTH * 0.15;
+    static final int[] IMAGE_SIZES = { 256, 64, 32, 16 };
     
     public static final Stroke lineStroke = new BasicStroke(
         (float) LINE_WIDTH, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER);
@@ -150,7 +150,7 @@ public class GenerateIcons {
     }
     
     @SuppressWarnings("rawtypes")
-    public static final Class[] renderClasses = {
+    static final Class[] renderClasses = {
         LineToolRenderer.class,
         BezierToolRenderer.class,
         NavigateToolRenderer.class,

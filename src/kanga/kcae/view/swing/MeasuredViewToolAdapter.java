@@ -1,5 +1,6 @@
 package kanga.kcae.view.swing;
 
+import java.awt.Graphics;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -50,4 +51,10 @@ public class MeasuredViewToolAdapter implements MeasuredViewTool {
     
     @Override
     public void disabled() { }
+    
+    @Override
+    public void paintBackground(Graphics g) { }
+
+    @Override
+    public void paintOverlay(Graphics g) { }
 }

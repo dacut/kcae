@@ -1,10 +1,11 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
-public class LineStyle {
+public class LineStyle implements Serializable {
     public enum CapStyle {
         butt, round, square;
     }
@@ -133,4 +134,5 @@ public class LineStyle {
     private CapStyle capStyle;
     private JoinStyle joinStyle;
     private int miterLimit;
+    private static final long serialVersionUID = 1L;
 }

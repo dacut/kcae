@@ -1,5 +1,7 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /** A point in Cartesian 2-D space.
@@ -15,12 +17,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *  
  *  <p>Points are immutable and thread-safe.</p>
  */
-public final class Point implements Comparable<Point> {
-	/** Create a new point at the specified coordinates.
-	 * 
-	 *  @param x	The x (or horizontal) coordinate, in nanometers.
-	 *  @param y	The y (or vertical) coordinate, in nanometers.
-	 */
+public final class Point implements Comparable<Point>, Serializable {
+    /** Create a new point at the specified coordinates.
+     * 
+     *  @param x	The x (or horizontal) coordinate, in nanometers.
+     *  @param y	The y (or vertical) coordinate, in nanometers.
+     */
     public Point(final long x, final long y) {
         this.x = x;
         this.y = y;
@@ -120,4 +122,5 @@ public final class Point implements Comparable<Point> {
 
     private final long x;
     private final long y;
+    private static final long serialVersionUID = 1L;
 }

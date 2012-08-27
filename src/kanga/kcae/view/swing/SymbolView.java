@@ -5,18 +5,20 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.RenderingHints;
+import static java.lang.Math.round;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import kanga.kcae.object.BaseUnit;
+import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Symbol;
 import static java.awt.Color.WHITE;
 
 public class SymbolView extends MeasuredViewPanel {
-    private static final Log log = LogFactory.getLog(SymbolView.class);
-    private static final long serialVersionUID = 6237440111082245444L;
+    static final Log log = LogFactory.getLog(SymbolView.class);
+
     public SymbolView() {
         this(null, null, true, BaseUnit.meter);
     }
@@ -52,6 +54,7 @@ public class SymbolView extends MeasuredViewPanel {
         super(layoutManager, isDoubleBuffered, viewArea, baseUnit);
         this.symbol = symbol;
         this.backgroundColor = WHITE;
+        this.lineTool = new LineTool(this);
         this.setPreferredSize(new Dimension(1000, 600));
     }
 
@@ -60,21 +63,28 @@ public class SymbolView extends MeasuredViewPanel {
         super.paintComponent(graphics);
         final Graphics2D g = (Graphics2D) graphics;
         final Symbol symbol = this.getSymbol();
+        final MeasuredViewTool tool = this.getCurrentTool();
+        
+        if (tool != null) {
+            tool.paintBackground(g);
+        }
 
         if (symbol == null) {
             log.debug("paintComponent: symbol is null (nothing to paint)");
-            return;
         }
-        
-        if (this.getViewArea() == null) {
+        else if (this.getViewArea() == null) {
             log.debug("paintComponent: viewArea is null");
-            return;
         }
+        else {
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_ON);
-        
-        ShapePainter.paint(g, symbol.getShapes());
+            ShapePainter.paint(g, symbol.getShapes());
+        }
+
+        if (tool != null) {
+            tool.paintOverlay(g);
+        }
     }
     
     public Symbol getSymbol() {
@@ -85,5 +95,27 @@ public class SymbolView extends MeasuredViewPanel {
         this.symbol = symbol;
     }
     
+    public LineTool getLineTool() {
+        return this.lineTool;
+    }
+    
+    public Point roundToGrid(Point p) {
+        long gridSpacing = this.getGridSpacing();
+        double fGridSpacing = (double) gridSpacing;
+        return new Point(gridSpacing * round(p.getX() / fGridSpacing),
+                         gridSpacing * round(p.getY() / fGridSpacing));
+    }
+    
+    public long getGridSpacing() {
+        return this.gridSpacing;
+    }
+    
+    public void setGridSpacing(final long gridSpacing) {
+        this.gridSpacing = gridSpacing;
+    }
+    
     private Symbol symbol;
+    private final LineTool lineTool;
+    private long gridSpacing = 1000000; // 1 mm
+    private static final long serialVersionUID = 1L;
 }

@@ -6,8 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public abstract class Extents {
     public static class Double implements Comparable<Double>, Serializable {
-        private static final long serialVersionUID = 7081671937119139105L;
-
         public Double(final double min, final double max) {
             this.min = min;
             this.max = max;
@@ -46,12 +44,11 @@ public abstract class Extents {
         }
         
         public final double min;
-        public final double max; 
+        public final double max;
+        private static final long serialVersionUID = 1L;
     }
     
     public static class Long implements Comparable<Long>, Serializable {
-        private static final long serialVersionUID = -6853230783288454751L;
-
         public Long(final long min, final long max) {
             this.min = min;
             this.max = max;
@@ -91,5 +88,7 @@ public abstract class Extents {
         
         public final long min;
         public final long max;
+
+        private static final long serialVersionUID = 1L;
     }
 }

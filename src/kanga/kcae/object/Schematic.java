@@ -1,5 +1,6 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,7 +12,9 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /** Representation of a circuit schematic.
  */
-public class Schematic implements Comparable<Schematic> {
+public class Schematic implements Comparable<Schematic>, Serializable {
+    private static final long serialVersionUID = 1L;
+
     public Schematic() { }
     
     public Set<CircuitElement> getElements() {

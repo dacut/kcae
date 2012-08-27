@@ -2,6 +2,9 @@ package kanga.kcae.object;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -10,9 +13,9 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 public class Port extends CircuitElementAdapter implements Connectable {
     public Port(
-        final String name,
-        final SignalDirection direction,
-        final Net net)
+        @Nullable final String name,
+        @Nonnull final SignalDirection direction,
+        @Nullable final Net net)
     {
         super(name);
         this.direction = direction;
@@ -20,12 +23,12 @@ public class Port extends CircuitElementAdapter implements Connectable {
     }
 
     @Override
-    public SignalDirection getDirection() {
+    public SignalDirection getSignalDirection() {
         return this.direction;
     }
 
     @Override
-    public void setDirection(final SignalDirection direction) {
+    public void setSignalDirection(final SignalDirection direction) {
         this.direction = direction;
     }
 
@@ -52,7 +55,7 @@ public class Port extends CircuitElementAdapter implements Connectable {
 
         final Port other = (Port) otherObj;
         return new EqualsBuilder().appendSuper(super.equals(other))
-            .append(this.getDirection(), other.getDirection())
+            .append(this.getSignalDirection(), other.getSignalDirection())
             .append(this.getNet(), other.getNet())
             .isEquals();
     }
@@ -60,7 +63,7 @@ public class Port extends CircuitElementAdapter implements Connectable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(21395, 45731).appendSuper(super.hashCode())
-            .append(this.getDirection())
+            .append(this.getSignalDirection())
             .append(this.getNet())
             .toHashCode();
     }
@@ -78,7 +81,7 @@ public class Port extends CircuitElementAdapter implements Connectable {
 
         return new CompareToBuilder()
             .append(this.getName(), other.getName())
-            .append(this.getDirection(), other.getDirection())
+            .append(this.getSignalDirection(), other.getSignalDirection())
             .append(this.getNet(), other.getNet())
             .toComparison();
     }
@@ -87,11 +90,12 @@ public class Port extends CircuitElementAdapter implements Connectable {
     public String toString() {
         return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
             .append("name", this.getName())
-            .append("direction", this.getDirection())
+            .append("signalDirection", this.getSignalDirection())
             .append("net", this.getNet())
             .toString();
     }
 
     private SignalDirection direction;
     private Net net;
+    private static final long serialVersionUID = 1L;
 }

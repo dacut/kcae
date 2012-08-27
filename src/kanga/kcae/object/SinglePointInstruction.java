@@ -1,8 +1,12 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public abstract class SinglePointInstruction implements PathInstruction {
+public abstract class SinglePointInstruction
+    implements PathInstruction, Serializable
+{
     protected SinglePointInstruction(final Point point) {
         if (point == null) {
             throw new NullPointerException("point cannot be null.");
@@ -36,7 +40,7 @@ public abstract class SinglePointInstruction implements PathInstruction {
         if (otherObj == this) { return true; }
         if (otherObj.getClass() != this.getClass()) { return false; }
         
-        final MoveTo other = (MoveTo) otherObj;
+        final SinglePointInstruction other = (SinglePointInstruction) otherObj;
         return this.getPoint().equals(other.getPoint());
     }
 
@@ -48,5 +52,6 @@ public abstract class SinglePointInstruction implements PathInstruction {
     }
 
     private final Point point;
+    private static final long serialVersionUID = 1L;
 }
 

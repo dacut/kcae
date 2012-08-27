@@ -12,7 +12,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import kanga.kcae.object.BaseUnit;
-import kanga.kcae.object.Extents;
 import kanga.kcae.object.Rectangle;
 
 /** A component which places rulers around a MeasuredView, attaches a 
@@ -92,7 +91,7 @@ public abstract class MeasuredViewDecorator<T extends Component & MeasuredView>
         this.add(this.viewer, cpcons);
 
         view.addViewAreaChangeListener(this);
-        view.setViewArea(viewArea);
+        view.setViewArea(viewArea, Rectangle.FitMethod.NEAREST);
     }
 
     /** Returns the horizontal ruler component.
@@ -131,5 +130,5 @@ public abstract class MeasuredViewDecorator<T extends Component & MeasuredView>
     private final Ruler hRuler;
     private final Ruler vRuler;
     private final T viewer;
-    private static final long serialVersionUID = -7664541928680432846L;
+    private static final long serialVersionUID = 1L;
 }

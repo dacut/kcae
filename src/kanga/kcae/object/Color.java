@@ -1,8 +1,9 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.Formatter;
 
-public class Color {
+public class Color implements Serializable {
     public static final int MIN_VALUE = 0;
     public static final int MAX_VALUE = 255;
     public static final Color black = new Color(
@@ -75,4 +76,5 @@ public class Color {
     }
 
     private int rgba;
+    private static final long serialVersionUID = 1L;
 }

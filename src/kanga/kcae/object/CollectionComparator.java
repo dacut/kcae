@@ -1,13 +1,14 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 
 public class CollectionComparator<T extends Comparable<T>>
-    implements Comparator<Collection<T>>
+    implements Comparator<Collection<T>>, Serializable
 {
-	@Override
+    @Override
     public int compare(
         final Collection<T> c1,
         final Collection<T> c2)
@@ -36,4 +37,6 @@ public class CollectionComparator<T extends Comparable<T>>
         else if (i2.hasNext()) { return -1; }
         else                   { return 0; }
     }
+
+    private static final long serialVersionUID = 1L;
 }

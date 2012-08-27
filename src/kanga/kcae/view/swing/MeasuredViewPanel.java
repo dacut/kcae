@@ -5,8 +5,6 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -16,6 +14,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
@@ -31,25 +30,17 @@ import kanga.kcae.object.BaseUnit;
 import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 
+/** A panel implementing the basic tools needed to interact with a MeasuredView.
+ * 
+ *  
+ */
 public class MeasuredViewPanel
     extends JPanel
     implements MeasuredView
 {
     static final Log log = LogFactory.getLog(MeasuredViewPanel.class);
-    private static final long serialVersionUID = -4832792841867215854L;
+    private static final long serialVersionUID = 1L;
 
-    /** Resize the view area to meet the aspect ratio when the MeasuredViewer
-     *  is resized.
-     */
-    class RecalculateAspectRatio extends ComponentAdapter {
-        @Override
-        public void componentResized(final ComponentEvent evt) {
-            MeasuredViewPanel.this.setViewArea(
-                MeasuredViewPanel.this.getViewArea(),
-                Rectangle.FitMethod.EXPAND);
-        }
-    }
-    
     /** Dispatch events to the current tool. */
     class InputEventDispatcher
         implements FocusListener, KeyListener, MouseListener,
@@ -175,104 +166,6 @@ public class MeasuredViewPanel
         
     }
     
-    /** A tool for handling pan/zoom requests.
-     * 
-     *  This is the tool which is typically enabled by default (i.e. when no
-     *  other tool is active).  Panning is performed by pressing mouse
-     *  button 1, dragging the canvas around, and then releasing mouse
-     *  button 1.  Zooming is performed using the mouse scroll wheel.
-     */
-    class PanZoomHandler extends MeasuredViewToolAdapter {
-        private boolean enabled = true;
-        private int lastX = Integer.MIN_VALUE;
-        private int lastY = Integer.MIN_VALUE;
-        
-        @Override
-        public void mouseDragged(final MouseEvent e) {
-            final int x, y;
-            
-            if (! this.isEnabled()) {
-                return;
-            }
-            
-            x = e.getXOnScreen();
-            y = e.getYOnScreen();
-            
-            if (this.lastX != Integer.MIN_VALUE &&
-                this.lastY != Integer.MIN_VALUE)
-            {
-                // We have a previous reference point; use it to calculate the
-                // distance in pixels.
-                int dxPix = x - this.lastX;
-                int dyPix = y - this.lastY;
-                
-                // Convert from pixels to quanta.
-                final Pair<Long, Long> qpp =
-                    MeasuredViewPanel.this.getQuantaPerPixel();
-                final long dxQua = -qpp.getLeft() * dxPix;
-                final long dyQua = -qpp.getRight() * dyPix;
-             
-                final Rectangle originalView =
-                    MeasuredViewPanel.this.getViewArea();
-                final Rectangle newView = originalView.translate(dxQua, dyQua);
-
-                log.debug("pan: oldView=" + originalView + "; newView=" +
-                          newView);
-                MeasuredViewPanel.this.setViewArea(newView);
-            }
-            
-            this.lastX = x;
-            this.lastY = y;
-            return;
-        }
-
-        @Override
-        public void mouseMoved(final MouseEvent e) {
-            return;
-        }
-        
-        @Override
-        public void mousePressed(final MouseEvent e) {
-            if ((e.getButton() & MouseEvent.BUTTON1) != 0) {
-                this.lastX = e.getXOnScreen();
-                this.lastY = e.getYOnScreen();
-                e.getComponent().setCursor(
-                    MeasuredViewPanel.this.closedGrabCursor);
-            }
-        }
-        
-        @Override
-        public void mouseReleased(final MouseEvent e) {
-            if ((e.getButton() & MouseEvent.BUTTON1) != 0) {
-                e.getComponent().setCursor(
-                    MeasuredViewPanel.this.openGrabCursor);
-            }
-        }
-        
-        @Override
-        public void mouseWheelMoved(final MouseWheelEvent e) {
-            final int clicks = e.getWheelRotation();
-            final Point zoomPoint = MeasuredViewPanel.this.screenPointToQuanta(
-                e.getPoint());
-            final Rectangle originalView =
-                MeasuredViewPanel.this.getViewArea();
-            final Rectangle newView = originalView.zoom(
-                pow(1.05, clicks), zoomPoint);
-            
-            log.debug("zoom: oldView=" + originalView + "; newView=" +
-                      newView + "; clicks=" + clicks);
-            MeasuredViewPanel.this.setViewArea(newView);
-        }
-
-        public boolean isEnabled() {
-            return this.enabled;
-        }
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-    }
-    
     protected MeasuredViewPanel() {
         this(null, true, null, BaseUnit.meter);
     }
@@ -297,7 +190,7 @@ public class MeasuredViewPanel
     {
         super(layoutManager, isDoubleBuffered);
         this.viewAreaChangeListeners = new ArrayList<ViewAreaChangeListener>();
-        this.panningListener = new PanZoomHandler();
+        this.panZoomTool = new PanZoomTool(this);
         this.closedGrabCursor = Resource.getCursor(
             this, Resource.closedGrabImage, 6, 6,
             "MeasuredViewPanelClosedGrab");
@@ -312,13 +205,13 @@ public class MeasuredViewPanel
         this.addMouseMotionListener(ied);
         this.addMouseWheelListener(ied);
         
-        this.setViewArea(viewArea);
+        this.setViewArea(viewArea, Rectangle.FitMethod.NEAREST);
         this.setBaseUnit(baseUnit);
-        this.setCurrentTool(this.panningListener);
+        this.setCurrentTool(this.panZoomTool);
         this.setCursor(this.openGrabCursor);
 
         // Recalculate the view area when the component is resized.
-        this.addComponentListener(new RecalculateAspectRatio());
+        this.addComponentListener(new RecalculateAspectRatio(this));
         return;
     }
     
@@ -345,18 +238,15 @@ public class MeasuredViewPanel
         return this.viewArea;
     }
     
-    @Override
-    public void setViewArea(final Rectangle viewArea) {
-        this.setViewArea(viewArea, Rectangle.FitMethod.NEAREST);
-    }
-
     /** Sets the current viewport to show the specified region.
      * 
-     *  @param viewarea     The region to view.
+     *  @param viewArea     The region to view.
      *  @param fitMethod    If the region does not match the aspect ratio of
      *      of the screen, this specifies how the bounds should be adjusted.
-     *  @see kanga.kcae.object.Rectangle#adjustAspectRatio(double, kanga.kcae.object.Rectangle.FitMethod) 
+     *  @see kanga.kcae.object.Rectangle#adjustAspectRatio(
+     *         double, kanga.kcae.object.Rectangle.FitMethod) 
      */
+    @Override
     public void setViewArea(
         Rectangle viewArea,
         final Rectangle.FitMethod fitMethod)
@@ -404,29 +294,29 @@ public class MeasuredViewPanel
     }
     
     @Override
-    public Point screenPointToQuanta(java.awt.Point p) {
+    public Point screenPointToQuanta(Point2D p) {
         final Rectangle va = this.getViewArea();
         final java.awt.Rectangle bounds = this.getBounds();
-        final double xrel = (p.getX() - bounds.getX()) / bounds.getWidth();
-        final double yrel = (p.getY() - bounds.getY()) / bounds.getHeight();
+        
+        final double xrel = p.getX() / bounds.getWidth();
+        final double yrel = p.getY() / bounds.getHeight();
         
         return new Point(va.getLeft() + (long) (va.getWidth() * xrel),
                          va.getTop() + (long) (va.getHeight() * yrel));
     }
     
     @Override
-    public java.awt.Point quantaPointToScreen(Point p) {
+    public Point2D quantaPointToScreen(Point p) {
         final Rectangle va = this.getViewArea();
         final java.awt.Rectangle bounds = this.getBounds();
         final double xrel = ((double) (p.getX() - va.getLeft())) /
-                            (double) va.getWidth();
+                             (double) va.getWidth();
         final double yrel = ((double) (p.getY() - va.getTop())) /
-                            (double) va.getHeight();
+                             (double) va.getHeight();
         
-        return new java.awt.Point(bounds.x + (int) (bounds.getWidth() * xrel),
-                                  bounds.y + (int) (bounds.getHeight() * yrel));
+        return new Point2D.Double(bounds.getWidth() * xrel,
+                                  bounds.getHeight() * yrel);
     }
-
     
     @Override
     protected void paintComponent(final Graphics graphics) {
@@ -454,6 +344,42 @@ public class MeasuredViewPanel
         g.translate(-viewArea.getLeft(), -viewArea.getTop());
     }
     
+    /** Zooms in/out while keeping the specified point on the screen fixed.
+     * 
+     *  @param  screenPoint     The point to keep fixed.
+     *  @param  magnitude       The magnitude to zoom in/out.  Positive numbers
+     *                          zoom in.
+     */
+    public void zoomAtScreenPoint(
+        final Point2D screenPoint,
+        final int magnitude)
+    {
+        this.zoomAtQuantaPoint(this.screenPointToQuanta(screenPoint),
+                               magnitude);
+    }
+    
+    /** Zooms in/out while keeping the specified point fixed.
+     * 
+     *  @param  zoomPoint       The point to keep fixed.
+     *  @param  magnitude       The magnitude to zoom in/out.  Positive numbers
+     *                          zoom in.
+     */
+    public void zoomAtQuantaPoint(
+        final Point zoomPoint,
+        final int magnitude)
+    {
+        final Rectangle originalView =
+            MeasuredViewPanel.this.getViewArea();
+        final Rectangle newView = originalView.zoom(
+            pow(1.05, magnitude), zoomPoint);
+        
+        // Don't allow the user to zoom in greater than 1 nm per pixel --
+        // strangeness abounds when multiple screen points map to the same
+        // quanta.
+        if (magnitude < 0 || newView.getWidth() > this.getBounds().width) { 
+            this.setViewArea(newView, Rectangle.FitMethod.NEAREST);
+        }
+    }
     public BaseUnit getBaseUnit() {
         return this.baseUnit;
     }
@@ -488,12 +414,16 @@ public class MeasuredViewPanel
         return this.currentTool;
     }
     
+    public PanZoomTool getPanZoomTool() {
+        return this.panZoomTool;
+    }
+    
     private Rectangle viewArea;
     private BaseUnit baseUnit;
     protected Color backgroundColor;
     private final List<ViewAreaChangeListener> viewAreaChangeListeners;
-    private MeasuredViewTool currentTool;
-    private final PanZoomHandler panningListener;
+    private transient MeasuredViewTool currentTool;
+    private final PanZoomTool panZoomTool;
     final Cursor closedGrabCursor;
     final Cursor openGrabCursor;
 }

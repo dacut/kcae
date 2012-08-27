@@ -1,5 +1,6 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import static java.util.Collections.unmodifiableList;
@@ -10,7 +11,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class Path implements Shape, Comparable<Path> {
+public class Path implements Shape, Comparable<Path>, Serializable {
     public Path() {
         this.instructions = new ArrayList<PathInstruction>();
         this.lineStyle = null;
@@ -116,4 +117,5 @@ public class Path implements Shape, Comparable<Path> {
     private LineStyle lineStyle;
     private FillStyle fillStyle;
     private List<PathInstruction> instructions;
+    private static final long serialVersionUID = 1L;
 }

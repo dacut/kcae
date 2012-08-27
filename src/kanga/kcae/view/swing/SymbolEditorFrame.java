@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -25,12 +27,12 @@ import kanga.kcae.object.Path;
 import kanga.kcae.object.ShapeGroup;
 import kanga.kcae.object.Symbol;
 
+@SuppressWarnings("SIC_INNER_SHOULD_BE_STATIC_ANON")
 public class SymbolEditorFrame extends JFrame {
-    private static final long serialVersionUID = -4078447997380910996L;
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(SymbolEditorFrame.class);
     
-    public static ArrayList<String> dlog = new ArrayList<String>();
+    public static final ArrayList<String> dlog = new ArrayList<String>();
     
     public SymbolEditorFrame() {
         this(null);
@@ -64,6 +66,7 @@ public class SymbolEditorFrame extends JFrame {
     private JPanel createToolBar() {
         final JPanel tb = new JPanel();
         final BoxLayout layout = new BoxLayout(tb, BoxLayout.PAGE_AXIS);
+        final SymbolView symView = this.symbolEditor.getViewer();
         tb.setLayout(layout);
         
         final JButton navigate = new JButton(
@@ -77,12 +80,14 @@ public class SymbolEditorFrame extends JFrame {
         navigate.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                symView.setCurrentTool(symView.getPanZoomTool());
             }
         });
         
         line.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                symView.setCurrentTool(symView.getLineTool());
             }
             
         });
@@ -143,4 +148,5 @@ public class SymbolEditorFrame extends JFrame {
 
     final SymbolEditor symbolEditor;
     final ScriptFrame scriptFrame;
+    private static final long serialVersionUID = 1L;
 }

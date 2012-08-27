@@ -4,6 +4,8 @@ import static java.lang.Math.min;
 import static java.lang.Math.max;
 import static java.lang.Math.round;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /** A rectangle in Cartesian 2-D space whose points lie on integral nanometer
@@ -13,7 +15,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *  
  *  @see Point
  */
-public final class Rectangle implements Comparable<Rectangle> {
+public final class Rectangle implements Comparable<Rectangle>, Serializable {
+    private static final long serialVersionUID = 1L;
+    
     /** How the fitting algorithm should work. */
     public static enum FitMethod {
         /** Fit to the rectangle most closely matching this one. */
@@ -352,12 +356,15 @@ public final class Rectangle implements Comparable<Rectangle> {
         switch (fitMethod) {
             case NEAREST:
             result = this.fitToAspect(aspectRatio);
+            break;
             
             case SHRINK:
             result = this.shrinkToAspect(aspectRatio);
+            break;
             
             case EXPAND:
             result = this.expandToAspect(aspectRatio);
+            break;
         }
         
         return result;

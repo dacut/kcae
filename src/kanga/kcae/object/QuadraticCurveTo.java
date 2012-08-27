@@ -2,6 +2,7 @@ package kanga.kcae.object;
 
 import static java.lang.Math.pow;
 import static java.lang.Math.round;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /** Draws a quadratic curve segment of a path.
@@ -146,5 +147,6 @@ public class QuadraticCurveTo implements PathInstruction {
 
     private final Point controlPoint;
     private final Point targetPoint;
+    private static final long serialVersionUID = 1L;
 }
 

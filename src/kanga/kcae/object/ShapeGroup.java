@@ -1,5 +1,6 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +10,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class ShapeGroup implements Shape, Cloneable {
+public class ShapeGroup implements Shape, Cloneable, Serializable {
     public ShapeGroup() {
         this.shapes = new ArrayList<Shape>();
     }
@@ -19,8 +20,8 @@ public class ShapeGroup implements Shape, Cloneable {
     }
     
     @Override
-    public ShapeGroup clone() {
-        return new ShapeGroup(this.getShapes());
+    public ShapeGroup clone() throws CloneNotSupportedException {
+        return (ShapeGroup) super.clone();
     }
 
     public List<Shape> getShapes() {
@@ -142,4 +143,5 @@ public class ShapeGroup implements Shape, Cloneable {
     }
     
     private final List<Shape> shapes;
+    private static final long serialVersionUID = 1L;
 }

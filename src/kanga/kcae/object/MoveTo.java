@@ -40,10 +40,17 @@ public class MoveTo extends SinglePointInstruction {
             .appendSuper(super.hashCode())
             .toHashCode();
     }
+    
+    @Override
+    public boolean equals(final Object otherObj) {
+        return super.equals(otherObj);
+    }
 
     @Override
     public String toString() {
         return "MoveTo[" + this.getPoint().toString() + "]";
     }
+    
+    private static final long serialVersionUID = 1L;
 }
 

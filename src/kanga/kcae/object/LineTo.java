@@ -22,10 +22,17 @@ public class LineTo extends SinglePointInstruction {
             .appendSuper(super.hashCode())
             .toHashCode();
     }
+    
+    @Override
+    public boolean equals(final Object otherObj) {
+        return super.equals(otherObj);
+    }
 
     @Override
     public String toString() {
         return "LineTo[" + this.getPoint().toString() + "]";
     }
+    
+    private static final long serialVersionUID = 1L;
 }
 

@@ -118,11 +118,11 @@ public class ScriptInterpreterHistory
         this.commandHistory.add(source);
     }
         
-    private final Style baseStyle;
-    private final Style stdinStyle;
-    private final Style stdoutStyle;
-    private final Style stderrStyle;
-    private final InterpreterOutputHandler stdoutHandler;
-    private final InterpreterOutputHandler stderrHandler;
+    private transient final Style baseStyle;
+    private transient final Style stdinStyle;
+    private transient final Style stdoutStyle;
+    private transient final Style stderrStyle;
+    private transient final InterpreterOutputHandler stdoutHandler;
+    private transient final InterpreterOutputHandler stderrHandler;
     private final ArrayList<String> commandHistory;
 }

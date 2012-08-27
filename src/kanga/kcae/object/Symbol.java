@@ -1,5 +1,6 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,7 +15,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Symbol implements Shape, Comparable<Symbol> {
+public class Symbol implements Shape, Comparable<Symbol>, Serializable {    
     public Symbol(final String name) {
         this.name = name;
         this.shapes = new ShapeGroup();
@@ -60,7 +61,13 @@ public class Symbol implements Shape, Comparable<Symbol> {
         if (shapes == null) {
             this.shapes = new ShapeGroup();
         } else {
-            this.shapes = shapes.clone();
+            try {
+                this.shapes = shapes.clone();
+            }
+            catch (final CloneNotSupportedException e) {
+                throw new RuntimeException("ShapeGroup " + shapes +
+                    " does not support clone?", e);
+            }
         }
     }
 
@@ -124,4 +131,5 @@ public class Symbol implements Shape, Comparable<Symbol> {
     private String name;
     private ShapeGroup shapes;
     private final Map<String, Port> portsByName = new HashMap<String, Port>();
+    private static final long serialVersionUID = 1L;
 }

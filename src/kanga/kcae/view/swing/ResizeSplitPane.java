@@ -24,7 +24,7 @@ import javax.swing.JSplitPane;
  *  </pre></p>
  */
 public class ResizeSplitPane extends ComponentAdapter {
-    public static ArrayList<String> dlog = new ArrayList<String>(); 
+    public static final ArrayList<String> dlog = new ArrayList<String>(); 
     ResizeSplitPane(final double location) {
         this.location = location;
     }

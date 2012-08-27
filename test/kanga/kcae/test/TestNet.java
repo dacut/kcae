@@ -70,6 +70,8 @@ public class TestNet {
         assertTrue(n2.compareTo(n1a) > 0);
 
         Net n1c = new Net("net1") {
+            private static final long serialVersionUID = 1L;
+
             @Override
             public int hashCode() {
                 return super.hashCode();

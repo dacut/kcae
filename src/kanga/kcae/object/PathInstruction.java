@@ -1,10 +1,12 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
+
 /** An instruction for painting a path.
  * 
  *  @see Path
  */
-public interface PathInstruction {
+public interface PathInstruction extends Serializable {
     /** Visits the specified {@code PathPainter} using the method appropriate
      *  for the path instruction.
      *  

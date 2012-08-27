@@ -4,6 +4,8 @@ import static java.lang.Math.pow;
 import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /** Draws a cubic Bézier curve segment of a path.
@@ -17,7 +19,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *  t<sup>3</sup> P<sub>3</sub><br>
  *  for <i>t</i> in [0, 1].</p>
  */
-public class BezierCurveTo implements PathInstruction {
+public class BezierCurveTo implements PathInstruction, Serializable {
     public BezierCurveTo(
         final Point controlPoint1,
         final Point controlPoint2,
@@ -201,5 +203,6 @@ public class BezierCurveTo implements PathInstruction {
     private final Point controlPoint1;
     private final Point controlPoint2;
     private final Point targetPoint;
+    private static final long serialVersionUID = 1L;
 }
 

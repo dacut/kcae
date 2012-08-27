@@ -1,5 +1,6 @@
 package kanga.kcae.view.swing;
 
+import java.awt.Graphics;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -12,4 +13,6 @@ public interface MeasuredViewTool
 {
     public void enabled();
     public void disabled();
+    public void paintBackground(Graphics g);
+    public void paintOverlay(Graphics g);
 }

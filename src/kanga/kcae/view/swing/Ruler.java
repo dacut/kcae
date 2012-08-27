@@ -222,9 +222,9 @@ public class Ruler extends JPanel {
             bestSpacing = 5;
             bestDiff = diff;
         }
-        if ((diff = abs(normalizedRangeSpacing - 10.0)) < bestDiff) {
+        if (abs(normalizedRangeSpacing - 10.0) < bestDiff) {
             bestSpacing = 10;
-            bestDiff = diff;
+            // bestDiff = diff;
         }
 
         // Scale this back up to our denormalized range.  In our example,

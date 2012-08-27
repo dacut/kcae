@@ -1,6 +1,8 @@
 package kanga.kcae.object;
 
-public class ClosePath implements PathInstruction {
+import java.io.Serializable;
+
+public class ClosePath implements PathInstruction, Serializable {
     public ClosePath() { }
     
     @Override
@@ -39,5 +41,7 @@ public class ClosePath implements PathInstruction {
     public String toString() {
         return "ClosePath[]";
     }
+    
+    private static final long serialVersionUID = 1L;
 }
     

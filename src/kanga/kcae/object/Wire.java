@@ -1,12 +1,14 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class Wire implements Comparable<Wire> {
+public class Wire implements Comparable<Wire>, Serializable {
     public Wire(final Point start, final Point end) {
         this(start, end, null);
     }
@@ -85,4 +87,5 @@ public class Wire implements Comparable<Wire> {
     private Point start;
     private Point end;
     private Net net;
+    private static final long serialVersionUID = 1L;
 }

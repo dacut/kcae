@@ -1,5 +1,6 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +11,11 @@ import org.python.core.PyException;
 import org.python.core.PyObject;
 import org.python.util.InteractiveInterpreter;
 
-public class ScriptInterpreter extends InteractiveInterpreter {
+public class ScriptInterpreter
+    extends InteractiveInterpreter
+    implements Serializable
+{
+    private static final long serialVersionUID = 1L;
     public static final int INITIAL_HISTORY_SIZE = 1000;
     
     public ScriptInterpreter() {

@@ -1,5 +1,6 @@
 package kanga.kcae.object;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import static java.util.Collections.unmodifiableSet;
@@ -10,7 +11,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class Net implements Comparable<Net> {
+public class Net implements Comparable<Net>, Serializable {
     public Net(final String name) {
         this.name = name;
     }
@@ -73,6 +74,6 @@ public class Net implements Comparable<Net> {
     }
 
     private String name;
-    private transient final Set<Connectable> connections =
-        new HashSet<Connectable>();
+    private final Set<Connectable> connections = new HashSet<Connectable>();
+    private static final long serialVersionUID = 1L;
 }

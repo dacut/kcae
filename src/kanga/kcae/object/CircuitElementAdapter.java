@@ -44,4 +44,5 @@ public abstract class CircuitElementAdapter implements CircuitElement {
     }
 
     private String name;
+    private static final long serialVersionUID = 1L;
 }
