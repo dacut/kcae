@@ -1,6 +1,6 @@
 package kanga.kcae.object;
 
-import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class Pin extends Port implements Comparable<Pin> {
+public class Pin extends Port {
     public Pin(
         @Nullable final Collection<String> pinNumbers,
         @Nonnull final SignalDirection signalDirection,
@@ -36,9 +36,6 @@ public class Pin extends Port implements Comparable<Pin> {
         @Nullable final Collection<PinStyle> pinStyles)
     {
         super(concatenatePinNumbers(pinNumbers), signalDirection, net);
-        this.pinNumbers = (
-            pinNumbers != null ? new HashSet<String>(pinNumbers) :
-                                 new HashSet<String>());
         this.connectionPoint = connectionPoint;
         this.endPoint = endPoint;
         this.pinStyles = (
@@ -46,46 +43,43 @@ public class Pin extends Port implements Comparable<Pin> {
                                 EnumSet.noneOf(PinStyle.class));
     }
     
-    public static String concatentatePinNumbers(
+    public static String concatenatePinNumbers(
         final Collection<String> pinNumbers)
     {
         final StringBuilder result = new StringBuilder();
+        boolean first = true;
+        
+        for (final String pinNumber : pinNumbers) {
+            if (first) { first = false; }
+            else       { result.append(";"); }
+            result.append(pinNumber);
+        }
+        
+        return result.toString();
+    }
+    
+    public static Set<String> splitPinNumbers(final String concatPinNumbers) {
+        return new HashSet<String>(Arrays.asList(concatPinNumbers.split(";")));
     }
 
     public Set<String> getPinNumbers() {
-        return unmodifiableSet(this.pinNumbers);
+        return splitPinNumbers(super.getName());
     }
     
     public boolean addPinNumber(final String name) {
-        return this.pinNumbers.add(name);
+        final Set<String> names = splitPinNumbers(this.getName());
+        final boolean result = names.add(name);
+        this.setName(concatenatePinNumbers(names));
+        return result;
     }
     
     public boolean removePinNumber(final String name) {
-        return this.pinNumbers.remove(name);
+        final Set<String> names = splitPinNumbers(this.getName());
+        final boolean result = names.remove(name);
+        this.setName(concatenatePinNumbers(names));
+        return result;
     }
     
-    @Override
-    public SignalDirection getSignalDirection() {
-        return this.signalDirection;
-    }
-    
-    @Override
-    public void setSignalDirection(
-        @Nonnull final SignalDirection signalDirection)
-    {
-        this.signalDirection = signalDirection;
-    }
-    
-    @Override
-    public Net getNet() {
-        return this.net;
-    }
-    
-    @Override
-    public void setNet(Net net) {
-        this.net = net;
-    }
-
     public Point getConnectionPoint() {
         return this.connectionPoint;
     }
@@ -100,16 +94,11 @@ public class Pin extends Port implements Comparable<Pin> {
 
     @Override
     public boolean equals(final Object otherObj) {
-        if (otherObj == null) { return false; }
-        if (otherObj == this) { return true; }
-        if (this.getClass() != otherObj.getClass()) { return false; }
-        
+        final boolean superResult = super.equals(otherObj);        
         final Pin other = (Pin) otherObj;
         
         return new EqualsBuilder()
-            .append(this.getPinNumbers(), other.getPinNumbers())
-            .append(this.getSignalDirection(), other.getSignalDirection())
-            .append(this.getNet(), other.getNet())
+            .appendSuper(superResult)
             .append(this.getConnectionPoint(), other.getConnectionPoint())
             .append(this.getEndPoint(), other.getEndPoint())
             .append(this.getPinStyles(), other.getPinStyles())
@@ -118,10 +107,9 @@ public class Pin extends Port implements Comparable<Pin> {
     
     @Override
     public int hashCode() {
+        final int superResult = super.hashCode();
         return new HashCodeBuilder(17, 37)
-            .append(this.getPinNumbers())
-            .append(this.getSignalDirection())
-            .append(this.getNet())
+            .appendSuper(superResult)
             .append(this.getConnectionPoint())
             .append(this.getEndPoint())
             .append(this.getPinStyles())
@@ -129,11 +117,22 @@ public class Pin extends Port implements Comparable<Pin> {
     }
     
     @Override
-    public int compareTo(final Pin other) {
+    public int compareTo(final CircuitElement otherCE) {
+        final int superResult = super.compareTo(otherCE);
+        if (superResult != 0) {
+            return superResult;
+        }
+
+        final Pin other;
+        try {
+            other = (Pin) otherCE;
+        }
+        catch (ClassCastException e) {
+            return this.getClass().getName().compareTo(
+                otherCE.getClass().getName());
+        }
+        
         return new CompareToBuilder()
-            .append(this.getPinNumbers(), other.getPinNumbers())
-            .append(this.getSignalDirection(), other.getSignalDirection())
-            .append(this.getNet(), other.getNet())
             .append(this.getConnectionPoint(), other.getConnectionPoint())
             .append(this.getEndPoint(), other.getEndPoint())
             .append(this.getPinStyles(), other.getPinStyles())
@@ -152,9 +151,6 @@ public class Pin extends Port implements Comparable<Pin> {
             .toString();
     }
     
-    private final Set<String> pinNumbers;
-    private SignalDirection signalDirection;
-    private Net net;
     private final Point connectionPoint;
     private final Point endPoint;
     private final EnumSet<PinStyle> pinStyles;
