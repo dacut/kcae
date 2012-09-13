@@ -149,6 +149,8 @@ public class TestRectangle extends TestCase {
     }
     
     @Test
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(
+        value = { "RV_RETURN_VALUE_IGNORED_INFERRED" })
     public void testUnionNull() {
         Rectangle r1 = Rectangle.fromPoints(0, 0, 0, 0);
         

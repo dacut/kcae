@@ -2,10 +2,15 @@ package kanga.kcae.object;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.IdentityHashMap;
 import java.util.Set;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static java.util.Collections.newSetFromMap;
+import static java.util.Collections.unmodifiableSet;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -15,49 +20,83 @@ import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Symbol implements Shape, Comparable<Symbol>, Serializable {    
-    public Symbol(final String name) {
+/** A device symbol for use in the schematic editor.
+ */
+public class Symbol implements Shape, Comparable<Symbol>, Serializable {
+    /** Create a new symbol.
+     * 
+     *  @param name     The name of the symbol.
+     */
+    public Symbol(@Nullable final String name) {
         this.name = name;
         this.shapes = new ShapeGroup();
         return;
     }
 
+    /** Returns the name of the symbol.
+     * 
+     *  @return The name of the symbol.
+     */
     @JsonProperty
+    @CheckForNull
     public String getName() {
         return this.name;
     }
 
+    /** Sets the name of the symbol.
+     * 
+     *  @param  name    The new name of the symbol.
+     */
     @JsonProperty
-    public void setName(final String name) {
+    public void setName(@Nullable final String name) {
         this.name = name;
     }
 
-    protected Collection<Port> getPortsModifiable() {
-        return this.portsByName.values();
-    }
-
-    @JsonProperty
-    public final Set<Port> getPorts() {
-        return new HashSet<Port>(this.getPortsModifiable());
+    public boolean addPin(@Nonnull final Pin pin) {
+        if (pin == null) {
+            throw new NullPointerException("pin cannot be null");
+        }
+        
+        return this.pins.add(pin);
     }
     
+    /** Returns a navigable set of the pins on this device (sorted by name).
+     * 
+     *  @return A set of the pins on this device.
+     */
+    @Nonnull
     @JsonProperty
-    public void setPorts(final Collection<Port> ports) {
-        this.portsByName.clear();
-        for (final Port port : ports) {
-            this.portsByName.put(port.getName(), port);
+    public Set<Pin> getPins() {
+        return unmodifiableSet(this.pins);
+    }
+    
+    public void setPins(@CheckForNull final Collection<Pin> pins) {
+        if (pins != null) {
+            for (final Pin pin : pins) {
+                if (pin == null) {
+                    throw new NullPointerException(
+                        "pins cannot contain null elements.");
+                }
+            }
+        }
+        
+        this.pins.clear();
+        
+        if (pins != null) {
+            this.pins.addAll(pins);
         }
         
         return;
     }
 
     @JsonProperty
+    @Nonnull
     public ShapeGroup getShapes() {
         return this.shapes;
     }
 
     @JsonProperty
-    public void setShapes(final ShapeGroup shapes) {
+    public void setShapes(@CheckForNull final ShapeGroup shapes) {
         if (shapes == null) {
             this.shapes = new ShapeGroup();
         } else {
@@ -72,6 +111,7 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
     }
 
     @Override
+    @CheckForNull
     public Rectangle getBoundingBox() {
         return this.getShapes().getBoundingBox();
     }
@@ -87,7 +127,7 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
     }
 
     @Override
-    public boolean equals(final Object otherObj) {
+    public boolean equals(@CheckForNull final Object otherObj) {
         if (otherObj == null) { return false; }
         if (otherObj == this) { return true; }
         if (otherObj.getClass() != this.getClass()) { return false; }
@@ -96,7 +136,7 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
         return new EqualsBuilder()
             .append(this.getName(), other.getName())
             .append(this.getShapes(), other.getShapes())
-            .append(this.getPortsModifiable(), other.getPortsModifiable())
+            .append(this.getPins(), other.getPins())
             .isEquals();
         
     }
@@ -106,7 +146,7 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
         return new HashCodeBuilder(8271, 61687)
             .append(this.getName())
             .append(this.getShapes())
-            .append(this.getPortsModifiable())
+            .append(this.getPins())
             .toHashCode();
     }
 
@@ -115,7 +155,7 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
         return new CompareToBuilder()
             .append(this.getName(), other.getName())
             .append(this.getShapes(), other.getShapes())
-            .append(this.getPortsModifiable(), other.getPortsModifiable())
+            .append(this.getPins(), other.getPins())
             .toComparison();
     }
 
@@ -124,12 +164,19 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
         return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
             .append("name", this.getName())
             .append("shapes", this.getShapes())
-            .append("ports", this.getPortsModifiable())
+            .append("pins", this.getPins())
             .toString();
     }
 
+    @CheckForNull
     private String name;
+    
+    @Nonnull
     private ShapeGroup shapes;
-    private final Map<String, Port> portsByName = new HashMap<String, Port>();
+    
+    @Nonnull
+    private final Set<Pin> pins =
+        newSetFromMap(new IdentityHashMap<Pin, Boolean>());
+    
     private static final long serialVersionUID = 1L;
 }

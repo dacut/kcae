@@ -1,12 +1,18 @@
 #! /bin/sh
 root=`dirname $0`;
 classpath="$root/dist/kcae.jar"
+classpath="${classpath}:$root/ext/asm-3.0.jar"
+classpath="${classpath}:$root/ext/asm-tree-3.0.jar"
 classpath="${classpath}:$root/ext/commons-lang3-3.1.jar"
 classpath="${classpath}:$root/ext/commons-logging-1.1.1.jar"
 classpath="${classpath}:$root/ext/commons-logging-adapters-1.1.1.jar"
 classpath="${classpath}:$root/ext/commons-logging-api-1.1.1.jar"
+classpath="${classpath}:$root/ext/findbugs-annotations-2.0.1-rc2.jar"
+classpath="${classpath}:$root/ext/guava-13.0.1.jar"
 classpath="${classpath}:$root/ext/jackson-core-asl-1.9.7.jar"
 classpath="${classpath}:$root/ext/jackson-mapper-asl-1.9.7.jar"
+classpath="${classpath}:$root/ext/jakarta-oro-2.0.8.jar"
+classpath="${classpath}:$root/ext/jsr305.jar"
 classpath="${classpath}:$root/ext/jython-2.7a2.jar"
 classpath="${classpath}:$root/ext/log4j-1.2.9.jar"
 logger="org.apache.commons.logging.impl.Log4JLogger"

@@ -41,7 +41,7 @@ public class PanZoomTool extends MeasuredViewToolAdapter {
             // Convert from pixels to quanta.
             final Pair<Long, Long> qpp = this.panel.getQuantaPerPixel();
             final long dxQua = -qpp.getLeft() * dxPix;
-            final long dyQua = -qpp.getRight() * dyPix;
+            final long dyQua =  qpp.getRight() * dyPix;
          
             final Rectangle originalView = this.panel.getViewArea();
             final Rectangle newView = originalView.translate(dxQua, dyQua);
@@ -91,4 +91,6 @@ public class PanZoomTool extends MeasuredViewToolAdapter {
     private boolean enabled = true;
     private int lastX = Integer.MIN_VALUE;
     private int lastY = Integer.MIN_VALUE;
+
+    private static final long serialVersionUID = 1L;
 }

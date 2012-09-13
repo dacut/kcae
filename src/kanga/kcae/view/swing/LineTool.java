@@ -13,6 +13,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 import kanga.kcae.object.ClosePath;
 import kanga.kcae.object.LineTo;
 import kanga.kcae.object.MoveTo;
@@ -75,6 +77,7 @@ public class LineTool extends MeasuredViewToolAdapter {
     }
     
     @Override
+    @SuppressWarnings(value={"BC_UNCONFIRMED_CAST"})
     public void paintOverlay(Graphics graphics) {
         Graphics2D g = (Graphics2D) graphics;
         Path2D.Double path = new Path2D.Double();
@@ -137,4 +140,6 @@ public class LineTool extends MeasuredViewToolAdapter {
     final List<Point> points = new ArrayList<Point>();
     Point trackingPoint = null;
     final SymbolView symView;
+    
+    private static final long serialVersionUID = 1L;
 }

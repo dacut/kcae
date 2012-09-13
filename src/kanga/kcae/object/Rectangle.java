@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-/** A rectangle in Cartesian 2-D space whose points lie on integral nanometer
- *  quanta.
- * 
+/** A rectangle in Cartesian 2-D space whose points lie on an (integral)
+ *  nanometer grid.
+ *  
  *  <p>Rectangles are immutable and thread-safe.</p>
  *  
  *  @see Point
@@ -37,24 +37,25 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  lower-right corner.  No checking is performed.
      *  
      *  @param left     The horizontal position of the left edge of the
-     *                  rectangle, in quanta (nanometers).
+     *                  rectangle, in nanometers.
+     *  @param bottom   The vertical position of the bottom edge of the
+     *                  rectangle, in nanometers.
      *  @param top      The vertical position of the top edge of the rectangle,
-     *                  in quanta (nanometers).
+     *                  in nanometers.
      *  @param right    The horizontal position of the right edge of the
-     *                  rectangle, in quanta (nanometers).
-     *  @param bottom	The vertical position of the bottom edge of the
-     *                  rectangle, in quanta (nanometers).
+     *                  rectangle, in nanometers.
      */
     Rectangle(
         final long left,
-        final long top,
+        final long bottom,
         final long right,
-        final long bottom)
+        final long top)
     {
+        assert bottom <= top;
         this.left = left;
-        this.top = top;
-        this.right = right;
         this.bottom = bottom;
+        this.right = right;
+        this.top = top;
     }
 
     /** Create a new rectangle.
@@ -146,9 +147,9 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
         }
 
         return new Rectangle(min(this.getLeft(), other.getLeft()),
-                min(this.getTop(), other.getTop()),
+                min(this.getBottom(), other.getBottom()),
                 max(this.getRight(), other.getRight()),
-                max(this.getBottom(), other.getBottom()));
+                max(this.getTop(), other.getTop()));
     }
 
     /** Find the smallest rectangle encompassing this rectangle and a point.
@@ -164,9 +165,9 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
         }
 
         return new Rectangle(min(this.getLeft(), other.getX()),
-                min(this.getTop(), other.getY()),
+                min(this.getBottom(), other.getY()),
                 max(this.getRight(), other.getX()),
-                max(this.getBottom(), other.getY()));
+                max(this.getTop(), other.getY()));
     }
     
     /** Returns the translation of this rectangle by the specified amount.
@@ -177,8 +178,8 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @return This rectangle translated by {@code (dx, dy)}.
      */
     public Rectangle translate(final long dx, final long dy) {
-        return new Rectangle(this.left + dx, this.top + dy,
-                             this.right + dx, this.bottom + dy);
+        return new Rectangle(this.left + dx, this.bottom + dy,
+                             this.right + dx, this.top + dy);
     }
 
     @Override
@@ -196,9 +197,9 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
 
         Rectangle other = (Rectangle) otherObj;
         return (this.left == other.left &&
+                this.bottom == other.bottom &&
                 this.right == other.right &&
-                this.top == other.top &&
-                this.bottom == other.bottom);
+                this.top == other.top);
     }
 
     @Override
@@ -262,7 +263,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      * 
      *  @return The height of the rectangle, in nanometers.
      */
-    public long getHeight() { return this.bottom - this.top; }
+    public long getHeight() { return this.top - this.bottom; }
 
     /** Returns the top-left corner of the rectangle.
      * 
@@ -309,7 +310,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @return The vertical extents of the rectangle.
      */
     public Extents.Long getVerticalExtents() {
-        return new Extents.Long(this.top, this.bottom);
+        return new Extents.Long(this.bottom, this.top);
     }
     
     /** Returns the aspect ratio (width to height) of the rectangle.
@@ -519,7 +520,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
         final long xc = point.getX();
         final long yc = point.getY();
         final long xoffset = xc - this.getLeft();
-        final long yoffset = yc - this.getTop();
+        final long yoffset = yc - this.getBottom();
         final long width = this.getWidth();
         final long height = this.getHeight();
         final long zoomWidth = (long) (factor * width);

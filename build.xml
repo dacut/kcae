@@ -226,6 +226,8 @@
            checksum="4ec8e1d8171e578b3151e898311a8710" />
     <ckget dir="${ext.dir}" url="${ext.url}/findbugs-annotations-2.0.1-rc2.jar"
            checksum="eb4867fa212ea876b9bc1127ed42a17b" />
+    <ckget dir="${ext.dir}" url="${ext.url}/guava-13.0.1.jar"
+           checksum="539a72e3c7b7bd1b12b9cf7a567fb28a" />
     <ckget dir="${ext.dir}" url="${ext.url}/jackson-core-asl-1.9.7.jar"
            checksum="0839b0bf5845e1385f17f234ea8e847f" />
     <ckget dir="${ext.dir}" url="${ext.url}/jackson-mapper-asl-1.9.7.jar"

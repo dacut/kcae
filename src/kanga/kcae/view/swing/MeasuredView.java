@@ -5,6 +5,9 @@ import java.awt.geom.Point2D;
 import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Point;
 
+/** A screen widget which displays a canvas representing quanta coordinate
+ *  space.
+ */
 public interface MeasuredView {
     /** Returns the currently visible view area.
      * 

@@ -1,7 +1,5 @@
 package kanga.kcae.object;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 public class MoveTo extends SinglePointInstruction {
     public MoveTo(final long x, final long y) {
         super(new Point(x, y));
@@ -34,18 +32,6 @@ public class MoveTo extends SinglePointInstruction {
         return bbox;
     }
     
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(18491, 15675)
-            .appendSuper(super.hashCode())
-            .toHashCode();
-    }
-    
-    @Override
-    public boolean equals(final Object otherObj) {
-        return super.equals(otherObj);
-    }
-
     @Override
     public String toString() {
         return "MoveTo[" + this.getPoint().toString() + "]";

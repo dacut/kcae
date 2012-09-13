@@ -5,8 +5,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.io.Serializable;
 
-public class MeasuredViewToolAdapter implements MeasuredViewTool {
+public class MeasuredViewToolAdapter implements MeasuredViewTool, Serializable {
     @Override
     public void focusGained(final FocusEvent e) { }
 
@@ -57,4 +58,6 @@ public class MeasuredViewToolAdapter implements MeasuredViewTool {
 
     @Override
     public void paintOverlay(Graphics g) { }
+
+    private static final long serialVersionUID = 1L;
 }

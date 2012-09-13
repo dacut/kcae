@@ -17,6 +17,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JPanel;
 import static java.lang.Math.pow;
 import static java.lang.Math.round;
@@ -254,8 +255,9 @@ public class MeasuredViewPanel
         if (viewArea != null) {
             // Make sure the aspect ratio is correct.
             java.awt.Rectangle bounds = this.getBounds();
+            assert bounds != null;
         
-            if (bounds != null && bounds.width > 0 && bounds.height > 0) {
+            if (bounds.width > 0 && bounds.height > 0) {
                 final double screenAspect = (((double) bounds.width) /
                                              ((double) bounds.height));
                 final Rectangle fitted = viewArea.adjustAspectRatio(
@@ -302,7 +304,7 @@ public class MeasuredViewPanel
         final double yrel = p.getY() / bounds.getHeight();
         
         return new Point(va.getLeft() + (long) (va.getWidth() * xrel),
-                         va.getTop() + (long) (va.getHeight() * yrel));
+                         va.getTop() - (long) (va.getHeight() * yrel));
     }
     
     @Override
@@ -311,11 +313,12 @@ public class MeasuredViewPanel
         final java.awt.Rectangle bounds = this.getBounds();
         final double xrel = ((double) (p.getX() - va.getLeft())) /
                              (double) va.getWidth();
-        final double yrel = ((double) (p.getY() - va.getTop())) /
+        final double yrel = ((double) (va.getTop() - p.getY())) /
                              (double) va.getHeight();
         
-        return new Point2D.Double(bounds.getWidth() * xrel,
-                                  bounds.getHeight() * yrel);
+        Point2D result = new Point2D.Double(bounds.getWidth() * xrel,
+                                            bounds.getHeight() * yrel);
+        return result;
     }
     
     @Override
@@ -340,8 +343,9 @@ public class MeasuredViewPanel
         g.setColor(this.backgroundColor);
         g.fillRect(clip.x, clip.y, clip.width, clip.height);
 
-        g.scale(ppqX, ppqY);
-        g.translate(-viewArea.getLeft(), -viewArea.getTop());
+        g.translate(0, bounds.getHeight());
+        g.scale(ppqX, -ppqY);
+        g.translate(-viewArea.getLeft(), -viewArea.getBottom());
     }
     
     /** Zooms in/out while keeping the specified point on the screen fixed.
@@ -354,6 +358,7 @@ public class MeasuredViewPanel
         final Point2D screenPoint,
         final int magnitude)
     {
+        log.debug("zoomAtScreenPoint: sp=" + screenPoint + ", mag=" + magnitude);
         this.zoomAtQuantaPoint(this.screenPointToQuanta(screenPoint),
                                magnitude);
     }
@@ -373,6 +378,8 @@ public class MeasuredViewPanel
         final Rectangle newView = originalView.zoom(
             pow(1.05, magnitude), zoomPoint);
         
+        log.debug("zoomAtQuantaPoint: zp=" + zoomPoint + ", mag=" + magnitude);
+        
         // Don't allow the user to zoom in greater than 1 nm per pixel --
         // strangeness abounds when multiple screen points map to the same
         // quanta.
@@ -380,6 +387,7 @@ public class MeasuredViewPanel
             this.setViewArea(newView, Rectangle.FitMethod.NEAREST);
         }
     }
+    
     public BaseUnit getBaseUnit() {
         return this.baseUnit;
     }

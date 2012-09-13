@@ -5,12 +5,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
 import java.awt.RenderingHints;
+
 import static java.lang.Math.round;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import kanga.kcae.object.BaseUnit;
+import kanga.kcae.object.Pin;
 import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Symbol;
@@ -55,6 +57,7 @@ public class SymbolView extends MeasuredViewPanel {
         this.symbol = symbol;
         this.backgroundColor = WHITE;
         this.lineTool = new LineTool(this);
+        this.pinTool = new PinTool(this);
         this.setPreferredSize(new Dimension(1000, 600));
     }
 
@@ -80,6 +83,9 @@ public class SymbolView extends MeasuredViewPanel {
                 RenderingHints.VALUE_ANTIALIAS_ON);
         
             ShapePainter.paint(g, symbol.getShapes());
+            for (final Pin pin : symbol.getPins()) {
+                ShapePainter.paint(g, pin);
+            }
         }
 
         if (tool != null) {
@@ -99,6 +105,10 @@ public class SymbolView extends MeasuredViewPanel {
         return this.lineTool;
     }
     
+    public PinTool getPinTool() {
+        return this.pinTool;
+    }
+    
     public Point roundToGrid(Point p) {
         long gridSpacing = this.getGridSpacing();
         double fGridSpacing = (double) gridSpacing;
@@ -116,6 +126,7 @@ public class SymbolView extends MeasuredViewPanel {
     
     private Symbol symbol;
     private final LineTool lineTool;
+    private final PinTool pinTool;
     private long gridSpacing = 1000000; // 1 mm
     private static final long serialVersionUID = 1L;
 }

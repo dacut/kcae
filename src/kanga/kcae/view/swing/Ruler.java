@@ -47,14 +47,14 @@ import static javax.swing.SwingConstants.VERTICAL;
 public class Ruler extends JPanel {
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(Ruler.class);
-    private static final long serialVersionUID = 5770541034442330291L;
+    private static final long serialVersionUID = 1L;
 
     public static final int MARGIN = 1;
     public static final Color BACKGROUND_COLOR = WHITE;
     public static final Color FOREGROUND_COLOR = BLACK;
     public static final double DESIRED_TICK_SPACING = 250.0;
     public static final double R_DESIRED_TICK_SPACING =
-            1.0 / DESIRED_TICK_SPACING;
+        1.0 / DESIRED_TICK_SPACING;
 
     public Ruler(final int orientation, final BaseUnit baseUnit) {
         this(Long.MIN_VALUE, Long.MIN_VALUE, orientation, baseUnit);
@@ -90,7 +90,7 @@ public class Ruler extends JPanel {
         // Determine the scale of the tick spacing, i.e. what is the smallest
         // integer i such that 10**i <= tickSpacing < 10**(i+1)?
         //
-        // tickSpacing       scale(tickSpacing)
+        // tickSpacing          tickSpacingScale
         // --------------------------------------
         //   0.01 to    0.10    -2
         //   0.10 to    1       -1
@@ -127,7 +127,7 @@ public class Ruler extends JPanel {
              tick += tickSpacing)
         {
             final int offset = (int) ((tick - start) * width / range);
-            final int x = (orientation == HORIZONTAL ? offset : width - offset);
+            final int x = offset;
             
             // Calculate the number of significant figures we need to print.
             // This can be a bit tricky!  There are two cases we need to
@@ -149,7 +149,7 @@ public class Ruler extends JPanel {
             // tickSpacingScale.  Don't blindly try to fold this into the
             // max() logic.
             final int sigFigs = (
-                tickScaleFlt < 0 ? 1 :
+                tickScaleFlt < tickSpacingScale ? 1 :
                 max(1, ((int) tickScaleFlt) - tickSpacingScale + 1));
 
             final String tickLabel = EngFormatter.format(
@@ -158,7 +158,7 @@ public class Ruler extends JPanel {
                 tickLabel, g);
             final int labelWidth = (int) labelBounds.getWidth();
             final int labelHeight = (int) labelBounds.getHeight();
-            
+
             g2.draw(new Line2D.Double(x, 2, x, height - 2));
 
             // Center the label over the line.

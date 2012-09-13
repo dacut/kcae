@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.annotation.CheckForNull;
+
 import static java.util.Collections.unmodifiableList;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -91,6 +94,7 @@ public class ShapeGroup implements Shape, Cloneable, Serializable {
     }
 
     @Override
+    @CheckForNull
     public Rectangle getBoundingBox() {
         Rectangle result = null;
 

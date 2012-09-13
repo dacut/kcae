@@ -43,6 +43,7 @@ public class ScriptInterpreterHistory
             try {
                 doc.insertString(doc.getLength(), String.valueOf((char) b),
                                  this.attributeSet);
+                ScriptInterpreterHistory.this.setCaretPosition(doc.getLength());
             }
             catch (final BadLocationException e) {
                 throw new IOException(e);
@@ -72,6 +73,10 @@ public class ScriptInterpreterHistory
         final PySystemState ss = interp.getSystemState();
         ss.stdout = ss.__stdout__ = new PyFile(this.stdoutHandler, 0);
         ss.stderr = ss.__stderr__ = new PyFile(this.stderrHandler, 0);
+    }
+    
+    public void scrollToEnd() {
+        
     }
     
     public void writeStdin(final CharSequence str) {

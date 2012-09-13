@@ -2,16 +2,20 @@ package kanga.kcae.object;
 
 import java.io.Serializable;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public abstract class Extents {
     public static class Double implements Comparable<Double>, Serializable {
         public Double(final double min, final double max) {
+            assert min <= max;
             this.min = min;
             this.max = max;
         }
         
         @Override
+        @SuppressWarnings(value = {"FE_FLOATING_POINT_EQUALITY"} )
         public boolean equals(final Object otherObj) {
             if      (otherObj == null) { return false; }
             else if (otherObj == this) { return true; }

@@ -1,14 +1,22 @@
 package kanga.kcae.object;
 
-import java.util.Arrays;
+import java.io.Serializable;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.EnumSet;
-import java.util.HashSet;
+import java.util.List;
+import java.util.NavigableSet;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.TreeSet;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableSet;
+
+import static com.google.common.collect.Sets.unmodifiableNavigableSet;
 
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -16,89 +24,180 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-public class Pin extends Port {
+public class Pin implements Comparable<Pin>, Serializable {
+    public static class PinNameComparator
+        implements Comparator<Pin>, Serializable
+    {
+        @Override
+        public int compare(final Pin pin1, final Pin pin2) {
+            return new CompareToBuilder()
+                .append(pin1.getName(), pin2.getName())
+                .toComparison();
+        }
+        
+        private static final long serialVersionUID = 1L;
+    }
+
     public Pin(
-        @Nullable final Collection<String> pinNumbers,
+            @CheckForNull final String name,
+            @CheckForNull final String pinNumbers,
+            @Nonnull final SignalDirection signalDirection,
+            @Nonnull final Point connectionPoint,
+            @Nonnull final Point endPoint)
+    {
+        this(name, pinNumbers, signalDirection, connectionPoint, endPoint,
+             null);
+    }
+
+    public Pin(
+        @CheckForNull final String name,
+        @CheckForNull final String pinNumbers,
         @Nonnull final SignalDirection signalDirection,
-        @Nullable final Net net,
+        @Nonnull final Point connectionPoint,
+        @Nonnull final Point endPoint,
+        @CheckForNull final Collection<PinStyle> pinStyles)
+    {
+        this(name, splitPinNumbers(pinNumbers), signalDirection,
+             connectionPoint, endPoint, pinStyles);
+    }
+    
+    public Pin(
+        @CheckForNull final String name,
+        @CheckForNull final Collection<String> pinNumbers,
+        @Nonnull final SignalDirection signalDirection,
         @Nonnull final Point connectionPoint,
         @Nonnull final Point endPoint)
     {
-        this(pinNumbers, signalDirection, net, connectionPoint, endPoint, null);
+        this(name, pinNumbers, signalDirection, connectionPoint, endPoint,
+             null);
     }
     
     public Pin(
-        @Nullable final Collection<String> pinNumbers,
+        @CheckForNull final String name,
+        @CheckForNull final Collection<String> pinNumbers,
         @Nonnull final SignalDirection signalDirection,
-        @Nullable final Net net,
         @Nonnull final Point connectionPoint,
         @Nonnull final Point endPoint,
-        @Nullable final Collection<PinStyle> pinStyles)
+        @CheckForNull final Collection<PinStyle> pinStyles)
     {
-        super(concatenatePinNumbers(pinNumbers), signalDirection, net);
-        this.connectionPoint = connectionPoint;
-        this.endPoint = endPoint;
+        this.pinNumbers = new TreeSet<String>();
         this.pinStyles = (
-            pinStyles != null ? EnumSet.copyOf(pinStyles) :
-                                EnumSet.noneOf(PinStyle.class));
+                pinStyles != null ? EnumSet.copyOf(pinStyles) :
+                                    EnumSet.noneOf(PinStyle.class));
+
+        this.setName(name);
+        this.setPinNumbers(pinNumbers);
+        this.setSignalDirection(signalDirection);
+        this.setConnectionPoint(connectionPoint);
+        this.setEndPoint(endPoint);
     }
     
-    public static String concatenatePinNumbers(
-        final Collection<String> pinNumbers)
-    {
-        final StringBuilder result = new StringBuilder();
-        boolean first = true;
-        
-        for (final String pinNumber : pinNumbers) {
-            if (first) { first = false; }
-            else       { result.append(";"); }
-            result.append(pinNumber);
+    @Nonnull
+    public NavigableSet<String> getPinNumbers() {
+        return unmodifiableNavigableSet(this.pinNumbers);
+    }
+    
+    public boolean addPinNumber(@Nonnull final String name) {
+        if (name == null) {
+            throw new NullPointerException("name cannot be null");
         }
         
-        return result.toString();
+        return this.pinNumbers.add(name);
     }
     
-    public static Set<String> splitPinNumbers(final String concatPinNumbers) {
-        return new HashSet<String>(Arrays.asList(concatPinNumbers.split(";")));
+    public boolean removePinNumber(@Nonnull final String name) {
+        return this.pinNumbers.remove(name);
     }
 
-    public Set<String> getPinNumbers() {
-        return splitPinNumbers(super.getName());
+    public void setPinNumbers(
+         @CheckForNull final Collection<String> pinNumbers)
+    {
+        this.pinNumbers.clear();
+        if (pinNumbers != null) {
+            for (String pinNumber : pinNumbers) {
+                if (pinNumber == null) {
+                    throw new NullPointerException(
+                        "pinNumbers cannot contain null elements");
+                }
+            }
+            this.pinNumbers.addAll(pinNumbers);
+        }
     }
-    
-    public boolean addPinNumber(final String name) {
-        final Set<String> names = splitPinNumbers(this.getName());
-        final boolean result = names.add(name);
-        this.setName(concatenatePinNumbers(names));
-        return result;
+
+    @CheckForNull
+    public String getName() {
+        return this.name;
     }
-    
-    public boolean removePinNumber(final String name) {
-        final Set<String> names = splitPinNumbers(this.getName());
-        final boolean result = names.remove(name);
-        this.setName(concatenatePinNumbers(names));
-        return result;
+
+    public void setName(@CheckForNull final String name) {
+        this.name = name;
     }
-    
+
+    @Nonnull
+    public SignalDirection getSignalDirection() {
+        return this.signalDirection;
+    }
+
+    public void setSignalDirection(@Nonnull SignalDirection signalDirection) {
+        if (signalDirection == null) {
+            throw new NullPointerException("signalDirection cannot be null");
+        }
+        
+        this.signalDirection = signalDirection;
+    }
+
+    @Nonnull
     public Point getConnectionPoint() {
         return this.connectionPoint;
     }
+    
+    public void setConnectionPoint(@Nonnull final Point connectionPoint) {
+        if (connectionPoint == null) {
+            throw new NullPointerException("connectionPoint cannot be null");
+        }
+        
+        this.connectionPoint = connectionPoint;
+    }
 
+    @Nonnull
     public Point getEndPoint() {
         return this.endPoint;
     }
+    
+    public void setEndPoint(@Nonnull final Point endPoint) {
+        if (endPoint == null) {
+            throw new NullPointerException("endPoint cannot be null");
+        }
+        
+        this.endPoint = endPoint;
+    }
 
+    @Nonnull
     public Set<PinStyle> getPinStyles() {
         return unmodifiableSet(this.pinStyles);
+    }
+    
+    @Nonnull
+    public static List<String> splitPinNumbers(@CheckForNull String pinNumbers)
+    {
+        if (pinNumbers == null)
+            return emptyList();
+        
+        return asList(pinNumbers.split("[,;] *"));
     }
 
     @Override
     public boolean equals(final Object otherObj) {
-        final boolean superResult = super.equals(otherObj);        
+        if (otherObj == null) { return false; }
+        if (this == otherObj) { return true; }
+        if (this.getClass() != otherObj.getClass()) { return false; }
+        
         final Pin other = (Pin) otherObj;
         
         return new EqualsBuilder()
-            .appendSuper(superResult)
+            .append(this.getName(), other.getName())
+            .append(this.getPinNumbers(), other.getPinNumbers())
+            .append(this.getSignalDirection(), other.getSignalDirection())
             .append(this.getConnectionPoint(), other.getConnectionPoint())
             .append(this.getEndPoint(), other.getEndPoint())
             .append(this.getPinStyles(), other.getPinStyles())
@@ -107,9 +206,10 @@ public class Pin extends Port {
     
     @Override
     public int hashCode() {
-        final int superResult = super.hashCode();
         return new HashCodeBuilder(17, 37)
-            .appendSuper(superResult)
+            .append(this.getName())
+            .append(this.getPinNumbers())
+            .append(this.getSignalDirection())
             .append(this.getConnectionPoint())
             .append(this.getEndPoint())
             .append(this.getPinStyles())
@@ -117,22 +217,11 @@ public class Pin extends Port {
     }
     
     @Override
-    public int compareTo(final CircuitElement otherCE) {
-        final int superResult = super.compareTo(otherCE);
-        if (superResult != 0) {
-            return superResult;
-        }
-
-        final Pin other;
-        try {
-            other = (Pin) otherCE;
-        }
-        catch (ClassCastException e) {
-            return this.getClass().getName().compareTo(
-                otherCE.getClass().getName());
-        }
-        
+    public int compareTo(final Pin other) {
         return new CompareToBuilder()
+            .append(this.getName(), other.getName())
+            .append(this.getPinNumbers(), other.getPinNumbers())
+            .append(this.getSignalDirection(), other.getSignalDirection())
             .append(this.getConnectionPoint(), other.getConnectionPoint())
             .append(this.getEndPoint(), other.getEndPoint())
             .append(this.getPinStyles(), other.getPinStyles())
@@ -142,17 +231,24 @@ public class Pin extends Port {
     @Override
     public String toString() {
         return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
-            .append("pinNames", this.getPinNumbers())
+            .append("name", this.getName())
+            .append("pinNumbers", this.getPinNumbers())
             .append("signalDirection", this.getSignalDirection())
-            .append("net", this.getNet())
             .append("connectionPoint", this.getConnectionPoint())
             .append("endPoint", this.getEndPoint())
             .append("pinStyles", this.getPinStyles())
             .toString();
     }
+
+    @CheckForNull
+    private String name;
     
-    private final Point connectionPoint;
-    private final Point endPoint;
-    private final EnumSet<PinStyle> pinStyles;
+    @Nonnull
+    private TreeSet<String> pinNumbers;
+    
+    private SignalDirection signalDirection;
+    private Point connectionPoint;
+    private Point endPoint;
+    private EnumSet<PinStyle> pinStyles;
     private static final long serialVersionUID = 1L;
 }
