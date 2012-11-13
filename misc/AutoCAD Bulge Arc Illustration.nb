@@ -1,0 +1,1166 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 8.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     46853,       1157]
+NotebookOptionsPosition[     46256,       1131]
+NotebookOutlinePosition[     46710,       1151]
+CellTagsIndexPosition[     46667,       1148]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "PointO", ",", "PointP", ",", "PointQ", ",", "r", ",", "b", ",", "d", 
+       ",", "\[Theta]", ",", "\[Phi]", ",", "\[Alpha]", ",", "\[Beta]", ",", 
+       "\[Gamma]"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"PointQ", "=", 
+       RowBox[{
+        FractionBox["1", "2"], 
+        RowBox[{"(", 
+         RowBox[{"PointA", "+", "PointB"}], ")"}]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"d", "=", 
+       RowBox[{
+        FractionBox["1", "2"], 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox[
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"PointA", "-", "PointB"}], ")"}], "\[LeftDoubleBracket]",
+             "1", "\[RightDoubleBracket]"}], "2"], "+", 
+          SuperscriptBox[
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"PointA", "-", "PointB"}], ")"}], "\[LeftDoubleBracket]",
+             "2", "\[RightDoubleBracket]"}], "2"]}]]}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"b", "=", 
+       RowBox[{
+        RowBox[{"Abs", "[", "BF", "]"}], "*", "d"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+        RowBox[{"(", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"\[Theta]", "=", 
+           RowBox[{"ArcTan", "@@", 
+            RowBox[{"(", 
+             RowBox[{
+              RowBox[{"Sign", "[", "BF", "]"}], 
+              RowBox[{"(", 
+               RowBox[{"PointB", "-", "PointA"}], ")"}]}], ")"}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Phi]", "=", 
+           RowBox[{"\[Theta]", "-", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             FractionBox["\[Pi]", "2"]}]}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"r", "=", 
+           FractionBox[
+            RowBox[{
+             SuperscriptBox["b", "2"], "+", 
+             SuperscriptBox["d", "2"]}], 
+            RowBox[{"2", "b"}]]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"PointP", "=", 
+           RowBox[{"PointQ", "+", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"b", " ", 
+                RowBox[{"Cos", "[", "\[Phi]", "]"}]}], ",", 
+               RowBox[{"b", " ", 
+                RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}], "}"}]}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PointO", "=", 
+           RowBox[{"PointQ", "-", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"r", "-", "b"}], ")"}], 
+                RowBox[{"Cos", "[", "\[Phi]", "]"}]}], ",", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"r", "-", "b"}], ")"}], 
+                RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}], "}"}]}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Alpha]", "=", 
+           RowBox[{"ArcTan", "@@", 
+            RowBox[{"(", 
+             RowBox[{"PointA", "-", "PointO"}], ")"}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Beta]", "=", 
+           RowBox[{"ArcTan", "@@", 
+            RowBox[{"(", 
+             RowBox[{"PointB", "-", "PointO"}], ")"}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Alpha]", "=", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", ">", "0"}], ",", 
+             RowBox[{"\[Alpha]", "+", 
+              RowBox[{"Floor", "[", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"\[Beta]", "-", "\[Alpha]"}], ")"}], ",", 
+                RowBox[{"2", "\[Pi]"}]}], "]"}]}], ",", 
+             RowBox[{"\[Alpha]", "+", 
+              RowBox[{"Ceiling", "[", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"\[Beta]", "-", "\[Alpha]"}], ")"}], ",", 
+                RowBox[{"2", "\[Pi]"}]}], "]"}]}]}], "]"}]}], ";"}], 
+         "\[IndentingNewLine]", ")"}], ",", 
+        RowBox[{"(", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"\[Theta]", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Phi]", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"r", "=", "Infinity"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"PointP", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PointO", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Alpha]", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Beta]", "=", "Indeterminate"}], ";"}], 
+         "\[IndentingNewLine]", ")"}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Show", "[", 
+       RowBox[{
+        RowBox[{"Graphics", "[", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Line", "[", 
+            RowBox[{"{", 
+             RowBox[{"PointA", ",", "PointB"}], "}"}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"PointSize", "[", "Large", "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Point", "[", "PointQ", "]"}], ",", "\[IndentingNewLine]", 
+           
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+             RowBox[{"Point", "[", 
+              RowBox[{"{", 
+               RowBox[{"PointP", ",", "PointO"}], "}"}], "]"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{"\"\<A\>\"", ",", "14"}], "]"}], ",", 
+             RowBox[{"PointA", "+", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", ".5"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{"\"\<B\>\"", ",", "14"}], "]"}], ",", 
+             RowBox[{"PointB", "+", 
+              RowBox[{"{", 
+               RowBox[{".5", ",", "0"}], "}"}]}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Text", "[", 
+                RowBox[{
+                 RowBox[{"Style", "[", 
+                  RowBox[{"\"\<O\>\"", ",", "14"}], "]"}], ",", 
+                 RowBox[{"PointO", "+", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"-", ".3"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"Text", "[", 
+                RowBox[{
+                 RowBox[{"Style", "[", 
+                  RowBox[{"\"\<P\>\"", ",", "14"}], "]"}], ",", 
+                 RowBox[{"PointP", "+", 
+                  RowBox[{"{", 
+                   RowBox[{".5", ",", 
+                    RowBox[{"-", ".5"}]}], "}"}]}]}], "]"}]}], "}"}]}], "]"}],
+            ",", "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{"\"\<Q\>\"", ",", "14"}], "]"}], ",", 
+             RowBox[{"PointQ", "+", 
+              RowBox[{"{", 
+               RowBox[{".5", ",", "0"}], "}"}]}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<r=\>\"", "<>", 
+              RowBox[{"ToString", "[", "r", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "6"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<d=\>\"", "<>", 
+              RowBox[{"ToString", "[", "d", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "5.7"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<\[Alpha]=\>\"", "<>", 
+              RowBox[{"ToString", "[", "\[Alpha]", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "5.4"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<\[Beta]=\>\"", "<>", 
+              RowBox[{"ToString", "[", "\[Beta]", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "5.1"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+             RowBox[{"Circle", "[", 
+              RowBox[{"PointO", ",", "r", ",", 
+               RowBox[{"{", 
+                RowBox[{"\[Alpha]", ",", "\[Beta]"}], "}"}]}], "]"}]}], 
+            "]"}]}], "\[IndentingNewLine]", "}"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Axes", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"PlotRange", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", "6"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", "6"}], "}"}]}], "}"}]}]}], "]"}]}]}], 
+    "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"PointA", ",", " ", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"-", "4.7"}], ",", 
+         RowBox[{"-", "4.7"}]}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "5"}], ",", 
+       RowBox[{"-", "5"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "5"}], "}"}], ",", "Locator"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"PointB", ",", 
+       RowBox[{"{", 
+        RowBox[{"5.0", ",", "4.3"}], "}"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"-", "5"}], ",", 
+       RowBox[{"-", "5"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5", ",", "5"}], "}"}], ",", "Locator"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"BF", ",", "0.7"}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->CompressedData["
+1:eJwdzltIUwEAgOHDgi0kMpBK0wcLEhnmDTJwUzgyMExzqSkUUfOClKlbNBEV
+EymZytSkmyU+RK6QIcFsRS68ZGEuSoYWQ8ExpXJ2Qkp9sEmdfw8/3+t/uLS2
+oEIhCEKcHKpNv5IMbQGx7bo3DYOSMQP78wPD2Fkz1fdUdno9044W90UHlpor
+PZhvvrKIK6+7l7BD27r3maxT2ZCI5bd607BgX7MG3432i2hT2bNQZ3Rk47+U
+C3osrN8pRlHQn8MDT5ou47GRxmr8FDU065BN9d/woHO39AXVOYYFdFkWk0dk
+YyOXUrB8Q9Li9gvleUweHitDnyu6Cn/HB4xoG4w145H4gWY8NPejC/sGSjRr
+spcCbi1GhIsiprd/CPlS8mVj7kldHuqjO8/g6T/fDXjn8f5KHC85WoXazalr
+WHOi+CZa/3624ANPlBWlluBdzDAN3cedN8cHsX5uzIaKYIsdJx6dfY69u8Je
+4YzTP4r2mY/joV9r0ltseu91o2Y+bxbvhdV5scLwMOQ3l2IVfVsb62gsMm1h
+glMp/JRtzWxQ4bRqTzhOTkxG4NXbpyJRt70Sgz1fi+Iw0W9W48HljnT8D9mm
+WRg=
+  "]],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`BF$$ = 
+    0.4850000000000001, $CellContext`PointA$$ = {2.46, 
+    3.9800000000000004`}, $CellContext`PointB$$ = {-4.96, -4.54}, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`PointA$$], {-4.7, -4.7}}, {-5, -5}, {5, 5}}, {{
+       Hold[$CellContext`PointB$$], {5., 4.3}}, {-5, -5}, {5, 5}}, {{
+       Hold[$CellContext`BF$$], 0.7}, -1, 1}}, Typeset`size$$ = {
+    360., {179., 184.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`PointA$47186$$ = {0, 
+    0}, $CellContext`PointB$47187$$ = {0, 0}, $CellContext`BF$47188$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`BF$$ = 
+        0.7, $CellContext`PointA$$ = {-4.7, -4.7}, $CellContext`PointB$$ = {
+         5., 4.3}}, "ControllerVariables" :> {
+        Hold[$CellContext`PointA$$, $CellContext`PointA$47186$$, {0, 0}], 
+        Hold[$CellContext`PointB$$, $CellContext`PointB$47187$$, {0, 0}], 
+        Hold[$CellContext`BF$$, $CellContext`BF$47188$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Module[{$CellContext`PointO$, $CellContext`PointP$, \
+$CellContext`PointQ$, $CellContext`r$, $CellContext`b$, $CellContext`d$, \
+$CellContext`\[Theta]$, $CellContext`\[Phi]$, $CellContext`\[Alpha]$, \
+$CellContext`\[Beta]$, $CellContext`\[Gamma]$}, $CellContext`PointQ$ = (1/
+           2) ($CellContext`PointA$$ + $CellContext`PointB$$); \
+$CellContext`d$ = (1/
+           2) (Part[$CellContext`PointA$$ - $CellContext`PointB$$, 1]^2 + 
+            Part[$CellContext`PointA$$ - $CellContext`PointB$$, 2]^2)^
+           Rational[1, 2]; $CellContext`b$ = 
+         Abs[$CellContext`BF$$] $CellContext`d$; 
+        If[$CellContext`BF$$ != 
+          0, $CellContext`\[Theta]$ = 
+           Apply[ArcTan, 
+             Sign[$CellContext`BF$$] ($CellContext`PointB$$ - \
+$CellContext`PointA$$)]; $CellContext`\[Phi]$ = $CellContext`\[Theta]$ - 
+            Sign[$CellContext`BF$$] (Pi/
+             2); $CellContext`r$ = ($CellContext`b$^2 + $CellContext`d$^2)/(
+            2 $CellContext`b$); $CellContext`PointP$ = $CellContext`PointQ$ + 
+            Sign[$CellContext`BF$$] {$CellContext`b$ 
+               Cos[$CellContext`\[Phi]$], $CellContext`b$ 
+               Sin[$CellContext`\[Phi]$]}; $CellContext`PointO$ = \
+$CellContext`PointQ$ - 
+            Sign[$CellContext`BF$$] {($CellContext`r$ - $CellContext`b$) 
+              Cos[$CellContext`\[Phi]$], ($CellContext`r$ - $CellContext`b$) 
+              Sin[$CellContext`\[Phi]$]}; $CellContext`\[Alpha]$ = 
+           Apply[ArcTan, $CellContext`PointA$$ - $CellContext`PointO$]; \
+$CellContext`\[Beta]$ = 
+           Apply[ArcTan, $CellContext`PointB$$ - $CellContext`PointO$]; \
+$CellContext`\[Alpha]$ = 
+           If[$CellContext`BF$$ > 0, $CellContext`\[Alpha]$ + 
+             Floor[$CellContext`\[Beta]$ - $CellContext`\[Alpha]$, 2 
+               Pi], $CellContext`\[Alpha]$ + 
+             Ceiling[$CellContext`\[Beta]$ - $CellContext`\[Alpha]$, 2 Pi]]; 
+          Null, $CellContext`\[Theta]$ = Indeterminate; $CellContext`\[Phi]$ = 
+           Indeterminate; $CellContext`r$ = Infinity; $CellContext`PointP$ = 
+           Indeterminate; $CellContext`PointO$ = 
+           Indeterminate; $CellContext`\[Alpha]$ = 
+           Indeterminate; $CellContext`\[Beta]$ = Indeterminate; Null]; Show[
+          Graphics[{
+            Line[{$CellContext`PointA$$, $CellContext`PointB$$}], 
+            PointSize[Large], 
+            Point[$CellContext`PointQ$], 
+            If[$CellContext`BF$$ != 0, 
+             Point[{$CellContext`PointP$, $CellContext`PointO$}]], 
+            Text[
+             Style["A", 14], $CellContext`PointA$$ + {-0.5, 0}], 
+            Text[
+             Style["B", 14], $CellContext`PointB$$ + {0.5, 0}], 
+            If[$CellContext`BF$$ != 0, {
+              Text[
+               Style["O", 14], $CellContext`PointO$ + {-0.3, 0}], 
+              Text[
+               Style["P", 14], $CellContext`PointP$ + {0.5, -0.5}]}], 
+            Text[
+             Style["Q", 14], $CellContext`PointQ$ + {0.5, 0}], 
+            Text[
+             StringJoin["r=", 
+              ToString[$CellContext`r$]], {-6, 6}, {-1, 1}], 
+            Text[
+             StringJoin["d=", 
+              ToString[$CellContext`d$]], {-6, 5.7}, {-1, 1}], 
+            Text[
+             StringJoin["\[Alpha]=", 
+              ToString[$CellContext`\[Alpha]$]], {-6, 5.4}, {-1, 1}], 
+            Text[
+             StringJoin["\[Beta]=", 
+              ToString[$CellContext`\[Beta]$]], {-6, 5.1}, {-1, 1}], 
+            If[$CellContext`BF$$ != 0, 
+             
+             Circle[$CellContext`PointO$, $CellContext`r$, {$CellContext`\
+\[Alpha]$, $CellContext`\[Beta]$}]]}], Axes -> True, 
+          PlotRange -> {{-6, 6}, {-6, 6}}]], 
+      "Specifications" :> {{{$CellContext`PointA$$, {-4.7, -4.7}}, {-5, -5}, {
+         5, 5}, ControlType -> 
+         Locator}, {{$CellContext`PointB$$, {5., 4.3}}, {-5, -5}, {5, 5}, 
+         ControlType -> Locator}, {{$CellContext`BF$$, 0.7}, -1, 1}}, 
+      "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{409., {224., 230.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.560398790005389*^9, 3.560398797455584*^9}, {
+   3.560398832622514*^9, 3.560398848770816*^9}, 3.560398919703538*^9, 
+   3.560398970390806*^9, 3.56039904347371*^9, 3.560399086186425*^9, {
+   3.5603991455489283`*^9, 3.5603991564528017`*^9}, 3.560399243820656*^9, {
+   3.560399296423888*^9, 3.560399317478524*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+      "PointA", ",", "PointB", ",", "PointO", ",", "PointP", ",", "PointQ", 
+       ",", "r", ",", "b", ",", "d", ",", "\[Theta]", ",", "\[Phi]", ",", 
+       "\[Alpha]", ",", "\[Beta]", ",", "\[Gamma]"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"d", "=", 
+       RowBox[{
+        FractionBox["1", "2"], 
+        SqrtBox[
+         RowBox[{
+          SuperscriptBox["dx", "2"], "+", 
+          SuperscriptBox["dy", "2"]}]]}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"b", "=", 
+       RowBox[{
+        RowBox[{"Abs", "[", "BF", "]"}], "*", "d"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"If", "[", 
+       RowBox[{
+        RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+        RowBox[{"(", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"\[Theta]", "=", 
+           RowBox[{"ArcTan", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"Sign", "[", "BF", "]"}], "dx"}], ",", 
+             RowBox[{
+              RowBox[{"Sign", "[", "BF", "]"}], "dy"}]}], "]"}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Phi]", "=", 
+           RowBox[{"\[Theta]", "-", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             FractionBox["\[Pi]", "2"]}]}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"r", "=", 
+           FractionBox[
+            RowBox[{
+             SuperscriptBox["b", "2"], "+", 
+             SuperscriptBox["d", "2"]}], 
+            RowBox[{"2", "b"}]]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"ox", "=", 
+           RowBox[{
+            FractionBox["dx", "2"], "-", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             RowBox[{"(", 
+              RowBox[{"r", "-", "b"}], ")"}], 
+             RowBox[{"Cos", "[", "\[Phi]", "]"}]}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"oy", "=", 
+           RowBox[{
+            FractionBox["dy", "2"], "-", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             RowBox[{"(", 
+              RowBox[{"r", "-", "b"}], ")"}], 
+             RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PointA", "=", 
+           RowBox[{"{", 
+            RowBox[{"0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"PointB", "=", 
+           RowBox[{"{", 
+            RowBox[{"dx", ",", "dy"}], "}"}]}], ";", "\[IndentingNewLine]", 
+          RowBox[{"PointQ", "=", 
+           RowBox[{
+            FractionBox["1", "2"], 
+            RowBox[{"(", 
+             RowBox[{"PointA", "+", "PointB"}], ")"}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PointP", "=", 
+           RowBox[{"PointQ", "+", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"b", " ", 
+                RowBox[{"Cos", "[", "\[Phi]", "]"}]}], ",", 
+               RowBox[{"b", " ", 
+                RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}], "}"}]}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PointO", "=", 
+           RowBox[{"PointQ", "-", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"r", "-", "b"}], ")"}], 
+                RowBox[{"Cos", "[", "\[Phi]", "]"}]}], ",", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"r", "-", "b"}], ")"}], 
+                RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}], "}"}]}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Alpha]", "=", 
+           RowBox[{"ArcTan", "@@", 
+            RowBox[{"(", 
+             RowBox[{"PointA", "-", "PointO"}], ")"}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Beta]", "=", 
+           RowBox[{"ArcTan", "@@", 
+            RowBox[{"(", 
+             RowBox[{"PointB", "-", "PointO"}], ")"}]}]}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Alpha]", "=", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", ">", "0"}], ",", 
+             RowBox[{"\[Alpha]", "+", 
+              RowBox[{"Floor", "[", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"\[Beta]", "-", "\[Alpha]"}], ")"}], ",", 
+                RowBox[{"2", "\[Pi]"}]}], "]"}]}], ",", 
+             RowBox[{"\[Alpha]", "+", 
+              RowBox[{"Ceiling", "[", 
+               RowBox[{
+                RowBox[{"(", 
+                 RowBox[{"\[Beta]", "-", "\[Alpha]"}], ")"}], ",", 
+                RowBox[{"2", "\[Pi]"}]}], "]"}]}]}], "]"}]}], ";"}], 
+         "\[IndentingNewLine]", ")"}], ",", 
+        RowBox[{"(", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"\[Theta]", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Phi]", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"r", "=", "Infinity"}], ";", "\[IndentingNewLine]", 
+          RowBox[{"PointP", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"PointO", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Alpha]", "=", "Indeterminate"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\[Beta]", "=", "Indeterminate"}], ";"}], 
+         "\[IndentingNewLine]", ")"}]}], "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"Show", "[", 
+       RowBox[{
+        RowBox[{"Graphics", "[", 
+         RowBox[{"{", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"Line", "[", 
+            RowBox[{"{", 
+             RowBox[{"PointA", ",", "PointB"}], "}"}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"PointSize", "[", "Large", "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Point", "[", "PointQ", "]"}], ",", "\[IndentingNewLine]", 
+           
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+             RowBox[{"Point", "[", 
+              RowBox[{"{", 
+               RowBox[{"PointP", ",", "PointO"}], "}"}], "]"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{"\"\<A\>\"", ",", "14"}], "]"}], ",", 
+             RowBox[{"PointA", "+", 
+              RowBox[{"{", 
+               RowBox[{
+                RowBox[{"-", ".5"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{"\"\<B\>\"", ",", "14"}], "]"}], ",", 
+             RowBox[{"PointB", "+", 
+              RowBox[{"{", 
+               RowBox[{".5", ",", "0"}], "}"}]}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Text", "[", 
+                RowBox[{
+                 RowBox[{"Style", "[", 
+                  RowBox[{"\"\<O\>\"", ",", "14"}], "]"}], ",", 
+                 RowBox[{"PointO", "+", 
+                  RowBox[{"{", 
+                   RowBox[{
+                    RowBox[{"-", ".3"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"Text", "[", 
+                RowBox[{
+                 RowBox[{"Style", "[", 
+                  RowBox[{"\"\<P\>\"", ",", "14"}], "]"}], ",", 
+                 RowBox[{"PointP", "+", 
+                  RowBox[{"{", 
+                   RowBox[{".5", ",", 
+                    RowBox[{"-", ".5"}]}], "}"}]}]}], "]"}]}], "}"}]}], "]"}],
+            ",", "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{"\"\<Q\>\"", ",", "14"}], "]"}], ",", 
+             RowBox[{"PointQ", "+", 
+              RowBox[{"{", 
+               RowBox[{".5", ",", "0"}], "}"}]}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<r=\>\"", "<>", 
+              RowBox[{"ToString", "[", "r", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "6"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<d=\>\"", "<>", 
+              RowBox[{"ToString", "[", "d", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "5.7"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<\[Alpha]=\>\"", "<>", 
+              RowBox[{"ToString", "[", "\[Alpha]", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "5.4"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"\"\<\[Beta]=\>\"", "<>", 
+              RowBox[{"ToString", "[", "\[Beta]", "]"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "6"}], ",", "5.1"}], "}"}], ",", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+             RowBox[{"Circle", "[", 
+              RowBox[{"PointO", ",", "r", ",", 
+               RowBox[{"{", 
+                RowBox[{"\[Alpha]", ",", "\[Beta]"}], "}"}]}], "]"}]}], 
+            "]"}]}], "\[IndentingNewLine]", "}"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Axes", "\[Rule]", "True"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"PlotRange", "\[Rule]", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", "6"}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "6"}], ",", "6"}], "}"}]}], "}"}]}]}], "]"}]}]}], 
+    "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dx", ",", "1"}], "}"}], ",", " ", 
+     RowBox[{"-", "5"}], ",", "5"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"dy", ",", "1"}], "}"}], ",", 
+     RowBox[{"-", "5"}], ",", "5"}], "}"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"BF", ",", "0.7"}], "}"}], ",", 
+     RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.560515418408671*^9, 3.56051564834163*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`BF$$ = 
+    0.06499999999999995, $CellContext`dx$$ = -5., $CellContext`dy$$ = \
+-1.6400000000000001`, Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`dx$$], 1}, -5, 5}, {{
+       Hold[$CellContext`dy$$], 1}, -5, 5}, {{
+       Hold[$CellContext`BF$$], 0.7}, -1, 1}}, Typeset`size$$ = {
+    360., {179., 184.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`dx$51603$$ = 
+    0, $CellContext`dy$51604$$ = 0, $CellContext`BF$51605$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`BF$$ = 0.7, $CellContext`dx$$ = 
+        1, $CellContext`dy$$ = 1}, "ControllerVariables" :> {
+        Hold[$CellContext`dx$$, $CellContext`dx$51603$$, 0], 
+        Hold[$CellContext`dy$$, $CellContext`dy$51604$$, 0], 
+        Hold[$CellContext`BF$$, $CellContext`BF$51605$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, "Body" :> 
+      Module[{$CellContext`PointA$, $CellContext`PointB$, \
+$CellContext`PointO$, $CellContext`PointP$, $CellContext`PointQ$, \
+$CellContext`r$, $CellContext`b$, $CellContext`d$, $CellContext`\[Theta]$, \
+$CellContext`\[Phi]$, $CellContext`\[Alpha]$, $CellContext`\[Beta]$, \
+$CellContext`\[Gamma]$}, $CellContext`d$ = (1/
+           2) ($CellContext`dx$$^2 + $CellContext`dy$$^2)^
+           Rational[1, 2]; $CellContext`b$ = 
+         Abs[$CellContext`BF$$] $CellContext`d$; 
+        If[$CellContext`BF$$ != 
+          0, $CellContext`\[Theta]$ = 
+           ArcTan[Sign[$CellContext`BF$$] $CellContext`dx$$, 
+             Sign[$CellContext`BF$$] $CellContext`dy$$]; $CellContext`\[Phi]$ = \
+$CellContext`\[Theta]$ - 
+            Sign[$CellContext`BF$$] (Pi/
+             2); $CellContext`r$ = ($CellContext`b$^2 + $CellContext`d$^2)/(
+            2 $CellContext`b$); $CellContext`ox = $CellContext`dx$$/2 - 
+            Sign[$CellContext`BF$$] ($CellContext`r$ - $CellContext`b$) 
+            Cos[$CellContext`\[Phi]$]; $CellContext`oy = $CellContext`dy$$/2 - 
+            Sign[$CellContext`BF$$] ($CellContext`r$ - $CellContext`b$) 
+            Sin[$CellContext`\[Phi]$]; $CellContext`PointA$ = {0, 
+            0}; $CellContext`PointB$ = {$CellContext`dx$$, $CellContext`dy$$}; \
+$CellContext`PointQ$ = (1/
+             2) ($CellContext`PointA$ + $CellContext`PointB$); \
+$CellContext`PointP$ = $CellContext`PointQ$ + 
+            Sign[$CellContext`BF$$] {$CellContext`b$ 
+               Cos[$CellContext`\[Phi]$], $CellContext`b$ 
+               Sin[$CellContext`\[Phi]$]}; $CellContext`PointO$ = \
+$CellContext`PointQ$ - 
+            Sign[$CellContext`BF$$] {($CellContext`r$ - $CellContext`b$) 
+              Cos[$CellContext`\[Phi]$], ($CellContext`r$ - $CellContext`b$) 
+              Sin[$CellContext`\[Phi]$]}; $CellContext`\[Alpha]$ = 
+           Apply[ArcTan, $CellContext`PointA$ - $CellContext`PointO$]; \
+$CellContext`\[Beta]$ = 
+           Apply[ArcTan, $CellContext`PointB$ - $CellContext`PointO$]; \
+$CellContext`\[Alpha]$ = 
+           If[$CellContext`BF$$ > 0, $CellContext`\[Alpha]$ + 
+             Floor[$CellContext`\[Beta]$ - $CellContext`\[Alpha]$, 2 
+               Pi], $CellContext`\[Alpha]$ + 
+             Ceiling[$CellContext`\[Beta]$ - $CellContext`\[Alpha]$, 2 Pi]]; 
+          Null, $CellContext`\[Theta]$ = Indeterminate; $CellContext`\[Phi]$ = 
+           Indeterminate; $CellContext`r$ = Infinity; $CellContext`PointP$ = 
+           Indeterminate; $CellContext`PointO$ = 
+           Indeterminate; $CellContext`\[Alpha]$ = 
+           Indeterminate; $CellContext`\[Beta]$ = Indeterminate; Null]; Show[
+          Graphics[{
+            Line[{$CellContext`PointA$, $CellContext`PointB$}], 
+            PointSize[Large], 
+            Point[$CellContext`PointQ$], 
+            If[$CellContext`BF$$ != 0, 
+             Point[{$CellContext`PointP$, $CellContext`PointO$}]], 
+            Text[
+             Style["A", 14], $CellContext`PointA$ + {-0.5, 0}], 
+            Text[
+             Style["B", 14], $CellContext`PointB$ + {0.5, 0}], 
+            If[$CellContext`BF$$ != 0, {
+              Text[
+               Style["O", 14], $CellContext`PointO$ + {-0.3, 0}], 
+              Text[
+               Style["P", 14], $CellContext`PointP$ + {0.5, -0.5}]}], 
+            Text[
+             Style["Q", 14], $CellContext`PointQ$ + {0.5, 0}], 
+            Text[
+             StringJoin["r=", 
+              ToString[$CellContext`r$]], {-6, 6}, {-1, 1}], 
+            Text[
+             StringJoin["d=", 
+              ToString[$CellContext`d$]], {-6, 5.7}, {-1, 1}], 
+            Text[
+             StringJoin["\[Alpha]=", 
+              ToString[$CellContext`\[Alpha]$]], {-6, 5.4}, {-1, 1}], 
+            Text[
+             StringJoin["\[Beta]=", 
+              ToString[$CellContext`\[Beta]$]], {-6, 5.1}, {-1, 1}], 
+            If[$CellContext`BF$$ != 0, 
+             
+             Circle[$CellContext`PointO$, $CellContext`r$, {$CellContext`\
+\[Alpha]$, $CellContext`\[Beta]$}]]}], Axes -> True, 
+          PlotRange -> {{-6, 6}, {-6, 6}}]], 
+      "Specifications" :> {{{$CellContext`dx$$, 1}, -5, 
+         5}, {{$CellContext`dy$$, 1}, -5, 5}, {{$CellContext`BF$$, 0.7}, -1, 
+         1}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{403., {249., 255.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{{3.560515622272119*^9, 3.5605156488675537`*^9}}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BulgeArcIllustration", "[", 
+   RowBox[{"dx_", ",", "dy_", ",", "BF_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "PointA", ",", "PointB", ",", "PointO", ",", "PointP", ",", "PointQ", 
+      ",", "r", ",", "b", ",", "d", ",", "\[Theta]", ",", "\[Phi]", ",", 
+      "\[Alpha]", ",", "\[Beta]", ",", "\[Gamma]"}], "}"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"d", "=", 
+      RowBox[{
+       FractionBox["1", "2"], 
+       SqrtBox[
+        RowBox[{
+         SuperscriptBox["dx", "2"], "+", 
+         SuperscriptBox["dy", "2"]}]]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"b", "=", 
+      RowBox[{
+       RowBox[{"Abs", "[", 
+        FractionBox["BF", "127"], "]"}], "*", "d"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+       RowBox[{"(", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\[Theta]", "=", 
+          RowBox[{"ArcTan", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], "dx"}], ",", 
+            RowBox[{
+             RowBox[{"Sign", "[", "BF", "]"}], "dy"}]}], "]"}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\[Phi]", "=", 
+          RowBox[{"\[Theta]", "-", 
+           RowBox[{
+            RowBox[{"Sign", "[", "BF", "]"}], 
+            FractionBox["\[Pi]", "2"]}]}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"r", "=", 
+          FractionBox[
+           RowBox[{
+            SuperscriptBox["b", "2"], "+", 
+            SuperscriptBox["d", "2"]}], 
+           RowBox[{"2", "b"}]]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"ox", "=", 
+          RowBox[{
+           FractionBox["dx", "2"], "-", 
+           RowBox[{
+            RowBox[{"Sign", "[", "BF", "]"}], 
+            RowBox[{"(", 
+             RowBox[{"r", "-", "b"}], ")"}], 
+            RowBox[{"Cos", "[", "\[Phi]", "]"}]}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"oy", "=", 
+          RowBox[{
+           FractionBox["dy", "2"], "-", 
+           RowBox[{
+            RowBox[{"Sign", "[", "BF", "]"}], 
+            RowBox[{"(", 
+             RowBox[{"r", "-", "b"}], ")"}], 
+            RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"PointA", "=", 
+          RowBox[{"{", 
+           RowBox[{"0", ",", "0"}], "}"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"PointB", "=", 
+          RowBox[{"{", 
+           RowBox[{"dx", ",", "dy"}], "}"}]}], ";", "\[IndentingNewLine]", 
+         RowBox[{"PointQ", "=", 
+          RowBox[{
+           FractionBox["1", "2"], 
+           RowBox[{"(", 
+            RowBox[{"PointA", "+", "PointB"}], ")"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"PointP", "=", 
+          RowBox[{"PointQ", "+", 
+           RowBox[{
+            RowBox[{"Sign", "[", "BF", "]"}], 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"b", " ", 
+               RowBox[{"Cos", "[", "\[Phi]", "]"}]}], ",", 
+              RowBox[{"b", " ", 
+               RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}], "}"}]}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"PointO", "=", 
+          RowBox[{"PointQ", "-", 
+           RowBox[{
+            RowBox[{"Sign", "[", "BF", "]"}], 
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"r", "-", "b"}], ")"}], 
+               RowBox[{"Cos", "[", "\[Phi]", "]"}]}], ",", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"r", "-", "b"}], ")"}], 
+               RowBox[{"Sin", "[", "\[Phi]", "]"}]}]}], "}"}]}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\[Alpha]", "=", 
+          RowBox[{"ArcTan", "@@", 
+           RowBox[{"(", 
+            RowBox[{"PointA", "-", "PointO"}], ")"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\[Beta]", "=", 
+          RowBox[{"ArcTan", "@@", 
+           RowBox[{"(", 
+            RowBox[{"PointB", "-", "PointO"}], ")"}]}]}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\[Alpha]", "=", 
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"BF", ">", "0"}], ",", 
+            RowBox[{"\[Alpha]", "+", 
+             RowBox[{"Floor", "[", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"\[Beta]", "-", "\[Alpha]"}], ")"}], ",", 
+               RowBox[{"2", "\[Pi]"}]}], "]"}]}], ",", 
+            RowBox[{"\[Alpha]", "+", 
+             RowBox[{"Ceiling", "[", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"\[Beta]", "-", "\[Alpha]"}], ")"}], ",", 
+               RowBox[{"2", "\[Pi]"}]}], "]"}]}]}], "]"}]}], ";"}], 
+        "\[IndentingNewLine]", ")"}], ",", 
+       RowBox[{"(", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"\[Theta]", "=", "Indeterminate"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\[Phi]", "=", "Indeterminate"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"r", "=", "Infinity"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"PointP", "=", "Indeterminate"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"PointO", "=", "Indeterminate"}], ";", "\[IndentingNewLine]", 
+         RowBox[{"\[Alpha]", "=", "Indeterminate"}], ";", 
+         "\[IndentingNewLine]", 
+         RowBox[{"\[Beta]", "=", "Indeterminate"}], ";"}], 
+        "\[IndentingNewLine]", ")"}]}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"Graphics", "[", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"Line", "[", 
+         RowBox[{"{", 
+          RowBox[{"PointA", ",", "PointB"}], "}"}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"PointSize", "[", "Large", "]"}], ",", "\[IndentingNewLine]", 
+        
+        RowBox[{"Point", "[", "PointQ", "]"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+          RowBox[{"Point", "[", 
+           RowBox[{"{", 
+            RowBox[{"PointP", ",", "PointO"}], "}"}], "]"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"Style", "[", 
+           RowBox[{"\"\<A\>\"", ",", "14"}], "]"}], ",", 
+          RowBox[{"PointA", "+", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", ".5"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"Style", "[", 
+           RowBox[{"\"\<B\>\"", ",", "14"}], "]"}], ",", 
+          RowBox[{"PointB", "+", 
+           RowBox[{"{", 
+            RowBox[{".5", ",", "0"}], "}"}]}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+          RowBox[{"{", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"Text", "[", 
+             RowBox[{
+              RowBox[{"Style", "[", 
+               RowBox[{"\"\<O\>\"", ",", "14"}], "]"}], ",", 
+              RowBox[{"PointO", "+", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", ".3"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"Text", "[", 
+             RowBox[{
+              RowBox[{"Style", "[", 
+               RowBox[{"\"\<P\>\"", ",", "14"}], "]"}], ",", 
+              RowBox[{"PointP", "+", 
+               RowBox[{"{", 
+                RowBox[{".5", ",", 
+                 RowBox[{"-", ".5"}]}], "}"}]}]}], "]"}]}], "}"}]}], "]"}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"Style", "[", 
+           RowBox[{"\"\<Q\>\"", ",", "14"}], "]"}], ",", 
+          RowBox[{"PointQ", "+", 
+           RowBox[{"{", 
+            RowBox[{".5", ",", "0"}], "}"}]}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"\"\<r=\>\"", "<>", 
+           RowBox[{"ToString", "[", "r", "]"}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "6"}], ",", "6"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"\"\<d=\>\"", "<>", 
+           RowBox[{"ToString", "[", "d", "]"}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "6"}], ",", "5.7"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"\"\<\[Alpha]=\>\"", "<>", 
+           RowBox[{"ToString", "[", "\[Alpha]", "]"}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "6"}], ",", "5.4"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Text", "[", 
+         RowBox[{
+          RowBox[{"\"\<\[Beta]=\>\"", "<>", 
+           RowBox[{"ToString", "[", "\[Beta]", "]"}]}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "6"}], ",", "5.1"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"-", "1"}], ",", "1"}], "}"}]}], "]"}], ",", 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"BF", "\[NotEqual]", "0"}], ",", 
+          RowBox[{"Circle", "[", 
+           RowBox[{"PointO", ",", "r", ",", 
+            RowBox[{"{", 
+             RowBox[{"\[Alpha]", ",", "\[Beta]"}], "}"}]}], "]"}]}], "]"}]}], 
+       "\[IndentingNewLine]", "}"}], "]"}]}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.5605457271782017`*^9, 3.560545838131288*^9}}]
+},
+WindowSize->{740, 756},
+WindowMargins->{{195, Automatic}, {38, Automatic}},
+PrintingCopies->1,
+PrintingPageRange->{1, Automatic},
+ShowSelection->True,
+CellContext->Notebook,
+FrontEndVersion->"8.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (October 5, \
+2011)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[579, 22, 11843, 306, 853, "Input"],
+Cell[12425, 330, 6258, 119, 471, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18720, 454, 11421, 292, 955, "Input"],
+Cell[30144, 748, 6090, 117, 521, "Output"]
+}, Open  ]],
+Cell[36249, 868, 10003, 261, 903, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)
