@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Point;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.URL;
 
@@ -19,11 +20,22 @@ public class Resource {
     public static final Image closedGrabImage = getImage("ClosedGrab.png");
     public static final Image openGrabImage = getImage("OpenGrab.png");
 
+    public static InputStream getResource(String name) {
+        return getResource(name, ClassLoader.getSystemClassLoader());
+    }
+
+    public static InputStream getResource(
+        String name,
+        ClassLoader classLoader)
+    {
+        return classLoader.getResourceAsStream(resourcePrefix + name);
+    }
+
     public static Image getImage(final String name) {
         return getImage(name, ClassLoader.getSystemClassLoader());
     }
     
-    public static Image getImage(final String name, ClassLoader classLoader) {
+    public static Image getImage(String name, ClassLoader classLoader) {
         try {
             URL url = classLoader.getResource(
                 resourcePrefix + name);

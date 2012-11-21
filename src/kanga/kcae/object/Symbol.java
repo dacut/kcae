@@ -22,14 +22,34 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 /** A device symbol for use in the schematic editor.
  */
-public class Symbol implements Shape, Comparable<Symbol>, Serializable {
+public class Symbol implements Comparable<Symbol>, Serializable {
     /** Create a new symbol.
      * 
-     *  @param name     The name of the symbol.
+     *  @param  name    The name of the symbol.
      */
-    public Symbol(@Nullable final String name) {
+    public Symbol(
+        @CheckForNull final String name)
+    {
+        this(name, null, null);
+    }
+
+    /** Create a new symbol.
+     * 
+     *  @param  name    The name of the symbol.
+     *  @param  pinNameFont The default font to use for pin names (if not
+     *                  specified on the pin itself).
+     *  @param  pinNumberFont The default font to use for pin numbers (if not
+     *                  specified on the pin itself).
+     */
+    public Symbol(
+        @CheckForNull final String name,
+        @CheckForNull final Font pinNameFont,
+        @CheckForNull final Font pinNumberFont)
+    {
         this.name = name;
         this.shapes = new ShapeGroup();
+        this.pinNameFont = pinNameFont;
+        this.pinNumberFont = pinNumberFont;
         return;
     }
 
@@ -60,7 +80,8 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
         return this.pins.add(pin);
     }
     
-    /** Returns a navigable set of the pins on this device (sorted by name).
+    /** Returns an immutable navigable set of the pins on this device, sorted
+     *  by name.
      * 
      *  @return A set of the pins on this device.
      */
@@ -70,6 +91,16 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
         return unmodifiableSet(this.pins);
     }
     
+    /** Sets the pins on the device.
+     * 
+     *  @param  pins    A set of pins on the device.  This may be {@code null},
+     *                  in which case the device will contain no pins.  However,
+     *                  if this is not {@code null}, it may <em>not</em> contain
+     *                  {@code null} elements.
+     *                  
+     *  @throws NullPointerException If {@code pins} is not {@code null} but
+     *          contains a {@code null} element.
+     */
     public void setPins(@CheckForNull final Collection<Pin> pins) {
         if (pins != null) {
             for (final Pin pin : pins) {
@@ -89,39 +120,124 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
         return;
     }
 
+    /** The default font to use for drawing pin names.
+     * 
+     *  This font is used if a pin does not specify its own font.
+     *  
+     *  @return The default pin name font.
+     */
+    @Nonnull
+    public Font getPinNameFont() {
+        if (this.pinNameFont == null) {
+            return FailsafeDefaults.ISO_FONT_8MM;
+        } else {
+            return this.pinNameFont;
+        }
+    }
+
+    /** Sets the default font to use for drawing pin names.
+     * 
+     *  @param  pinNameFont The default pin name font.  If {@code null}, an
+     *                  application default is used.
+     */
+    public void setPinNameFont(@CheckForNull Font pinNameFont) {
+        this.pinNameFont = pinNameFont;
+    }
+
+    /** The font to use for drawing the specified pin's name.
+     * 
+     *  @param  pin     The pin being drawn.
+     *  
+     *  @return The font to use 
+     */
+    @Nonnull
+    public Font getPinNameFont(@Nonnull final Pin pin) {
+        final Font pinFont = pin.getPinNameFont();
+        if (pinFont != null) {
+            return pinFont;
+        } else {
+            return this.getPinNameFont();
+        }
+    }
+
+    /** The default font to use for drawing pin numbers.
+     * 
+     *  This font is used if a pin does not specify its own font.
+     * 
+     *  @return The default pin number font.
+     */
+    public Font getPinNumberFont() {
+        if (this.pinNumberFont == null) {
+            return FailsafeDefaults.ISO_FONT_8MM;
+        } else {
+            return this.pinNumberFont;
+        }
+    }
+
+    /** The font to use when drawing the specified pin's number.
+     * 
+     *  @param  pin     The pin being drawn.
+     *  
+     *  @return The font to use 
+     */
+    @Nonnull
+    public Font getPinNumberFont(@Nonnull final Pin pin) {
+        final Font pinFont = pin.getPinNumberFont();
+        if (pinFont != null) {
+            return pinFont;
+        } else {
+            return this.getPinNumberFont();
+        }
+    }
+    
+    
+    /** Sets the default font to use for drawing pin numbers.
+     * 
+     *  @param  pinNumberFont The default pin number font.  If {@code null}, an
+     *                  application default is used.
+     */
+    public void setPinNumberFont(@CheckForNull Font pinNumberFont) {
+        this.pinNumberFont = pinNumberFont;
+    }
+
+    /** Returns the shapes which make up the symbol.
+     * 
+     *  The returned {@link ShapeGroup} is shared with the symbol: any
+     *  modifications made are actually being made on the symbol itself.
+     *  
+     *  @return The shapes which make up the symbol.
+     */
     @JsonProperty
     @Nonnull
     public ShapeGroup getShapes() {
         return this.shapes;
     }
 
+    /** Sets the shapes which make up the symbol.
+     * 
+     *  The symbol will take ownership of the shape group passed in.
+     * 
+     *  @param  shapes  The shapes which make up the symbol.  If {@code null},
+     *                  an empty shape group is created.
+     */
     @JsonProperty
     public void setShapes(@CheckForNull final ShapeGroup shapes) {
         if (shapes == null) {
             this.shapes = new ShapeGroup();
         } else {
-            try {
-                this.shapes = shapes.clone();
-            }
-            catch (final CloneNotSupportedException e) {
-                throw new RuntimeException("ShapeGroup " + shapes +
-                    " does not support clone?", e);
-            }
+            this.shapes = shapes;
         }
     }
 
-    @Override
     @CheckForNull
     public Rectangle getBoundingBox() {
         return this.getShapes().getBoundingBox();
     }
 
-    @Override
     public void setLineStyle(final LineStyle lineStyle) {
         this.getShapes().setLineStyle(lineStyle);
     }
 
-    @Override
     public void setFillStyle(final FillStyle fillStyle) {
         this.getShapes().setFillStyle(fillStyle);
     }
@@ -173,6 +289,12 @@ public class Symbol implements Shape, Comparable<Symbol>, Serializable {
     
     @Nonnull
     private ShapeGroup shapes;
+    
+    @CheckForNull
+    private Font pinNameFont;
+    
+    @CheckForNull
+    private Font pinNumberFont;
     
     @Nonnull
     private final Set<Pin> pins =

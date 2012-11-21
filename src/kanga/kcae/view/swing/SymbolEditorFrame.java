@@ -101,6 +101,7 @@ public class SymbolEditorFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 symView.setCurrentTool(symView.getPanZoomTool());
+                symView.grabFocus();
             }
         });
         
@@ -108,6 +109,7 @@ public class SymbolEditorFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 symView.setCurrentTool(symView.getLineTool());
+                symView.grabFocus();
             }
             
         });
@@ -116,6 +118,7 @@ public class SymbolEditorFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 symView.setCurrentTool(symView.getPinTool());
+                symView.grabFocus();
             }
         });
         
@@ -171,7 +174,7 @@ public class SymbolEditorFrame extends JFrame {
         sym.setShapes(sg);
         sym.setLineStyle(new LineStyle(500000, Color.black));
         
-        final Pin p1 = new Pin("VCC", "1", SignalDirection.PASSIVE,
+        final Pin p1 = new Pin("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "1", SignalDirection.PASSIVE,
             new Point(-10000000, 5000000), new Point(0, 5000000),
             EnumSet.of(PinStyle.BUS));
         sym.addPin(p1);

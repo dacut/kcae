@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       157,          7]
-NotebookDataLength[     92977,       2569]
-NotebookOptionsPosition[     88217,       2418]
-NotebookOutlinePosition[     88696,       2439]
-CellTagsIndexPosition[     88653,       2436]
+NotebookDataLength[     47556,       1242]
+NotebookOptionsPosition[     45481,       1168]
+NotebookOutlinePosition[     45961,       1189]
+CellTagsIndexPosition[     45918,       1186]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -43,2382 +43,1132 @@ Cell[TextData[{
   3.557549727847385*^9, 3.557549806090785*^9}, {3.557595677353868*^9, 
   3.557595685999321*^9}}],
 
-Cell[CellGroupData[{
-
-Cell["Given Parameters", "Subsection",
- CellChangeTimes->{{3.557548690173963*^9, 3.557548717852174*^9}, {
-  3.5575487707223873`*^9, 3.557548773162764*^9}, {3.557605337336735*^9, 
-  3.557605337863308*^9}}],
-
 Cell[BoxData[
  RowBox[{
-  RowBox[{"A", "=", 
-   RowBox[{"{", 
-    RowBox[{"0", ",", "0"}], "}"}]}], ";", " ", 
-  RowBox[{"B", "=", 
-   RowBox[{"{", 
-    RowBox[{"x", ",", "y"}], "}"}]}], ";"}]], "Input",
- CellChangeTimes->{{3.557547250855135*^9, 3.557547286253366*^9}, {
-   3.557547335284934*^9, 3.5575473381556997`*^9}, {3.5575475408995113`*^9, 
-   3.55754755366669*^9}, {3.5575476777193947`*^9, 3.5575476794627647`*^9}, {
-   3.5575497841728487`*^9, 3.557549822228571*^9}, {3.557549899233879*^9, 
-   3.5575499062730513`*^9}, {3.55754999608456*^9, 3.5575499980130053`*^9}, {
-   3.5575876826937857`*^9, 3.5575877006777887`*^9}, 3.5575877550407057`*^9, {
-   3.557590672046873*^9, 3.5575906775484858`*^9}, {3.557590921287264*^9, 
-   3.557590991887517*^9}, {3.557595601046133*^9, 3.557595613153626*^9}, {
-   3.557605312593439*^9, 3.557605319617463*^9}}],
-
-Cell["\<\
-We use inverse trigonometric functions extensively in this notebook, so we\
-\[CloseCurlyQuote]ll disable those warning messages:\
-\>", "Text",
- CellChangeTimes->{{3.557747298882505*^9, 3.557747314222947*^9}, {
-  3.557848749343405*^9, 3.55784879162821*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"SetOptions", "[", 
-   RowBox[{"Solve", ",", " ", 
-    RowBox[{"InverseFunctions", "\[Rule]", "True"}]}], "]"}], ";"}]], "Input",\
-
- CellChangeTimes->{{3.55774731632689*^9, 3.557747327616796*^9}, 
-   3.557849836672078*^9, {3.5578500791435623`*^9, 3.557850079567945*^9}}],
-
-Cell["\<\
-This is a function used to accumulate solution rules.\
-\>", "Text",
- CellChangeTimes->{{3.557850081742468*^9, 3.557850096788908*^9}}],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"solutions", "=", 
-   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"Solution", "[", "r_Rule", "]"}], " ", ":=", " ", 
-   RowBox[{"(", 
-    RowBox[{
-     RowBox[{"solutions", " ", "=", " ", 
-      RowBox[{"Join", "[", 
-       RowBox[{"solutions", ",", " ", 
-        RowBox[{"{", "r", "}"}]}], "]"}]}], ";", " ", "r"}], ")"}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{
-   RowBox[{"Solution", "[", 
-    RowBox[{"{", "r_", "}"}], "]"}], " ", ":=", " ", 
-   RowBox[{"Solution", "[", "r", "]"}]}], ";"}]}], "Input",
- CellChangeTimes->{{3.557850101654595*^9, 3.557850181596849*^9}, {
-  3.557850503018861*^9, 3.557850503298831*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell["Setup", "Subsection",
- CellChangeTimes->{{3.55754991602427*^9, 3.557549946204289*^9}, {
-  3.5576056294221087`*^9, 3.557605630140719*^9}, {3.557848871681467*^9, 
-  3.557848873240938*^9}}],
-
-Cell[BoxData[
- GraphicsBox[
-  {Thickness[Large], 
-   CircleBox[
-    NCache[{Rational[245, 24] 
-      Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]], 
-      Rational[-245, 24] 
-      Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {
-     8.893621024226094, 5.011344582234197}], NCache[
-    Rational[245, 24], 10.208333333333334`]], LineBox[{{0, 0}, {11, 15}}], 
-   LineBox[NCache[{{0, 0}, {
-      Rational[245, 24] 
-       Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {11, 
-      15}}, {{0, 0}, {8.893621024226094, 5.011344582234197}, {11, 15}}]], 
-   LineBox[{{0, 0}, {11, 0}, {11, 15}}], 
-   LineBox[NCache[{{
-      Rational[245, 24] 
-       Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {
-      Rational[1, 16608] (118800 + 
-        59290 Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]] + 
-        80850 Sin[
-          ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]] - ((-118800 - 
-           59290 Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]] - 
-           80850 Sin[
-            ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]])^2 - 
-         33216 (653400 + 
-          889350 Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]))^
-        Rational[1, 2]), 
-       Rational[1, 11] (Rational[19965, 346] + 
-        Rational[-148225, 2768] 
-         Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]] + 
-        Rational[-202125, 2768] 
-         Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]] + 
-        Rational[
-          5, 5536] ((-118800 - 59290 
-             Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]] - 
-             80850 Sin[
-              ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]])^2 - 
-           33216 (653400 + 
-            889350 Sin[
-              ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]))^
-          Rational[1, 2])}}, {{8.893621024226094, 5.011344582234197}, {
-     1.8832601398883706`, 12.431917991061315`}}]], 
-   LineBox[NCache[{{
-      Rational[245, 24] 
-       Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {11, 
-      0}}, {{8.893621024226094, 5.011344582234197}, {11, 0}}]], 
-   LineBox[NCache[{{
-      Rational[245, 24] 
-       Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {
-      11, Rational[-245, 24] 
-       Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}}, {{
-      8.893621024226094, 5.011344582234197}, {11, 5.011344582234197}}]], 
-   InsetBox[
-    StyleBox["\<\"A\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {-0.5, -0.5}], InsetBox[
-    StyleBox["\<\"B\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, 15.5}], InsetBox[
-    StyleBox["\<\"O\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {9.393621024226094, 5.311344582234197}], InsetBox[
-    StyleBox["\<\"P\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, -0.5}], InsetBox[
-    StyleBox["\<\"Q\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {5., 8.}], InsetBox[
-    StyleBox["\<\"R\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, 5.511344582234197}], InsetBox[
-    StyleBox["\<\"\[Beta]\"\>",
-     StripOnInput->False,
-     FontSize->14], {1.5, 1.3}], InsetBox[
-    StyleBox["\<\"\[Beta]\"\>",
-     StripOnInput->False,
-     FontSize->14], {9.9, 12.8}], InsetBox[
-    StyleBox["\<\"\[Alpha]\"\>",
-     StripOnInput->False,
-     FontSize->14], {10.7, 12}], InsetBox[
-    StyleBox["\<\"\[Gamma]\"\>",
-     StripOnInput->False,
-     FontSize->14], {2, 0.5}], InsetBox[
-    StyleBox["\<\"\[Delta]\"\>",
-     StripOnInput->False,
-     FontSize->14], 
-    NCache[{-1 + 
-      Rational[245, 24] 
-       Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]], 
-      Rational[-245, 24] 
-      Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {
-     7.8936210242260945`, 5.011344582234197}]], InsetBox[
-    StyleBox["\<\"\[Delta]\"\>",
-     StripOnInput->False,
-     FontSize->14], 
-    NCache[{8.693621024226095, 1 + 
-      Rational[-245, 24] 
-       Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {
-     8.693621024226095, 6.011344582234197}]], InsetBox[
-    StyleBox["\<\"\[Phi]\"\>",
-     StripOnInput->False,
-     FontSize->14], {10.093621024226094`, 6.511344582234197}], 
-   GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"b\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], 
-     NCache[{Rational[9, 2], Rational[21, 2]}, {4.5, 10.5}]], {{{
-     0.5913636636275175, 0.8064049958557055}, {-0.8064049958557055, 
-     0.5913636636275175}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {4.446810512113047, 3.005672291117098}], {{{
-     0.871211855434393, -0.4909072243821254}, {0.4909072243821254, 
-     0.871211855434393}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {9.546810512113046, 10.005672291117099`}], {{{
-     0.20633916497377033`, -0.9784805307199153}, {0.9784805307199153, 
-     0.20633916497377033`}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"b-r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {7.4, 7.3}], {{{0.6689154744407998, 
-     0.7433384747567152}, {-0.7433384747567152, 0.6689154744407998}}, 
-     Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"d/2\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {2.45, 4.15}], {{{
-     0.5913636636275174, -0.8064049958557055}, {0.8064049958557055, 
-     0.5913636636275174}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"d/2\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {7.95, 11.65}], {{{
-     0.5913636636275174, -0.8064049958557055}, {0.8064049958557055, 
-     0.5913636636275174}}, Center}], InsetBox[
-    StyleBox["\<\"x\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {5.5, -0.5}], InsetBox[
-    StyleBox["\<\"y\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], 
-    NCache[{13, Rational[-245, 24] 
-      Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {
-     13, 5.011344582234197}]], 
-   CircleBox[
-    NCache[{Rational[245, 24] 
-      Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]], 
-      Rational[-245, 24] 
-      Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]]}, {
-     8.893621024226094, 5.011344582234197}], 1.5, 
-    NCache[{0, 
-      ArcTan[(11 + 
-         Rational[-245, 24] 
-          Cos[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]])^(-1) (
-        15 + Rational[245, 24] 
-         Sin[ArcCsc[Rational[245, 101]] - ArcTan[Rational[15, 11]]])]}, {
-     0, 1.3629641996654633`}]]},
-  Axes->True,
-  AxesOrigin->NCache[{Rational[245, 24] Cos[ArcCsc[
-         Rational[245, 101]] - ArcTan[
-        Rational[15, 11]]], Rational[-245, 24] Sin[ArcCsc[
-         Rational[245, 101]] - ArcTan[
-        Rational[15, 11]]]}, {8.893621024226094, 5.011344582234197}],
-  Ticks->None]], "Input",
- Evaluatable->False,
- CellChangeTimes->{{3.557781940094016*^9, 3.557781941172742*^9}}],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- "Let ",
- StyleBox["O",
-  FontSlant->"Italic"],
- " be the origin of the circle encompassing the arc (calculated later).\nLet ",
- StyleBox["P",
-  FontSlant->"Italic"],
- " form a right triangle with respect to ",
- StyleBox["A",
-  FontSlant->"Italic"],
- " and ",
- StyleBox["B",
-  FontSlant->"Italic"],
- ":"
-}], "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.55760925299089*^9, 3.5576093565678368`*^9}, {
-   3.557848807661475*^9, 3.557848836075911*^9}, 3.5578498573363657`*^9}],
-
-Cell[BoxData[
- RowBox[{"P", "=", 
-  RowBox[{"{", 
+  RowBox[{"BulgeToDrawArc", "[", 
+   RowBox[{"x_", ",", "y_", ",", "bulgeFactor_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
    RowBox[{
-    RowBox[{"B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], ",", 
-    
-    RowBox[{"A", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}], 
-   "}"}]}]], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.557609358123396*^9, 3.557609367778096*^9}, {
-   3.5578488409803267`*^9, 3.5578488446679373`*^9}, 3.5578498573364983`*^9, {
-   3.56124132728872*^9, 3.561241329344553*^9}}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{"x", ",", "0"}], "}"}]], "Output",
- CellChangeTimes->{3.5578510283535843`*^9, 3.557851184760326*^9, 
-  3.557851968436401*^9, 3.557852010420751*^9, 3.5612408149207497`*^9}],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- "Let ",
- StyleBox["Q",
-  FontSlant->"Italic"],
- " be the midpoint of ",
- Cell[BoxData[
-  FormBox[
-   OverscriptBox["AB", "_"], TraditionalForm]],
-  FontWeight->"Bold"],
- ":"
-}], "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.557609369460844*^9, 3.55760942002421*^9}, 
-   3.557782084041049*^9}],
-
-Cell[BoxData[
- RowBox[{"Q", "=", 
-  RowBox[{"{", 
-   RowBox[{
-    FractionBox[
-     RowBox[{"B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
-     "2"], ",", 
-    FractionBox[
-     RowBox[{"B", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-     "2"]}], "}"}]}]], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.557609430890937*^9, 3.5576094477105103`*^9}, 
-   3.557782084041157*^9}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   FractionBox["x", "2"], ",", 
-   FractionBox["y", "2"]}], "}"}]], "Output",
- CellChangeTimes->{3.5578510342620773`*^9, 3.557851184871745*^9, 
-  3.557851968529283*^9, 3.557852010515436*^9, 3.561240814974859*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell["Solution", "Subsection",
- CellChangeTimes->{{3.5578488763943977`*^9, 3.557848881680969*^9}}],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- StyleBox["The length ", "Text"],
- StyleBox["d ", "Text",
-  FontSlant->"Italic"],
- StyleBox["of ", "Text"],
- StyleBox[Cell[BoxData[
-  FormBox[
-   OverscriptBox["AB", "_"], TraditionalForm]], "Text",
-  FontWeight->"Bold"], "Text"],
- StyleBox[" is found by solving the Pythagorean theorem for triangle APB:", 
-  "Text"]
-}], "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.5576057133739223`*^9, 3.557605740840948*^9}, 
-   3.557782080513109*^9, {3.557782133820096*^9, 3.5577821427797194`*^9}, {
-   3.557848863201765*^9, 3.557848866057749*^9}, {3.557849068884513*^9, 
-   3.557849109929627*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"d", "\[Rule]", 
-   SqrtBox[
-    RowBox[{
-     SuperscriptBox["x", "2"], "+", 
-     SuperscriptBox["y", "2"]}]]}], "//", "Solution"}]], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.557605359334714*^9, 3.557605374119207*^9}, 
-   3.557605451823414*^9, 3.557605659833453*^9, {3.557747182058406*^9, 
-   3.5577471830810003`*^9}, {3.557748261929287*^9, 3.557748270465571*^9}, {
-   3.55774836378447*^9, 3.55774837208597*^9}, {3.557781043931531*^9, 
-   3.557781048730912*^9}, {3.557781085946929*^9, 3.5577810955222683`*^9}, {
-   3.557781818537972*^9, 3.55778181950848*^9}, {3.5577819613720627`*^9, 
-   3.5577819625395203`*^9}, 3.557782080513213*^9, {3.557782119592877*^9, 
-   3.557782155309127*^9}, {3.557782249961474*^9, 3.5577822685525618`*^9}, {
-   3.557782313935605*^9, 3.557782316663218*^9}, {3.557849224616164*^9, 
-   3.557849225242237*^9}, {3.5578493161319942`*^9, 3.557849317407503*^9}, {
-   3.557849674591485*^9, 3.557849680126514*^9}, {3.557849718616521*^9, 
-   3.557849764668488*^9}, {3.557850168661028*^9, 3.557850170741427*^9}}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"d", "\[Rule]", 
-  SqrtBox[
-   RowBox[{
-    SuperscriptBox["x", "2"], "+", 
-    SuperscriptBox["y", "2"]}]]}]], "Output",
- CellChangeTimes->{3.557851036749077*^9, 3.5578511849534082`*^9, 
-  3.5578519686038933`*^9, 3.5578520105937023`*^9, 3.5612408150247993`*^9}],
-
-Cell[CellGroupData[{
-
-Cell[TextData[{
- StyleBox["The radius ",
-  FontWeight->"Plain"],
- StyleBox["r",
-  FontWeight->"Plain",
-  FontSlant->"Italic"],
- StyleBox[" of the circle is found by solving the Pythagorean theorem for \
-triangle AOQ:",
-  FontWeight->"Plain"]
-}], "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.557605500663068*^9, 3.557605540231913*^9}, {
-   3.55760587544381*^9, 3.557605890819332*^9}, 3.55778207669741*^9, 
-   3.557849037741691*^9, {3.557849120984785*^9, 3.5578491214242496`*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"Solve", "[", 
-   RowBox[{
-    RowBox[{
+    RowBox[{"{", 
      RowBox[{
-      SuperscriptBox[
-       RowBox[{"(", 
-        FractionBox["d", "2"], ")"}], "2"], "+", 
-      SuperscriptBox[
-       RowBox[{"(", 
-        RowBox[{"r", "-", "b"}], ")"}], "2"]}], "\[Equal]", 
-     SuperscriptBox["r", "2"]}], ",", "r"}], "]"}], "//", 
-  "Solution"}]], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.5576053854940233`*^9, 3.557605386251252*^9}, {
-   3.5576055435530243`*^9, 3.5576056114321747`*^9}, {3.557747192377075*^9, 
-   3.5577471935729647`*^9}, {3.557780693556715*^9, 3.557780695866081*^9}, {
-   3.55778072922445*^9, 3.557780742167718*^9}, {3.5577812012079153`*^9, 
-   3.557781202344235*^9}, 3.557782076697525*^9, {3.557782194910838*^9, 
-   3.55778220175613*^9}, {3.557782321031988*^9, 3.55778232287962*^9}, {
-   3.5578492288641663`*^9, 3.557849229430622*^9}, {3.557849330908669*^9, 
-   3.557849331955048*^9}, {3.557849383937462*^9, 3.557849435352755*^9}, {
-   3.557849754229601*^9, 3.557849761651711*^9}, {3.557850189500864*^9, 
-   3.557850198252536*^9}}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"r", "\[Rule]", 
-  FractionBox[
-   RowBox[{
-    RowBox[{"4", " ", 
-     SuperscriptBox["b", "2"]}], "+", 
-    SuperscriptBox["d", "2"]}], 
-   RowBox[{"8", " ", "b"}]]}]], "Output",
- CellChangeTimes->{3.557851038319605*^9, 3.557851185024487*^9, 
-  3.557851968681476*^9, 3.5578520106873713`*^9, 3.561240815083303*^9}],
-
-Cell[CellGroupData[{
-
-Cell["\<\
-Using the law of sines on AOQ, angle \[Beta] can be found:\
-\>", "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.557605633460649*^9, 3.557605634086532*^9}, {
-   3.557605751213212*^9, 3.557605780151228*^9}, {3.557605897419207*^9, 
-   3.5576058988671637`*^9}, {3.557781259955593*^9, 3.557781262057807*^9}, 
-   3.55778207056149*^9}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   FractionBox[
-    RowBox[{"r", "-", "b"}], 
-    RowBox[{"Sin", "[", "\[Beta]", "]"}]], "\[Equal]", 
-   FractionBox["r", 
-    RowBox[{"Sin", "[", 
-     FractionBox["\[Pi]", "2"], "]"}]]}], "\[Implies]", 
-  RowBox[{
-   RowBox[{
-    FractionBox[
-     RowBox[{"r", "-", "b"}], 
-     RowBox[{"Sin", "[", "\[Beta]", "]"}]], "\[Equal]", 
-    FractionBox["r", "1"]}], "\[Implies]", 
-   RowBox[{
-    RowBox[{"Sin", "[", "\[Beta]", "]"}], "\[Equal]", 
-    FractionBox["r", 
-     RowBox[{"r", "-", "b"}]]}]}]}]], "Input",
- Evaluatable->False,
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.557748087242177*^9, 3.557748108975651*^9}, {
-  3.557748139991125*^9, 3.557748226362771*^9}, {3.557782063466527*^9, 
-  3.5577820705616007`*^9}, {3.557851039840478*^9, 3.557851040710821*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"Solve", "[", 
-   RowBox[{
+     "ox", ",", "oy", ",", "qx", ",", "qy", ",", "b", ",", "d", ",", "r", ",",
+       "\[Alpha]", ",", "\[Beta]", ",", "\[Omega]", ",", "\[CapitalOmega]"}], 
+     "}"}], ",", "\[IndentingNewLine]", 
     RowBox[{
-     FractionBox[
-      RowBox[{"r", "-", "b"}], "r"], "\[Equal]", 
-     RowBox[{"Sin", "[", "\[Beta]", "]"}]}], ",", "\[Beta]"}], "]"}], "//", 
-  "Solution"}]], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.557605783746336*^9, 3.557605835295829*^9}, {
-   3.557605908432887*^9, 3.557605947563778*^9}, {3.5577472782597837`*^9, 
-   3.557747285666774*^9}, {3.557747952165202*^9, 3.557748042889949*^9}, {
-   3.55774807432908*^9, 3.557748079784224*^9}, {3.557748176445486*^9, 
-   3.5577482446017437`*^9}, {3.557781208550139*^9, 3.557781210472069*^9}, {
-   3.557782063466626*^9, 3.557782070561692*^9}, {3.557782534113941*^9, 
-   3.557782535135827*^9}, {3.557849232318574*^9, 3.557849234004677*^9}, 
-   3.557849379401148*^9, {3.557849429944525*^9, 3.55784943997612*^9}, {
-   3.55784976765239*^9, 3.557849772060382*^9}, {3.557850200860518*^9, 
-   3.557850205774474*^9}}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"\[Beta]", "\[Rule]", 
-  RowBox[{"ArcSin", "[", 
-   FractionBox[
-    RowBox[{
-     RowBox[{"-", "b"}], "+", "r"}], "r"], "]"}]}]], "Output",
- CellChangeTimes->{3.557851042090679*^9, 3.557851185109668*^9, 
-  3.557851968793606*^9, 3.557852010863637*^9, 3.561240815127063*^9}],
-
-Cell[CellGroupData[{
-
-Cell["\<\
-Angle \[Delta] is the complement of \[Beta]:\
-\>", "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.557781265306003*^9, 3.5577812737217073`*^9}, {
-  3.5577820452031727`*^9, 3.557782068265718*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"\[Delta]", "\[Rule]", 
-   RowBox[{
-    FractionBox["\[Pi]", "2"], "-", "\[Beta]"}]}], "//", 
-  "Solution"}]], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.557605845980404*^9, 3.557605856365857*^9}, {
-   3.557781279467545*^9, 3.557781283875543*^9}, {3.557782045203281*^9, 
-   3.55778206826584*^9}, {3.557782538559844*^9, 3.557782539327332*^9}, {
-   3.557849178681635*^9, 3.557849205968875*^9}, {3.557849237022236*^9, 
-   3.557849258760271*^9}, 3.557849375648882*^9, {3.55784961041679*^9, 
-   3.557849612513132*^9}, {3.557849774307633*^9, 3.55784978002775*^9}, {
-   3.557850208004546*^9, 3.557850216441387*^9}}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"\[Delta]", "\[Rule]", 
-  RowBox[{
-   FractionBox["\[Pi]", "2"], "-", "\[Beta]"}]}]], "Output",
- CellChangeTimes->{3.5578510439769287`*^9, 3.557851185226377*^9, 
-  3.5578519689030733`*^9, 3.557852010968891*^9, 3.561240815175289*^9}],
-
-Cell[CellGroupData[{
-
-Cell["\<\
-Angle ABP is \[Beta] + \[Alpha] and can be found through the definition of \
-the tangent function:\
-\>", "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.557605986329091*^9, 3.557606080876191*^9}, {
-   3.5576063178950577`*^9, 3.5576063341739187`*^9}, 3.557782038682619*^9}],
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{
-   RowBox[{"Solve", "[", 
-    RowBox[{
-     RowBox[{
-      RowBox[{"Tan", "[", 
-       RowBox[{"\[Beta]", "+", "\[Alpha]"}], "]"}], "\[Equal]", 
-      FractionBox["x", "y"]}], ",", "\[Alpha]"}], "]"}], 
-   "\[LeftDoubleBracket]", 
-   RowBox[{"1", ",", "1"}], "\[RightDoubleBracket]"}], "//", 
-  "Solution"}]], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.55760608619466*^9, 3.5576061288695517`*^9}, {
-   3.557747368283504*^9, 3.5577473725522957`*^9}, {3.557781299988146*^9, 
-   3.557781307681246*^9}, 3.557782038682727*^9, {3.5577824764901667`*^9, 
-   3.557782478553883*^9}, {3.55784924691864*^9, 3.557849251279243*^9}, {
-   3.5578493490499353`*^9, 3.5578493500222473`*^9}, {3.557849447662746*^9, 
-   3.557849450639731*^9}, {3.557849623433313*^9, 3.557849626320204*^9}, {
-   3.5578498860514107`*^9, 3.5578498903672867`*^9}, {3.5578502235950937`*^9, 
-   3.55785022709202*^9}}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{"\[Alpha]", "\[Rule]", 
-  RowBox[{
-   RowBox[{"-", "\[Beta]"}], "+", 
-   RowBox[{"ArcTan", "[", 
-    FractionBox["x", "y"], "]"}]}]}]], "Output",
- CellChangeTimes->{3.5578510461646433`*^9, 3.557851185367236*^9, 
-  3.557851969018277*^9, 3.557852011049489*^9, 3.561240815224882*^9}],
-
-Cell[CellGroupData[{
-
-Cell["\<\
-Considering triangle ORB, we can see that the end angle \[Phi] is the \
-complement of \[Alpha]:\
-\>", "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.557606144168717*^9, 3.557606226425228*^9}, {
-   3.557606280671669*^9, 3.557606282431624*^9}, {3.5576248297073107`*^9, 
-   3.557624868177693*^9}, {3.557781594886567*^9, 3.5577816159495173`*^9}, 
-   3.5577820248272467`*^9}],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{
-   RowBox[{"\[Phi]", "\[Rule]", 
-    RowBox[{
-     FractionBox["\[Pi]", "2"], "-", "\[Alpha]"}]}], "//", "Solution"}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"\[Phi]", " ", "//.", " ", "solutions"}]}], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.},
- CellChangeTimes->{{3.557606209552597*^9, 3.557606219740312*^9}, {
-   3.5576062842180023`*^9, 3.5576062855139914`*^9}, {3.5576248412533693`*^9, 
-   3.557624865500263*^9}, {3.5577813380416822`*^9, 3.557781341803329*^9}, {
-   3.557781629800371*^9, 3.557781642999597*^9}, 3.55778167534429*^9, {
-   3.5577819960685053`*^9, 3.557782024827362*^9}, {3.557782411405821*^9, 
-   3.557782454626587*^9}, 3.55784935544236*^9, {3.557849632504405*^9, 
-   3.5578496356398582`*^9}, {3.5578498932159243`*^9, 3.557849903510613*^9}, {
-   3.557850231042788*^9, 3.557850251965913*^9}, 3.55785055974371*^9}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{
-  FractionBox["\[Pi]", "2"], "+", 
-  RowBox[{"ArcSin", "[", 
-   FractionBox[
-    RowBox[{"8", " ", "b", " ", 
-     RowBox[{"(", 
-      RowBox[{
-       RowBox[{"-", "b"}], "+", 
-       FractionBox[
-        RowBox[{
-         RowBox[{"4", " ", 
-          SuperscriptBox["b", "2"]}], "+", 
-         SuperscriptBox["x", "2"], "+", 
-         SuperscriptBox["y", "2"]}], 
-        RowBox[{"8", " ", "b"}]]}], ")"}]}], 
-    RowBox[{
-     RowBox[{"4", " ", 
-      SuperscriptBox["b", "2"]}], "+", 
-     SuperscriptBox["x", "2"], "+", 
-     SuperscriptBox["y", "2"]}]], "]"}], "-", 
-  RowBox[{"ArcTan", "[", 
-   FractionBox["x", "y"], "]"}]}]], "Output",
- CellChangeTimes->{3.557851048818515*^9, 3.557851185482278*^9, 
-  3.557851969063672*^9, 3.557852011137885*^9, 3.5612408152756844`*^9}],
-
-Cell[CellGroupData[{
-
-Cell["\<\
-The start angle \[Theta] is angle ROA, or\
-\>", "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.557606229024761*^9, 3.557606257184552*^9}, {
-   3.557624849866596*^9, 3.557624860202138*^9}, 3.557782032546897*^9}],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{
-   RowBox[{"\[Theta]", "\[Rule]", 
-    RowBox[{"\[Phi]", "+", 
-     RowBox[{"2", "\[Delta]"}]}]}], "//", "Solution"}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{"\[Theta]", " ", "//.", " ", "solutions"}]}], "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.},
- CellChangeTimes->{{3.5576062589155903`*^9, 3.55760629688135*^9}, {
-   3.557781360220477*^9, 3.557781363520213*^9}, {3.557781685669291*^9, 
-   3.557781702220489*^9}, {3.557782008162116*^9, 3.557782032547007*^9}, {
-   3.5577825129462442`*^9, 3.557782518760154*^9}, 3.5578493634186068`*^9, {
-   3.557849461488564*^9, 3.557849468125346*^9}, {3.557849640303636*^9, 
-   3.557849657191139*^9}, {3.5578499056314774`*^9, 3.557849915726953*^9}, {
-   3.55785023564249*^9, 3.557850263353402*^9}, 3.557850564231496*^9}]
-}, Open  ]],
-
-Cell[BoxData[
- RowBox[{
-  FractionBox["\[Pi]", "2"], "+", 
-  RowBox[{"2", " ", 
-   RowBox[{"(", 
-    RowBox[{
-     FractionBox["\[Pi]", "2"], "-", 
-     RowBox[{"ArcSin", "[", 
-      FractionBox[
-       RowBox[{"8", " ", "b", " ", 
-        RowBox[{"(", 
-         RowBox[{
-          RowBox[{"-", "b"}], "+", 
-          FractionBox[
-           RowBox[{
-            RowBox[{"4", " ", 
-             SuperscriptBox["b", "2"]}], "+", 
-            SuperscriptBox["x", "2"], "+", 
-            SuperscriptBox["y", "2"]}], 
-           RowBox[{"8", " ", "b"}]]}], ")"}]}], 
+     RowBox[{"qx", "=", 
+      FractionBox["x", "2"]}], ";", 
+     RowBox[{"qy", "=", 
+      FractionBox["y", "2"]}], ";", 
+     RowBox[{"d", "=", 
+      SqrtBox[
        RowBox[{
-        RowBox[{"4", " ", 
-         SuperscriptBox["b", "2"]}], "+", 
-        SuperscriptBox["x", "2"], "+", 
-        SuperscriptBox["y", "2"]}]], "]"}]}], ")"}]}], "+", 
-  RowBox[{"ArcSin", "[", 
-   FractionBox[
-    RowBox[{"8", " ", "b", " ", 
-     RowBox[{"(", 
+        SuperscriptBox["qx", "2"], "+", 
+        SuperscriptBox["qy", "2"]}]]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"\[Omega]", "=", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{"x", ",", "y"}], "]"}]}], ";", 
+     RowBox[{"\[CapitalOmega]", "=", 
+      RowBox[{"\[Omega]", "+", 
+       FractionBox["\[Pi]", "2"]}]}], ";", 
+     RowBox[{"b", "=", 
       RowBox[{
-       RowBox[{"-", "b"}], "+", 
-       FractionBox[
+       FractionBox["bulgeFactor", "127"], " ", "d"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"r", "=", 
+      FractionBox[
+       RowBox[{
+        SuperscriptBox["b", "2"], "+", 
+        SuperscriptBox["d", "2"]}], 
+       RowBox[{"2", "b"}]]}], ";", 
+     RowBox[{"ox", "=", 
+      RowBox[{"qx", "+", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"r", "-", "b"}], ")"}], 
+        RowBox[{"Cos", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+     RowBox[{"oy", "=", 
+      RowBox[{"qy", "+", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"r", "-", "b"}], ")"}], 
+        RowBox[{"Sin", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\[Alpha]", "=", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"-", "ox"}], ",", 
+        RowBox[{"-", "oy"}]}], "]"}]}], ";", 
+     RowBox[{"\[Beta]", "=", 
+      RowBox[{"ArcTan", "[", 
+       RowBox[{
+        RowBox[{"x", "-", "ox"}], ",", 
+        RowBox[{"y", "-", "oy"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{
+       RowBox[{"b", ">", "0"}], ",", 
+       RowBox[{"While", "[", 
         RowBox[{
-         RowBox[{"4", " ", 
-          SuperscriptBox["b", "2"]}], "+", 
-         SuperscriptBox["x", "2"], "+", 
-         SuperscriptBox["y", "2"]}], 
-        RowBox[{"8", " ", "b"}]]}], ")"}]}], 
-    RowBox[{
-     RowBox[{"4", " ", 
-      SuperscriptBox["b", "2"]}], "+", 
-     SuperscriptBox["x", "2"], "+", 
-     SuperscriptBox["y", "2"]}]], "]"}], "-", 
-  RowBox[{"ArcTan", "[", 
-   FractionBox["x", "y"], "]"}]}]], "Output",
- CellChangeTimes->{3.557851051523919*^9, 3.557851185588688*^9, 
-  3.5578519691291943`*^9, 3.55785201121656*^9, 3.561240815324931*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell["Supplement", "Subsection",
- CellChangeTimes->{{3.557781403498044*^9, 3.557781433428413*^9}, {
-  3.5577815822809343`*^9, 3.55778158285494*^9}}],
+         RowBox[{"\[Alpha]", ">", "\[Beta]"}], ",", 
+         RowBox[{"\[Alpha]", "=", 
+          RowBox[{"\[Alpha]", "-", 
+           RowBox[{"2", "\[Pi]"}]}]}]}], "]"}], ",", 
+       RowBox[{"While", "[", 
+        RowBox[{
+         RowBox[{"\[Alpha]", "<", "\[Beta]"}], ",", 
+         RowBox[{"\[Alpha]", "=", 
+          RowBox[{"\[Alpha]", "+", 
+           RowBox[{"2", "\[Pi]"}]}]}]}], "]"}]}], "]"}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"\[Alpha]", "=", 
+      RowBox[{"\[Alpha]", "/", "Degree"}]}], ";", 
+     RowBox[{"\[Beta]", "=", 
+      RowBox[{"\[Beta]", "/", "Degree"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"DrawArc", "[", 
+      RowBox[{
+       RowBox[{"Abs", "[", "r", "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"\[Alpha]", ",", "\[Beta]"}], "}"}]}], "]"}]}]}], 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.561328560195022*^9, 3.561328675312911*^9}, {
+  3.561347685306657*^9, 3.561347830968014*^9}, {3.56134805901796*^9, 
+  3.561348169805686*^9}, {3.5613482667400703`*^9, 3.561348285200835*^9}, {
+  3.5613487674125*^9, 3.561348768872238*^9}}],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{
-  RowBox[{"Solve", "[", 
-   RowBox[{
+  RowBox[{"BulgeToDrawArc", "[", 
+   RowBox[{"3", ",", "3", ",", 
+    RowBox[{"-", "50"}]}], "]"}], "//", 
+  RowBox[{
+   RowBox[{"N", "[", 
+    RowBox[{"#", ",", "16"}], "]"}], "&"}]}]], "Input",
+ CellChangeTimes->{{3.5613481715790052`*^9, 3.561348204531721*^9}, {
+   3.5613823489484653`*^9, 3.561382350848991*^9}, 3.561382527750699*^9}],
+
+Cell[BoxData[
+ RowBox[{"DrawArc", "[", 
+  RowBox[{"3.11165958111595129891259754842155104398`16.", ",", 
+   RowBox[{"{", 
     RowBox[{
-     RowBox[{"Tan", "[", 
-      RowBox[{"\[Beta]", "+", "\[Gamma]"}], "]"}], "\[Equal]", 
-     FractionBox["y", "x"]}], ",", "\[Gamma]"}], "]"}], "//", 
-  "Solution"}]], "Input",
- CellChangeTimes->{{3.557608657839574*^9, 3.5576087077542562`*^9}, {
-  3.557747379640975*^9, 3.55774738411874*^9}, {3.557781366578508*^9, 
-  3.557781369831874*^9}, {3.557782591366357*^9, 3.5577825935501957`*^9}, {
-  3.5578499269511967`*^9, 3.55784993804634*^9}, {3.5578502678899508`*^9, 
-  3.5578502711293583`*^9}}],
-
-Cell[BoxData[
- RowBox[{"\[Gamma]", "\[Rule]", 
-  RowBox[{
-   RowBox[{"-", "\[Beta]"}], "+", 
-   RowBox[{"ArcTan", "[", 
-    FractionBox["y", "x"], "]"}]}]}]], "Output",
- CellChangeTimes->{3.5578510535595083`*^9, 3.557851185778365*^9, 
-  3.557851969202703*^9, 3.557852011293457*^9, 3.561240815375105*^9}]
+    "177.97919759719800516997938955850754603992`16.", ",", 
+     "92.02080240280199483002061044149234088674`16."}], "}"}]}], 
+  "]"}]], "Output",
+ CellChangeTimes->{{3.561348185358886*^9, 3.561348204935526*^9}, 
+   3.56134828679707*^9, 3.561348770311158*^9, 3.561382352071052*^9, 
+   3.5613825281827393`*^9}]
 }, Open  ]],
-
-Cell[TextData[{
- "We need to set Origin directly here; otherwise, ",
- StyleBox["Mathematica",
-  FontSlant->"Italic"],
- " assumes it\[CloseCurlyQuote]s a scalar and doesn\[CloseCurlyQuote]t \
-perform vector addition properly."
-}], "Text",
- CellChangeTimes->{{3.557852020572668*^9, 3.557852045629033*^9}}],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Origin", "=", 
-  RowBox[{"{", 
-   RowBox[{
-    RowBox[{"r", " ", 
-     RowBox[{"Cos", "[", "\[Gamma]", "]"}]}], ",", 
-    RowBox[{"r", " ", 
-     RowBox[{"Sin", "[", "\[Gamma]", "]"}]}]}], "}"}]}]], "Input",
- CellChangeTimes->{{3.5576087255687313`*^9, 3.557608784766397*^9}, {
-  3.5577825989659243`*^9, 3.557782602957683*^9}, {3.5578499407742157`*^9, 
-  3.557849950428692*^9}, {3.557850275073804*^9, 3.5578502767049837`*^9}, {
-  3.557851908572562*^9, 3.5578519107726927`*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"r", " ", 
-    RowBox[{"Cos", "[", "\[Gamma]", "]"}]}], ",", 
-   RowBox[{"r", " ", 
-    RowBox[{"Sin", "[", "\[Gamma]", "]"}]}]}], "}"}]], "Output",
- CellChangeTimes->{3.557851055078086*^9, 3.557851185846958*^9, 
-  3.5578519112598667`*^9, 3.557851969295803*^9, 3.557852011489506*^9, 
-  3.561240815424282*^9}]
-}, Open  ]],
-
-Cell[TextData[{
- StyleBox["Z",
-  FontSlant->"Italic"],
- " is the extension of ",
- Cell[BoxData[
-  FormBox[
-   OverscriptBox["OQ", "\[RightVector]"], TraditionalForm]]],
- " to meet the circle perimeter."
-}], "Text",
- CellChangeTimes->{{3.5576231336284647`*^9, 3.5576231647744207`*^9}}],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
  RowBox[{"Module", "[", 
   RowBox[{
-   RowBox[{"{", "result", "}"}], ",", 
-   RowBox[{
-    RowBox[{"result", "=", 
-     RowBox[{"Solve", "[", 
-      RowBox[{
-       RowBox[{"{", "\[IndentingNewLine]", 
-        RowBox[{
-         RowBox[{
-          SuperscriptBox["r", "2"], "\[Equal]", 
-          RowBox[{
-           SuperscriptBox[
-            RowBox[{"(", 
-             RowBox[{"cx", "-", "ox"}], ")"}], "2"], "+", 
-           SuperscriptBox[
-            RowBox[{"(", 
-             RowBox[{"cy", "-", "oy"}], ")"}], "2"]}]}], ",", 
-         "\[IndentingNewLine]", 
-         RowBox[{"cy", "\[Equal]", 
-          RowBox[{
-           RowBox[{
-            RowBox[{"-", 
-             FractionBox["y", "x"]}], 
-            RowBox[{"(", 
-             RowBox[{"cx", "-", 
-              FractionBox["x", "2"]}], ")"}]}], "+", 
-           FractionBox["y", "2"]}]}]}], "}"}], ",", " ", 
-       RowBox[{"{", 
-        RowBox[{"cx", ",", " ", "cy"}], "}"}]}], "]"}]}], ";", 
-    RowBox[{
-     RowBox[{"(", 
-      RowBox[{"cx", "/.", 
-       RowBox[{
-       "result", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ")"}], "-", 
-     RowBox[{"(", 
-      RowBox[{"cx", "/.", 
-       RowBox[{
-       "result", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}], 
-      ")"}]}]}]}], "]"}]], "Input",
- CellChangeTimes->{{3.5578511290516376`*^9, 3.557851143849965*^9}, {
-  3.561240944408997*^9, 3.561241061710018*^9}}],
-
-Cell[BoxData[
- RowBox[{
-  FractionBox[
-   RowBox[{
-    RowBox[{"ox", " ", 
-     SuperscriptBox["x", "2"]}], "-", 
-    RowBox[{"oy", " ", "x", " ", "y"}], "+", 
-    RowBox[{"x", " ", 
-     SuperscriptBox["y", "2"]}], "-", 
-    SqrtBox[
-     RowBox[{
-      RowBox[{
-       RowBox[{"-", 
-        SuperscriptBox["oy", "2"]}], " ", 
-       SuperscriptBox["x", "4"]}], "+", 
-      RowBox[{
-       SuperscriptBox["r", "2"], " ", 
-       SuperscriptBox["x", "4"]}], "-", 
-      RowBox[{"2", " ", "ox", " ", "oy", " ", 
-       SuperscriptBox["x", "3"], " ", "y"}], "+", 
-      RowBox[{"2", " ", "oy", " ", 
-       SuperscriptBox["x", "4"], " ", "y"}], "-", 
-      RowBox[{
-       SuperscriptBox["ox", "2"], " ", 
-       SuperscriptBox["x", "2"], " ", 
-       SuperscriptBox["y", "2"]}], "+", 
-      RowBox[{
-       SuperscriptBox["r", "2"], " ", 
-       SuperscriptBox["x", "2"], " ", 
-       SuperscriptBox["y", "2"]}], "+", 
-      RowBox[{"2", " ", "ox", " ", 
-       SuperscriptBox["x", "3"], " ", 
-       SuperscriptBox["y", "2"]}], "-", 
-      RowBox[{
-       SuperscriptBox["x", "4"], " ", 
-       SuperscriptBox["y", "2"]}]}]]}], 
-   RowBox[{
-    SuperscriptBox["x", "2"], "+", 
-    SuperscriptBox["y", "2"]}]], "-", 
-  FractionBox[
-   RowBox[{
-    RowBox[{"ox", " ", 
-     SuperscriptBox["x", "2"]}], "-", 
-    RowBox[{"oy", " ", "x", " ", "y"}], "+", 
-    RowBox[{"x", " ", 
-     SuperscriptBox["y", "2"]}], "+", 
-    SqrtBox[
-     RowBox[{
-      RowBox[{
-       RowBox[{"-", 
-        SuperscriptBox["oy", "2"]}], " ", 
-       SuperscriptBox["x", "4"]}], "+", 
-      RowBox[{
-       SuperscriptBox["r", "2"], " ", 
-       SuperscriptBox["x", "4"]}], "-", 
-      RowBox[{"2", " ", "ox", " ", "oy", " ", 
-       SuperscriptBox["x", "3"], " ", "y"}], "+", 
-      RowBox[{"2", " ", "oy", " ", 
-       SuperscriptBox["x", "4"], " ", "y"}], "-", 
-      RowBox[{
-       SuperscriptBox["ox", "2"], " ", 
-       SuperscriptBox["x", "2"], " ", 
-       SuperscriptBox["y", "2"]}], "+", 
-      RowBox[{
-       SuperscriptBox["r", "2"], " ", 
-       SuperscriptBox["x", "2"], " ", 
-       SuperscriptBox["y", "2"]}], "+", 
-      RowBox[{"2", " ", "ox", " ", 
-       SuperscriptBox["x", "3"], " ", 
-       SuperscriptBox["y", "2"]}], "-", 
-      RowBox[{
-       SuperscriptBox["x", "4"], " ", 
-       SuperscriptBox["y", "2"]}]}]]}], 
-   RowBox[{
-    SuperscriptBox["x", "2"], "+", 
-    SuperscriptBox["y", "2"]}]]}]], "Output",
- CellChangeTimes->{{3.557851104284128*^9, 3.5578511445270157`*^9}, 
-   3.557851185945202*^9, 3.557851915598043*^9, 3.557851969575898*^9, 
-   3.5578520115883627`*^9, 3.561240815542989*^9, 3.56124095738787*^9, {
-   3.561241005694347*^9, 3.561241062391762*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Z", "=", 
-  RowBox[{
    RowBox[{"{", 
-    RowBox[{"cx", ",", "cy"}], "}"}], "/.", 
+    RowBox[{
+    "bulgeFactor", ",", "u", ",", "d", ",", "dx", ",", "dy", ",", "px", ",", 
+     "py", ",", "ox", ",", "oy", ",", "b", ",", "r", ",", "\[Alpha]", ",", 
+     "\[Beta]", ",", "\[Omega]", ",", "\[CapitalOmega]"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
    RowBox[{
-    RowBox[{"Solve", "[", 
+    RowBox[{"u", "=", 
+     RowBox[{"{", 
+      RowBox[{"1", ",", "1"}], "}"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
      RowBox[{
-      RowBox[{"{", "\[IndentingNewLine]", 
-       RowBox[{
+      RowBox[{
+       RowBox[{"dx", "=", 
         RowBox[{
-         SuperscriptBox["r", "2"], "\[Equal]", 
+         RowBox[{"u", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+         "/", "2"}]}], ";", 
+       RowBox[{"dy", "=", 
+        RowBox[{
+         RowBox[{"u", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+         "/", "2"}]}], ";", 
+       RowBox[{"d", "=", 
+        SqrtBox[
          RowBox[{
-          SuperscriptBox[
-           RowBox[{"(", 
-            RowBox[{"cx", "-", 
-             RowBox[{
-             "Origin", "\[LeftDoubleBracket]", "1", 
-              "\[RightDoubleBracket]"}]}], ")"}], "2"], "+", 
-          SuperscriptBox[
-           RowBox[{"(", 
-            RowBox[{"cy", "-", 
-             RowBox[{
-             "Origin", "\[LeftDoubleBracket]", "2", 
-              "\[RightDoubleBracket]"}]}], ")"}], "2"]}]}], ",", 
-        "\[IndentingNewLine]", 
-        RowBox[{"cy", "==", 
+          SuperscriptBox["dx", "2"], "+", 
+          SuperscriptBox["dy", "2"]}]]}], ";", 
+       RowBox[{"\[Omega]", "=", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{"dx", ",", "dy"}], "]"}]}], ";", 
+       RowBox[{"\[CapitalOmega]", "=", 
+        RowBox[{"\[Omega]", "+", 
+         FractionBox["\[Pi]", "2"]}]}], ";", 
+       RowBox[{"b", "=", 
+        RowBox[{"bulgeFactor", " ", "d"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"r", "=", 
+        FractionBox[
+         RowBox[{
+          SuperscriptBox["b", "2"], "+", 
+          SuperscriptBox["d", "2"]}], 
+         RowBox[{"2", "b"}]]}], ";", 
+       RowBox[{"\[Beta]", "=", 
+        RowBox[{"ArcSin", "[", 
+         FractionBox[
+          RowBox[{"r", "-", "b"}], "r"], "]"}]}], ";", "\[IndentingNewLine]", 
+       
+       RowBox[{"px", "=", 
+        RowBox[{"dx", "-", 
+         RowBox[{"b", " ", 
+          RowBox[{"Cos", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+       RowBox[{"py", "=", 
+        RowBox[{"dy", "-", 
+         RowBox[{"b", " ", 
+          RowBox[{"Sin", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ox", "=", 
+        RowBox[{"px", "+", 
+         RowBox[{"r", " ", 
+          RowBox[{"Cos", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+       RowBox[{"oy", "=", 
+        RowBox[{"py", "+", 
+         RowBox[{"r", " ", 
+          RowBox[{"Sin", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"\[Alpha]", "=", 
+        RowBox[{"ArcTan", "[", 
+         RowBox[{
+          RowBox[{"-", "ox"}], ",", 
+          RowBox[{"-", "oy"}]}], "]"}]}], ";", 
+       RowBox[{"\[Beta]", "=", 
+        RowBox[{"ArcTan", "[", 
          RowBox[{
           RowBox[{
-           RowBox[{"-", 
-            FractionBox["y", "x"]}], 
-           RowBox[{"(", 
-            RowBox[{"cx", "-", 
-             FractionBox["x", "2"]}], ")"}]}], "+", 
-          FractionBox["y", "2"]}]}]}], "}"}], ",", " ", 
+           RowBox[{
+           "u", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "-", 
+           "ox"}], ",", 
+          RowBox[{
+           RowBox[{
+           "u", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "-", 
+           "oy"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"b", ">", "0"}], ",", 
+         RowBox[{"While", "[", 
+          RowBox[{
+           RowBox[{"\[Alpha]", ">", "\[Beta]"}], ",", 
+           RowBox[{"\[Alpha]", "=", 
+            RowBox[{"\[Alpha]", "-", 
+             RowBox[{"2", "\[Pi]"}]}]}]}], "]"}], ",", 
+         RowBox[{"While", "[", 
+          RowBox[{
+           RowBox[{"\[Alpha]", "<", "\[Beta]"}], ",", 
+           RowBox[{"\[Alpha]", "=", 
+            RowBox[{"\[Alpha]", "+", 
+             RowBox[{"2", "\[Pi]"}]}]}]}], "]"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"Column", "[", 
+        RowBox[{"{", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"\"\<\[Alpha]=\>\"", "<>", 
+           RowBox[{"ToString", "[", 
+            RowBox[{"N", "[", "\[Alpha]", "]"}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"\"\<\[Beta]=\>\"", "<>", 
+           RowBox[{"ToString", "[", 
+            RowBox[{"N", "[", "\[Beta]", "]"}], "]"}]}], ",", 
+          "\[IndentingNewLine]", 
+          RowBox[{"Show", "[", 
+           RowBox[{
+            RowBox[{"Graphics", "[", 
+             RowBox[{"{", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"Line", "[", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"0", ",", "0"}], "}"}], ",", "u"}], "}"}], "]"}], 
+               ",", "\[IndentingNewLine]", 
+               RowBox[{"PointSize", "[", "Large", "]"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{"Point", "[", 
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{"0", ",", "0"}], "}"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"dx", ",", "dy"}], "}"}], ",", 
+                  RowBox[{"{", 
+                   RowBox[{"px", ",", "py"}], "}"}]}], "}"}], "]"}], ",", 
+               "\[IndentingNewLine]", "Blue", ",", "\[IndentingNewLine]", 
+               RowBox[{"Circle", "[", 
+                RowBox[{
+                 RowBox[{"{", 
+                  RowBox[{"ox", ",", "oy"}], "}"}], ",", 
+                 RowBox[{"Abs", "[", "r", "]"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"\[Alpha]", ",", "\[Beta]"}], "}"}]}], "]"}], ",", 
+               "\[IndentingNewLine]", "Red", ",", "\[IndentingNewLine]", 
+               RowBox[{"Point", "[", 
+                RowBox[{"{", 
+                 RowBox[{"ox", ",", "oy"}], "}"}], "]"}]}], 
+              "\[IndentingNewLine]", "}"}], "\[IndentingNewLine]", "]"}], ",",
+             "\[IndentingNewLine]", 
+            RowBox[{"If", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"Abs", "[", "dx", "]"}], "<", 
+               RowBox[{"Abs", "[", "dy", "]"}]}], ",", "\[IndentingNewLine]", 
+              
+              RowBox[{"Plot", "[", 
+               RowBox[{
+                RowBox[{"dy", "-", 
+                 RowBox[{
+                  FractionBox["dx", "dy"], 
+                  RowBox[{"(", 
+                   RowBox[{"x", "-", "dx"}], ")"}]}]}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"x", ",", 
+                  RowBox[{"-", "10"}], ",", "10"}], "}"}]}], "]"}], ",", 
+              "\[IndentingNewLine]", 
+              RowBox[{"ParametricPlot", "[", 
+               RowBox[{
+                RowBox[{"{", 
+                 RowBox[{
+                  RowBox[{"dx", "-", 
+                   RowBox[{
+                    FractionBox["dy", "dx"], 
+                    RowBox[{"(", 
+                    RowBox[{"y", "-", "dy"}], ")"}]}]}], ",", "y"}], "}"}], 
+                ",", 
+                RowBox[{"{", 
+                 RowBox[{"y", ",", 
+                  RowBox[{"-", "10"}], ",", "10"}], "}"}]}], "]"}]}], "]"}], 
+            ",", "\[IndentingNewLine]", 
+            RowBox[{"PlotRange", "\[Rule]", 
+             RowBox[{"{", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "10"}], ",", "10"}], "}"}], ",", 
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"-", "10"}], ",", "10"}], "}"}]}], "}"}]}], ",", 
+            "\[IndentingNewLine]", 
+            RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}]}], "}"}], 
+        "]"}]}], ",", "\[IndentingNewLine]", 
       RowBox[{"{", 
-       RowBox[{"cx", ",", " ", "cy"}], "}"}]}], "]"}], "\[LeftDoubleBracket]",
-     "1", "\[RightDoubleBracket]"}]}]}]], "Input",
- CellChangeTimes->{{3.5576228345120296`*^9, 3.557622970876049*^9}, {
-  3.557623048824115*^9, 3.557623065024282*^9}, {3.557623650189296*^9, 
-  3.5576236610726137`*^9}, {3.5577826261355877`*^9, 3.557782634128771*^9}, {
-  3.557849972126425*^9, 3.5578500144694138`*^9}, {3.5578502788591747`*^9, 
-  3.5578503076757174`*^9}, {3.557850767669181*^9, 3.557850768011574*^9}, {
-  3.557851160099638*^9, 3.557851160259121*^9}, {3.5578519880087214`*^9, 
-  3.5578519973869457`*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{
-    FractionBox["1", 
-     RowBox[{"2", " ", 
-      RowBox[{"(", 
        RowBox[{
-        SuperscriptBox["x", "2"], "+", 
-        SuperscriptBox["y", "2"]}], ")"}]}]], 
-    RowBox[{"(", 
-     RowBox[{
-      RowBox[{"2", " ", "x", " ", 
-       SuperscriptBox["y", "2"]}], "+", 
-      RowBox[{"2", " ", "r", " ", 
-       SuperscriptBox["x", "2"], " ", 
-       RowBox[{"Cos", "[", "\[Gamma]", "]"}]}], "-", 
-      RowBox[{"2", " ", "r", " ", "x", " ", "y", " ", 
-       RowBox[{"Sin", "[", "\[Gamma]", "]"}]}], "-", 
-      SqrtBox[
-       RowBox[{
-        SuperscriptBox[
-         RowBox[{"(", 
-          RowBox[{
-           RowBox[{
-            RowBox[{"-", "2"}], " ", "x", " ", 
-            SuperscriptBox["y", "2"]}], "-", 
-           RowBox[{"2", " ", "r", " ", 
-            SuperscriptBox["x", "2"], " ", 
-            RowBox[{"Cos", "[", "\[Gamma]", "]"}]}], "+", 
-           RowBox[{"2", " ", "r", " ", "x", " ", "y", " ", 
-            RowBox[{"Sin", "[", "\[Gamma]", "]"}]}]}], ")"}], "2"], "-", 
-        RowBox[{"4", " ", 
-         RowBox[{"(", 
-          RowBox[{
-           SuperscriptBox["x", "2"], "+", 
-           SuperscriptBox["y", "2"]}], ")"}], " ", 
-         RowBox[{"(", 
-          RowBox[{
-           RowBox[{
-            SuperscriptBox["x", "2"], " ", 
-            SuperscriptBox["y", "2"]}], "-", 
-           RowBox[{"2", " ", "r", " ", 
-            SuperscriptBox["x", "2"], " ", "y", " ", 
-            RowBox[{"Sin", "[", "\[Gamma]", "]"}]}]}], ")"}]}]}]]}], ")"}]}], 
-   ",", 
-   FractionBox[
-    RowBox[{
-     RowBox[{"x", " ", "y"}], "-", 
-     FractionBox[
-      RowBox[{"x", " ", 
-       SuperscriptBox["y", "3"]}], 
-      RowBox[{
-       SuperscriptBox["x", "2"], "+", 
-       SuperscriptBox["y", "2"]}]], "-", 
-     FractionBox[
-      RowBox[{"r", " ", 
-       SuperscriptBox["x", "2"], " ", "y", " ", 
-       RowBox[{"Cos", "[", "\[Gamma]", "]"}]}], 
-      RowBox[{
-       SuperscriptBox["x", "2"], "+", 
-       SuperscriptBox["y", "2"]}]], "+", 
-     FractionBox[
-      RowBox[{"r", " ", "x", " ", 
-       SuperscriptBox["y", "2"], " ", 
-       RowBox[{"Sin", "[", "\[Gamma]", "]"}]}], 
-      RowBox[{
-       SuperscriptBox["x", "2"], "+", 
-       SuperscriptBox["y", "2"]}]], "+", 
-     FractionBox[
-      RowBox[{"y", " ", 
-       SqrtBox[
-        RowBox[{
-         SuperscriptBox[
-          RowBox[{"(", 
-           RowBox[{
-            RowBox[{
-             RowBox[{"-", "2"}], " ", "x", " ", 
-             SuperscriptBox["y", "2"]}], "-", 
-            RowBox[{"2", " ", "r", " ", 
-             SuperscriptBox["x", "2"], " ", 
-             RowBox[{"Cos", "[", "\[Gamma]", "]"}]}], "+", 
-            RowBox[{"2", " ", "r", " ", "x", " ", "y", " ", 
-             RowBox[{"Sin", "[", "\[Gamma]", "]"}]}]}], ")"}], "2"], "-", 
-         RowBox[{"4", " ", 
-          RowBox[{"(", 
-           RowBox[{
-            SuperscriptBox["x", "2"], "+", 
-            SuperscriptBox["y", "2"]}], ")"}], " ", 
-          RowBox[{"(", 
-           RowBox[{
-            RowBox[{
-             SuperscriptBox["x", "2"], " ", 
-             SuperscriptBox["y", "2"]}], "-", 
-            RowBox[{"2", " ", "r", " ", 
-             SuperscriptBox["x", "2"], " ", "y", " ", 
-             RowBox[{"Sin", "[", "\[Gamma]", "]"}]}]}], ")"}]}]}]]}], 
-      RowBox[{"2", " ", 
-       RowBox[{"(", 
-        RowBox[{
-         SuperscriptBox["x", "2"], "+", 
-         SuperscriptBox["y", "2"]}], ")"}]}]]}], "x"]}], "}"}]], "Output",
- CellChangeTimes->{
-  3.5578510572938747`*^9, {3.557851160653287*^9, 3.5578511860222263`*^9}, 
-   3.557851918538208*^9, {3.557851969629073*^9, 3.5578520116522503`*^9}, 
-   3.561240815759116*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"demo", " ", "=", 
-  RowBox[{"{", 
-   RowBox[{
-    RowBox[{"x", "\[Rule]", "11"}], ",", " ", 
-    RowBox[{"y", "\[Rule]", "15"}], ",", " ", 
-    RowBox[{"b", "\[Rule]", "6"}]}], "}"}]}]], "Input",
- CellChangeTimes->{{3.557608807303122*^9, 3.5576088238529587`*^9}, {
-  3.5576089018425837`*^9, 3.557608923249175*^9}, {3.557608956961175*^9, 
-  3.557608957464039*^9}, {3.557782613285478*^9, 3.557782616813223*^9}, {
-  3.557849959197063*^9, 3.557849960443737*^9}, {3.55785036853426*^9, 
-  3.557850370014098*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"x", "\[Rule]", "11"}], ",", 
-   RowBox[{"y", "\[Rule]", "15"}], ",", 
-   RowBox[{"b", "\[Rule]", "6"}]}], "}"}]], "Output",
- CellChangeTimes->{
-  3.557851060320912*^9, {3.557851162802725*^9, 3.5578511861214647`*^9}, 
-   3.557851920658993*^9, 3.557851969676786*^9, 3.5578520116984863`*^9, 
-   3.56124081580828*^9}]
-}, Open  ]],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"AOAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "-", 
-       
-       RowBox[{"A", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "-", 
-       
-       RowBox[{
-       "A", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], "]"}],
-     " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"OQAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{"Q", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{"Q", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], 
-     "]"}], " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"ABAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{"A", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "A", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], "]"}],
-     " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"OBAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], 
-     "]"}], " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], ";"}]}], "Input",
- CellChangeTimes->{{3.557623540034092*^9, 3.557623608762547*^9}, {
-  3.557623639089603*^9, 3.557623703304123*^9}, {3.557623759573288*^9, 
-  3.557623760116753*^9}, {3.5576239135433207`*^9, 3.557623914886898*^9}, {
-  3.557623945463291*^9, 3.557623953974421*^9}, {3.5576240969614058`*^9, 
-  3.5576241161511383`*^9}, {3.5576242126211977`*^9, 3.557624229468398*^9}, {
-  3.557850346688509*^9, 3.5578504046969337`*^9}, {3.5578513455584927`*^9, 
-  3.5578513603091507`*^9}}],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"r", "//.", 
-  RowBox[{"Join", "[", 
-   RowBox[{"solutions", ",", "demo"}], "]"}]}]], "Input",
- CellChangeTimes->{{3.561241228184299*^9, 3.561241243355372*^9}}],
-
-Cell[BoxData[
- RowBox[{"-", 
-  FractionBox["245", "24"]}]], "Output",
- CellChangeTimes->{{3.561241233346384*^9, 3.5612412438794317`*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Show", "[", "\[IndentingNewLine]", 
-  RowBox[{
-   RowBox[{"Graphics", "[", 
-    RowBox[{
-     RowBox[{"{", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"Thickness", "[", "Large", "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Circle", "[", 
-        RowBox[{"Origin", ",", " ", "r"}], "]"}], ",", "\[IndentingNewLine]", 
-       
-       RowBox[{"Line", "[", 
         RowBox[{"{", 
-         RowBox[{"A", ",", " ", "B"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
+         RowBox[{"bulgeFactor", ",", ".1", ",", "\"\<BF\>\""}], "}"}], ",", 
+        RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
         RowBox[{"{", 
-         RowBox[{"A", ",", " ", "Origin", ",", "B"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"A", ",", " ", 
+         RowBox[{"u", ",", 
           RowBox[{"{", 
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], ",", 
-            " ", 
-            RowBox[{
-            "A", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}], 
-           "}"}], ",", " ", "B"}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"Origin", ",", " ", "Z"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"Origin", ",", " ", "P"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"Origin", ",", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], ",", 
-            
-            RowBox[{
-            "Origin", "\[LeftDoubleBracket]", "2", 
-             "\[RightDoubleBracket]"}]}], "}"}]}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<A\>\"", ",", " ", "Italic", ",", "14"}], "]"}], ",", 
-         " ", 
-         RowBox[{"A", "-", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<B\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"B", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", " ", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<O\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"Origin", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", " ", ".3"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<P\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"P", "+", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", 
-            RowBox[{"-", ".5"}]}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<Q\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"Q", "+", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{"-", ".5"}], ",", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<R\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"{", 
-          RowBox[{
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "+", 
-            ".5"}], ",", 
-           RowBox[{
-            RowBox[{
-            "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-            "+", ".5"}]}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Beta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"A", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{"1.5", ",", " ", "1.3"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Beta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"B", " ", "-", " ", 
-          RowBox[{"{", 
-           RowBox[{"1.1", ",", " ", "2.2"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Alpha]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"B", " ", "-", " ", 
-          RowBox[{"{", 
-           RowBox[{"0.3", ",", " ", "3"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Gamma]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"A", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{"2", ",", " ", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Delta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"Origin", "+", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Delta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"Origin", "+", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{"-", ".2"}], ",", "1"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Phi]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"Origin", "+", 
-          RowBox[{"{", 
-           RowBox[{"1.2", ",", "1.5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<b\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-           ",", " ", 
-           RowBox[{"Q", "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", "1"}], ",", "3"}], "}"}]}]}], "]"}], ",", 
-         RowBox[{
-          RowBox[{"-", "OQAngle"}], "+", 
-          RowBox[{"\[Pi]", "/", "2"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
-       
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<r\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-           ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"A", "+", "Origin"}], ")"}]}], " ", "+", 
-            RowBox[{"{", 
-             RowBox[{"0", ",", ".5"}], "}"}]}]}], "]"}], ",", " ", 
-         "AOAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<r\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-           ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"B", "+", "Origin"}], ")"}]}], " ", "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", ".4"}], ",", "0"}], "}"}]}]}], "]"}], ",", " ", 
-         "OBAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<b-r\>\"", ",", " ", "Italic", ",", " ", "14"}], 
-            "]"}], ",", " ", 
-           RowBox[{"Q", "+", 
-            RowBox[{"{", 
-             RowBox[{"1.9", ",", 
-              RowBox[{"-", "0.2"}]}], "}"}]}]}], "]"}], ",", 
-         RowBox[{
-          RowBox[{"-", "OQAngle"}], "+", 
-          RowBox[{"\[Pi]", "/", "2"}], "+", ".1"}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<d/2\>\"", ",", " ", "Italic", ",", " ", "14"}], 
-            "]"}], ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"A", "+", "Q"}], ")"}]}], "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", ".3"}], ",", " ", "0.4"}], "}"}]}]}], "]"}], ",", 
-         " ", "ABAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<d/2\>\"", ",", " ", "Italic", ",", " ", "14"}], 
-            "]"}], ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"Q", "+", "B"}], ")"}]}], "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", ".3"}], ",", " ", "0.4"}], "}"}]}]}], "]"}], ",", 
-         " ", "ABAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<x\>\"", ",", "Italic", ",", "14"}], "]"}], ",", " ", 
-         RowBox[{
-          RowBox[{"0.5", 
-           RowBox[{"(", 
-            RowBox[{"A", "+", "P"}], ")"}]}], "-", 
-          RowBox[{"{", 
-           RowBox[{"0", ",", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<y\>\"", ",", "Italic", ",", "14"}], "]"}], ",", " ", 
-         RowBox[{"{", 
-          RowBox[{
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "+", 
-            "2"}], ",", 
-           RowBox[{
-           "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}],
-           "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Circle", "[", 
-        RowBox[{"Origin", ",", "1.5", ",", 
-         RowBox[{"{", 
-          RowBox[{"0", ",", "OBAngle"}], "}"}]}], "]"}]}], 
-      "\[IndentingNewLine]", "}"}], "//.", 
-     RowBox[{"Join", "[", 
-      RowBox[{"solutions", ",", "demo"}], "]"}]}], "]"}], ",", " ", 
-   RowBox[{"Axes", "\[Rule]", "True"}], ",", " ", 
-   RowBox[{"AxesOrigin", "\[Rule]", 
-    RowBox[{"(", 
-     RowBox[{"Origin", "//.", " ", 
-      RowBox[{"Join", "[", 
-       RowBox[{"solutions", ",", "demo"}], "]"}]}], ")"}]}], ",", " ", 
-   RowBox[{"Ticks", "\[Rule]", "None"}]}], "]"}]], "Input",
+           RowBox[{"8", ",", "8"}], "}"}]}], "}"}], ",", "Locator"}], "}"}]}],
+      "\[IndentingNewLine]", "]"}]}]}], "]"}]], "Input",
  CellChangeTimes->CompressedData["
-1:eJxTTMoPSmViYGAQA2IQfYo3cfXMxleO+69cB9MRZ46uB9Fah/W3gOiPac17
-QPS1UvFzIJrrVMtlEJ0jv/0GiGbgf/sXRH861Mo7C0iHLC0SA9FC16fYg+gf
-Dk4KC4C0yGk2RRAt5C01B0TP8tUH0zxVVhtBNEe59wkQfUvf6SyI3nOg5AaI
-Dp2W/xJET1kzEUznZTp9AdFLJA79BdHrViSLLATSnl7JyiCaYZWZOoi2MZyj
-D6LzXLtMQfSpmgcuIFqCfbcniI6Se+cHon+3dqaAaPtPK8pBNNfqvb1g9e9k
-J4Lony1Sy/ibXjnO19NZDqJ59Hv4BYC0gtRJIRAddD9HHkTr8S5VBNHT1/Sm
-gOj6Mz9TQTQAp9O1JQ==
+1:eJxTTMoPSmViYGAQBWIQrVZ9YWV7xyvHqAnux0D0ZVuWsyD628WomyD6T8O6
+nwuBtI0Eg9wiEN9ZUglEf+LNUAHRk/9dCgTRIma9USDaT21vAoh+Nm17Ioj+
+1v06DUSvvPWxEkRbTGNvANERDPO6QHQQr9Q8EP3mN/siEN1R8GYFiP71umQd
+iN4kt0lzI8i8ef36INolVsUERG9YedsBRCvfbHAF0TyFwn4g2ukrZwiIzhBK
+iQbROooLCkC0UcPeQhC9Y61nOYjeld5dD6JvMX1pAdGrGBd0gGgtz86JIFpc
+5yWY3iXrPw1EZ838uxBEX7Vz2AOi7ee8PA2iWZJuXATRL9oULoNoADF2tx8=
+
   "]],
 
 Cell[BoxData[
- GraphicsBox[
-  {Thickness[Large], 
-   CircleBox[
-    NCache[{Rational[245, 24] 
-      Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-      Rational[-245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-     8.893621024226094, 5.011344582234197}], NCache[
-    Rational[245, 24], 10.208333333333334`]], LineBox[{{0, 0}, {11, 15}}], 
-   LineBox[NCache[{{0, 0}, {
-      Rational[245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {11, 
-      15}}, {{0, 0}, {8.893621024226094, 5.011344582234197}, {11, 15}}]], 
-   LineBox[{{0, 0}, {11, 0}, {11, 15}}], 
-   LineBox[NCache[{{
-      Rational[245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-      Rational[1, 692] (4950 + 
-        Rational[29645, 12] 
-         Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-        Rational[13475, 4] 
-         Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] - ((-4950 + 
-           Rational[-29645, 12] 
-            Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-           Rational[-13475, 4] 
-            Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])^2 - 
-         1384 (27225 + 
-          Rational[148225, 4] 
-           Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]))^
-        Rational[1, 2]), 
-       Rational[1, 11] (Rational[19965, 346] + 
-        Rational[-148225, 2768] 
-         Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-        Rational[-202125, 2768] 
-         Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-        Rational[
-          15, 692] ((-4950 + 
-             Rational[-29645, 12] 
-              Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-             Rational[-13475, 4] 
-              Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])^2 - 
-           1384 (27225 + 
-            Rational[148225, 4] 
-             Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]))^
-          Rational[1, 2])}}, {{8.893621024226094, 5.011344582234197}, {
-     1.8832601398883715`, 12.431917991061312`}}]], 
-   LineBox[
-    NCache[{{Rational[245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {11, 
-      0}}, {{8.893621024226094, 5.011344582234197}, {11, 0}}]], 
-   LineBox[NCache[{{
-      Rational[245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[-245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-      11, Rational[-245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}}, {{
-      8.893621024226094, 5.011344582234197}, {11, 5.011344582234197}}]], 
-   InsetBox[
-    StyleBox["\<\"A\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {-0.5, -0.5}], InsetBox[
-    StyleBox["\<\"B\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, 15.5}], InsetBox[
-    StyleBox["\<\"O\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {9.393621024226094, 5.311344582234197}], InsetBox[
-    StyleBox["\<\"P\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, -0.5}], InsetBox[
-    StyleBox["\<\"Q\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {5., 8.}], InsetBox[
-    StyleBox["\<\"R\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, 5.511344582234197}], InsetBox[
-    StyleBox["\<\"\[Beta]\"\>",
-     StripOnInput->False,
-     FontSize->14], {1.5, 1.3}], InsetBox[
-    StyleBox["\<\"\[Beta]\"\>",
-     StripOnInput->False,
-     FontSize->14], {9.9, 12.8}], InsetBox[
-    StyleBox["\<\"\[Alpha]\"\>",
-     StripOnInput->False,
-     FontSize->14], {10.7, 12}], InsetBox[
-    StyleBox["\<\"\[Gamma]\"\>",
-     StripOnInput->False,
-     FontSize->14], {2, 0.5}], InsetBox[
-    StyleBox["\<\"\[Delta]\"\>",
-     StripOnInput->False,
-     FontSize->14], 
-    NCache[{-1 + 
-      Rational[245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-      Rational[-245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-     7.8936210242260945`, 5.011344582234197}]], InsetBox[
-    StyleBox["\<\"\[Delta]\"\>",
-     StripOnInput->False,
-     FontSize->14], 
-    NCache[{8.693621024226095, 1 + 
-      Rational[-245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-     8.693621024226095, 6.011344582234197}]], InsetBox[
-    StyleBox["\<\"\[Phi]\"\>",
-     StripOnInput->False,
-     FontSize->14], {10.093621024226094`, 6.511344582234197}], 
-   GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"b\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], 
-     NCache[{Rational[9, 2], Rational[21, 2]}, {4.5, 10.5}]], {{{
-     0.5913636636275175, 0.8064049958557055}, {-0.8064049958557055, 
-     0.5913636636275175}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {4.446810512113047, 3.005672291117098}], {{{
-     0.871211855434393, -0.4909072243821254}, {0.4909072243821254, 
-     0.871211855434393}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {9.546810512113046, 10.005672291117099`}], {{{
-     0.20633916497377033`, -0.9784805307199153}, {0.9784805307199153, 
-     0.20633916497377033`}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"b-r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {7.4, 7.3}], {{{0.6689154744407998, 
-     0.7433384747567152}, {-0.7433384747567152, 0.6689154744407998}}, 
-     Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"d/2\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {2.45, 4.15}], {{{
-     0.5913636636275174, -0.8064049958557055}, {0.8064049958557055, 
-     0.5913636636275174}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"d/2\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {7.95, 11.65}], {{{
-     0.5913636636275174, -0.8064049958557055}, {0.8064049958557055, 
-     0.5913636636275174}}, Center}], InsetBox[
-    StyleBox["\<\"x\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {5.5, -0.5}], InsetBox[
-    StyleBox["\<\"y\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], 
-    NCache[{13, Rational[-245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-     13, 5.011344582234197}]], 
-   CircleBox[
-    NCache[{Rational[245, 24] 
-      Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-      Rational[-245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-     8.893621024226094, 5.011344582234197}], 1.5, 
-    NCache[{0, 
-      ArcTan[(11 + 
-         Rational[-245, 24] 
-          Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])^(-1) (
-        15 + Rational[245, 24] 
-         Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])]}, {
-     0, 1.3629641996654633`}]]},
-  Axes->True,
-  AxesOrigin->NCache[{Rational[245, 24] Cos[ArcSin[
-         Rational[101, 245]] - ArcTan[
-        Rational[15, 11]]], Rational[-245, 24] Sin[ArcSin[
-         Rational[101, 245]] - ArcTan[
-        Rational[15, 11]]]}, {8.893621024226094, 5.011344582234197}],
-  Ticks->None]], "Output",
- CellChangeTimes->{
-  3.5578510637002087`*^9, {3.557851165677538*^9, 3.557851186334634*^9}, {
-   3.557851270198513*^9, 3.557851286832666*^9}, {3.557851370731175*^9, 
-   3.5578514080778503`*^9}, {3.557851924632371*^9, 3.5578519698616323`*^9}, 
-   3.557852011838821*^9, 3.561240815944948*^9}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"demo", " ", "=", 
-  RowBox[{"{", 
-   RowBox[{
-    RowBox[{"x", "\[Rule]", "11"}], ",", " ", 
-    RowBox[{"y", "\[Rule]", "15"}], ",", " ", 
-    RowBox[{"b", "\[Rule]", 
-     RowBox[{"-", "6"}]}]}], "}"}]}]], "Input",
- CellChangeTimes->{{3.557608807303122*^9, 3.5576088238529587`*^9}, {
-   3.5576089018425837`*^9, 3.557608923249175*^9}, {3.557608956961175*^9, 
-   3.557608957464039*^9}, {3.557782613285478*^9, 3.557782616813223*^9}, {
-   3.557849959197063*^9, 3.557849960443737*^9}, {3.55785036853426*^9, 
-   3.557850370014098*^9}, 3.561241138927499*^9}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"x", "\[Rule]", "11"}], ",", 
-   RowBox[{"y", "\[Rule]", "15"}], ",", 
-   RowBox[{"b", "\[Rule]", 
-    RowBox[{"-", "6"}]}]}], "}"}]], "Output",
- CellChangeTimes->{3.5612411398295183`*^9}]
-}, Open  ]],
-
-Cell[BoxData[{
- RowBox[{
-  RowBox[{"AOAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "-", 
-       
-       RowBox[{"A", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], "-", 
-       
-       RowBox[{
-       "A", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], "]"}],
-     " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"OQAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{"Q", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{"Q", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], 
-     "]"}], " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"ABAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{"A", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "A", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], "]"}],
-     " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], 
-  ";"}], "\[IndentingNewLine]", 
- RowBox[{
-  RowBox[{"OBAngle", "=", 
-   RowBox[{
-    RowBox[{"ArcTan", "[", 
-     RowBox[{
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
-      ",", 
-      RowBox[{
-       RowBox[{"B", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-       "-", 
-       RowBox[{
-       "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}]}], 
-     "]"}], " ", "//.", " ", 
-    RowBox[{"Join", "[", 
-     RowBox[{"solutions", ",", "demo"}], "]"}]}]}], ";"}]}], "Input",
- CellChangeTimes->{{3.557623540034092*^9, 3.557623608762547*^9}, {
-  3.557623639089603*^9, 3.557623703304123*^9}, {3.557623759573288*^9, 
-  3.557623760116753*^9}, {3.5576239135433207`*^9, 3.557623914886898*^9}, {
-  3.557623945463291*^9, 3.557623953974421*^9}, {3.5576240969614058`*^9, 
-  3.5576241161511383`*^9}, {3.5576242126211977`*^9, 3.557624229468398*^9}, {
-  3.557850346688509*^9, 3.5578504046969337`*^9}, {3.5578513455584927`*^9, 
-  3.5578513603091507`*^9}}],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{
-  RowBox[{"N", "[", "Z", "]"}], "//.", 
-  RowBox[{"Join", "[", 
-   RowBox[{"solutions", ",", "demo"}], "]"}]}]], "Input",
- CellChangeTimes->{{3.5612412892022657`*^9, 3.561241299097556*^9}}],
-
-Cell[BoxData[
- RowBox[{"{", 
-  RowBox[{
-   RowBox[{"6.432785295194465`", "\[VeryThinSpace]", "-", 
-    RowBox[{"9.480501653028123`", " ", "\[ImaginaryI]"}]}], ",", 
-   RowBox[{"6.2280200520075475`", "\[VeryThinSpace]", "+", 
-    RowBox[{"12.927956799583805`", " ", "\[ImaginaryI]"}]}]}], 
-  "}"}]], "Output",
- CellChangeTimes->{{3.561241294235524*^9, 3.561241299538583*^9}}]
-}, Open  ]],
-
-Cell[CellGroupData[{
-
-Cell[BoxData[
- RowBox[{"Show", "[", "\[IndentingNewLine]", 
-  RowBox[{
-   RowBox[{"Graphics", "[", 
-    RowBox[{
-     RowBox[{"{", "\[IndentingNewLine]", 
-      RowBox[{
-       RowBox[{"Thickness", "[", "Large", "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Circle", "[", 
-        RowBox[{"Origin", ",", 
-         RowBox[{"-", " ", 
-          RowBox[{"Abs", "[", "r", "]"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"A", ",", " ", "B"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"A", ",", " ", "Origin", ",", "B"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"A", ",", " ", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], ",", 
-            " ", 
-            RowBox[{
-            "A", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}], 
-           "}"}], ",", " ", "B"}], "}"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"Origin", ",", " ", "Z"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"Origin", ",", " ", "P"}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Line", "[", 
-        RowBox[{"{", 
-         RowBox[{"Origin", ",", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], ",", 
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`bulgeFactor$21416$$ = 
+    0.395, $CellContext`u$21416$$ = {5.030000000000001, 6.02}, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{{
+       Hold[$CellContext`bulgeFactor$21416$$], 0.1, "BF"}, -1, 1}, {{
+       Hold[$CellContext`u$21416$$], {8, 8}}, Automatic}}, Typeset`size$$ = {
+    576., {301.34375, 306.65625}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`bulgeFactor$21416$21417$$ = 
+    0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     1, StandardForm, 
+      "Variables" :> {$CellContext`bulgeFactor$21416$$ = 
+        0.1, $CellContext`u$21416$$ = {8, 8}}, "ControllerVariables" :> {
+        Hold[$CellContext`bulgeFactor$21416$$, \
+$CellContext`bulgeFactor$21416$21417$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> ($CellContext`dx$21416 = 
+        Part[$CellContext`u$21416$$, 1]/2; $CellContext`dy$21416 = 
+        Part[$CellContext`u$21416$$, 2]/
+         2; $CellContext`d$21416 = ($CellContext`dx$21416^2 + \
+$CellContext`dy$21416^2)^Rational[1, 2]; $CellContext`\[Omega]$21416 = 
+        ArcTan[$CellContext`dx$21416, $CellContext`dy$21416]; $CellContext`\
+\[CapitalOmega]$21416 = $CellContext`\[Omega]$21416 + 
+         Pi/2; $CellContext`b$21416 = $CellContext`bulgeFactor$21416$$ \
+$CellContext`d$21416; $CellContext`r$21416 = ($CellContext`b$21416^2 + \
+$CellContext`d$21416^2)/(2 $CellContext`b$21416); $CellContext`\[Beta]$21416 = 
+        ArcSin[($CellContext`r$21416 - \
+$CellContext`b$21416)/$CellContext`r$21416]; $CellContext`px$21416 = \
+$CellContext`dx$21416 - $CellContext`b$21416 
+         Cos[$CellContext`\[CapitalOmega]$21416]; $CellContext`py$21416 = \
+$CellContext`dy$21416 - $CellContext`b$21416 
+         Sin[$CellContext`\[CapitalOmega]$21416]; $CellContext`ox$21416 = \
+$CellContext`px$21416 + $CellContext`r$21416 
+          Cos[$CellContext`\[CapitalOmega]$21416]; $CellContext`oy$21416 = \
+$CellContext`py$21416 + $CellContext`r$21416 
+          Sin[$CellContext`\[CapitalOmega]$21416]; \
+$CellContext`\[Alpha]$21416 = 
+        ArcTan[-$CellContext`ox$21416, -$CellContext`oy$21416]; $CellContext`\
+\[Beta]$21416 = 
+        ArcTan[Part[$CellContext`u$21416$$, 1] - $CellContext`ox$21416, 
+          Part[$CellContext`u$21416$$, 2] - $CellContext`oy$21416]; 
+       If[$CellContext`b$21416 > 0, 
+         While[$CellContext`\[Alpha]$21416 > $CellContext`\[Beta]$21416, \
+$CellContext`\[Alpha]$21416 = $CellContext`\[Alpha]$21416 - 2 Pi], 
+         While[$CellContext`\[Alpha]$21416 < $CellContext`\[Beta]$21416, \
+$CellContext`\[Alpha]$21416 = $CellContext`\[Alpha]$21416 + 2 Pi]]; Column[{
+          StringJoin["\[Alpha]=", 
+           ToString[
+            N[$CellContext`\[Alpha]$21416]]], 
+          StringJoin["\[Beta]=", 
+           ToString[
+            N[$CellContext`\[Beta]$21416]]], 
+          Show[
+           Graphics[{
+             Line[{{0, 0}, $CellContext`u$21416$$}], 
+             PointSize[Large], 
+             
+             Point[{{0, 
+               0}, {$CellContext`dx$21416, $CellContext`dy$21416}, \
+{$CellContext`px$21416, $CellContext`py$21416}}], Blue, 
+             Circle[{$CellContext`ox$21416, $CellContext`oy$21416}, 
+              
+              Abs[$CellContext`r$21416], {$CellContext`\[Alpha]$21416, \
+$CellContext`\[Beta]$21416}], Red, 
+             Point[{$CellContext`ox$21416, $CellContext`oy$21416}]}], 
+           If[Abs[$CellContext`dx$21416] < Abs[$CellContext`dy$21416], 
             
-            RowBox[{
-            "Origin", "\[LeftDoubleBracket]", "2", 
-             "\[RightDoubleBracket]"}]}], "}"}]}], "}"}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<A\>\"", ",", " ", "Italic", ",", "14"}], "]"}], ",", 
-         " ", 
-         RowBox[{"A", "-", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<B\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"B", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", " ", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<O\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"Origin", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", " ", ".3"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<P\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"P", "+", 
-          RowBox[{"{", 
-           RowBox[{".5", ",", 
-            RowBox[{"-", ".5"}]}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<Q\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"Q", "+", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{"-", ".5"}], ",", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<R\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-         ",", " ", 
-         RowBox[{"{", 
-          RowBox[{
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "+", 
-            ".5"}], ",", 
-           RowBox[{
-            RowBox[{
-            "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
-            "+", ".5"}]}], "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Beta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"A", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{"1.5", ",", " ", "1.3"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Beta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"B", " ", "-", " ", 
-          RowBox[{"{", 
-           RowBox[{"1.1", ",", " ", "2.2"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Alpha]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"B", " ", "-", " ", 
-          RowBox[{"{", 
-           RowBox[{"0.3", ",", " ", "3"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Gamma]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"A", " ", "+", " ", 
-          RowBox[{"{", 
-           RowBox[{"2", ",", " ", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Delta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"Origin", "+", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{"-", "1"}], ",", "0"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Delta]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"Origin", "+", 
-          RowBox[{"{", 
-           RowBox[{
-            RowBox[{"-", ".2"}], ",", "1"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<\[Phi]\>\"", ",", " ", "14"}], "]"}], ",", " ", 
-         RowBox[{"Origin", "+", 
-          RowBox[{"{", 
-           RowBox[{"1.2", ",", "1.5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<b\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-           ",", " ", 
-           RowBox[{"Q", "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", "1"}], ",", "3"}], "}"}]}]}], "]"}], ",", 
-         RowBox[{
-          RowBox[{"-", "OQAngle"}], "+", 
-          RowBox[{"\[Pi]", "/", "2"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
-       
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<r\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-           ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"A", "+", "Origin"}], ")"}]}], " ", "+", 
-            RowBox[{"{", 
-             RowBox[{"0", ",", ".5"}], "}"}]}]}], "]"}], ",", " ", 
-         "AOAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<r\>\"", ",", " ", "Italic", ",", " ", "14"}], "]"}], 
-           ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"B", "+", "Origin"}], ")"}]}], " ", "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", ".4"}], ",", "0"}], "}"}]}]}], "]"}], ",", " ", 
-         "OBAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<b-r\>\"", ",", " ", "Italic", ",", " ", "14"}], 
-            "]"}], ",", " ", 
-           RowBox[{"Q", "+", 
-            RowBox[{"{", 
-             RowBox[{"1.9", ",", 
-              RowBox[{"-", "0.2"}]}], "}"}]}]}], "]"}], ",", 
-         RowBox[{
-          RowBox[{"-", "OQAngle"}], "+", 
-          RowBox[{"\[Pi]", "/", "2"}], "+", ".1"}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<d/2\>\"", ",", " ", "Italic", ",", " ", "14"}], 
-            "]"}], ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"A", "+", "Q"}], ")"}]}], "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", ".3"}], ",", " ", "0.4"}], "}"}]}]}], "]"}], ",", 
-         " ", "ABAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Rotate", "[", 
-        RowBox[{
-         RowBox[{"Text", "[", 
-          RowBox[{
-           RowBox[{"Style", "[", 
-            RowBox[{"\"\<d/2\>\"", ",", " ", "Italic", ",", " ", "14"}], 
-            "]"}], ",", " ", 
-           RowBox[{
-            RowBox[{"0.5", " ", 
-             RowBox[{"(", 
-              RowBox[{"Q", "+", "B"}], ")"}]}], "+", 
-            RowBox[{"{", 
-             RowBox[{
-              RowBox[{"-", ".3"}], ",", " ", "0.4"}], "}"}]}]}], "]"}], ",", 
-         " ", "ABAngle"}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<x\>\"", ",", "Italic", ",", "14"}], "]"}], ",", " ", 
-         RowBox[{
-          RowBox[{"0.5", 
-           RowBox[{"(", 
-            RowBox[{"A", "+", "P"}], ")"}]}], "-", 
-          RowBox[{"{", 
-           RowBox[{"0", ",", ".5"}], "}"}]}]}], "]"}], ",", 
-       "\[IndentingNewLine]", 
-       RowBox[{"Text", "[", 
-        RowBox[{
-         RowBox[{"Style", "[", 
-          RowBox[{"\"\<y\>\"", ",", "Italic", ",", "14"}], "]"}], ",", " ", 
-         RowBox[{"{", 
-          RowBox[{
-           RowBox[{
-            RowBox[{
-            "B", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], "+", 
-            "2"}], ",", 
-           RowBox[{
-           "Origin", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}],
-           "}"}]}], "]"}], ",", "\[IndentingNewLine]", 
-       RowBox[{"Circle", "[", 
-        RowBox[{"Origin", ",", "1.5", ",", 
-         RowBox[{"{", 
-          RowBox[{"0", ",", "OBAngle"}], "}"}]}], "]"}]}], 
-      "\[IndentingNewLine]", "}"}], "//.", 
-     RowBox[{"Join", "[", 
-      RowBox[{"solutions", ",", "demo"}], "]"}]}], "]"}], ",", " ", 
-   RowBox[{"Axes", "\[Rule]", "True"}], ",", " ", 
-   RowBox[{"AxesOrigin", "\[Rule]", 
-    RowBox[{"(", 
-     RowBox[{"Origin", "//.", " ", 
-      RowBox[{"Join", "[", 
-       RowBox[{"solutions", ",", "demo"}], "]"}]}], ")"}]}], ",", " ", 
-   RowBox[{"Ticks", "\[Rule]", "None"}]}], "]"}]], "Input",
- CellChangeTimes->{{3.5612412670194273`*^9, 3.561241282227914*^9}}],
+            Plot[$CellContext`dy$21416 - \
+($CellContext`dx$21416/$CellContext`dy$21416) ($CellContext`x - \
+$CellContext`dx$21416), {$CellContext`x, -10, 10}], 
+            
+            ParametricPlot[{$CellContext`dx$21416 - \
+($CellContext`dy$21416/$CellContext`dx$21416) ($CellContext`y - \
+$CellContext`dy$21416), $CellContext`y}, {$CellContext`y, -10, 10}]], 
+           PlotRange -> {{-10, 10}, {-10, 10}}, ImageSize -> Large]}]), 
+      "Specifications" :> {{{$CellContext`bulgeFactor$21416$$, 0.1, "BF"}, -1,
+          1}, {{$CellContext`u$21416$$, {8, 8}}, Automatic, ControlType -> 
+         Locator}}, "Options" :> {}, "DefaultOptions" :> {}],
+     ImageSizeCache->{625., {347., 353.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellChangeTimes->{3.561328281590575*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
 
 Cell[BoxData[
- GraphicsBox[
-  {Thickness[Large], 
+ RowBox[{"AutoCAD`Drawing", "=", "True"}]], "Input",
+ CellChangeTimes->{{3.561435732744115*^9, 3.5614357366414347`*^9}}],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{3.561435737661742*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"AutoCAD`Scale", "=", "1"}]], "Input",
+ CellChangeTimes->{{3.5614357590368557`*^9, 3.561435764216877*^9}}],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{3.561435764808764*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"AutoCAD`Stack", "=", 
+  RowBox[{"{", "}"}]}]], "Input",
+ CellChangeTimes->{{3.561435809668519*^9, 3.561435813607954*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", "}"}]], "Output",
+ CellChangeTimes->{3.5614358142183332`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"AutoCAD`CurrentPoint", "=", 
+  RowBox[{"{", 
+   RowBox[{"0", ",", "0"}], "}"}]}]], "Input",
+ CellChangeTimes->{{3.561435817314393*^9, 3.561435823151926*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0", ",", "0"}], "}"}]], "Output",
+ CellChangeTimes->{3.561435824230617*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"AutoCADReset", "[", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"AutoCAD`Drawing", "=", "True"}], ";", 
+    RowBox[{"AutoCAD`Scale", "=", "1"}], ";", 
+    RowBox[{"AutoCAD`Stack", "=", 
+     RowBox[{"{", "}"}]}], ";", 
+    RowBox[{"AutoCAD`CurrentPoint", "=", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0"}], "}"}]}], ";"}], ")"}]}]], "Input",
+ CellChangeTimes->{{3.561435828749511*^9, 3.5614358457267838`*^9}, {
+  3.561435999402564*^9, 3.561436029312234*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ActivateDraw", "[", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"AutoCAD`Drawing", "=", "True"}], ";"}], ")"}]}]], "Input",
+ CellChangeTimes->{{3.561435675748404*^9, 3.56143571807584*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DeactivateDraw", "[", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"AutoCAD`Drawing", "=", "False"}], ";"}], ")"}]}]], "Input",
+ CellChangeTimes->{{3.561435723262166*^9, 3.5614357304369173`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MultiplyVectors", "[", "x_", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"AutoCAD`Scale", "*=", "x"}], ";"}], ")"}]}]], "Input",
+ CellChangeTimes->{{3.5614357663818617`*^9, 3.56143579216852*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"DivideVectors", "[", "x_", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"AutoCAD`Scale", "/=", "x"}], ";"}], ")"}]}]], "Input",
+ CellChangeTimes->{{3.561435793675622*^9, 3.561435804071896*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PushLocation", "[", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"AutoCAD`Stack", "=", 
+     RowBox[{"Join", "[", 
+      RowBox[{"AutoCAD`Stack", ",", 
+       RowBox[{"{", "AutoCAD`CurrentPoint", "}"}]}], "]"}]}], ";"}], 
+   ")"}]}]], "Input",
+ CellChangeTimes->{{3.561436032945731*^9, 3.561436077182831*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"PopLocation", "[", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"AutoCAD`CurrentPoint", "=", 
+     RowBox[{"AutoCAD`Stack", "\[LeftDoubleBracket]", 
+      RowBox[{"-", "1"}], "\[RightDoubleBracket]"}]}], ";", 
+    RowBox[{"AutoCAD`Stack", "=", 
+     RowBox[{"Drop", "[", 
+      RowBox[{"AutoCAD`Stack", ",", 
+       RowBox[{"-", "1"}]}], "]"}]}], ";"}], ")"}]}]], "Input",
+ CellChangeTimes->{{3.561436079203781*^9, 3.561436096365415*^9}, {
+  3.561436167397891*^9, 3.561436178523262*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"MoveTo", "[", 
+   RowBox[{"x_", ",", "y_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", "cp", "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"cp", "=", "AutoCAD`CurrentPoint"}], ";", "\[IndentingNewLine]", 
+     
+     RowBox[{"AutoCAD`CurrentPoint", "=", 
+      RowBox[{"AutoCAD`CurrentPoint", "+", 
+       RowBox[{"{", 
+        RowBox[{"x", ",", "y"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{"AutoCAD`Drawing", ",", 
+       RowBox[{"Line", "[", 
+        RowBox[{"{", 
+         RowBox[{"cp", ",", "AutoCAD`CurrentPoint"}], "}"}], "]"}]}], 
+      "]"}]}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.561436200199404*^9, 3.561436237912569*^9}, {
+  3.5614362767204647`*^9, 3.561436302016542*^9}, {3.561438153702282*^9, 
+  3.561438168365498*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"OctantArc", "[", 
+   RowBox[{"r_", ",", "sc_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"cp", ",", "startAngle", ",", "endAngle", ",", "center"}], "}"}],
+     ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"cp", "=", "AutoCAD`CurrentPoint"}], ";", "\[IndentingNewLine]", 
+     
+     RowBox[{"startAngle", "=", 
+      RowBox[{
+       RowBox[{"BitShiftRight", "[", 
+        RowBox[{
+         RowBox[{"BitAnd", "[", 
+          RowBox[{
+           RowBox[{"Abs", "[", "sc", "]"}], ",", "16^^70"}], "]"}], ",", 
+         "4"}], "]"}], "\[Times]", 
+       FractionBox["\[Pi]", "4"]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"endAngle", "=", 
+      RowBox[{"startAngle", "+", 
+       RowBox[{
+        RowBox[{"Sign", "[", "sc", "]"}], "\[Times]", 
+        RowBox[{"BitAnd", "[", 
+         RowBox[{
+          RowBox[{"Abs", "[", "sc", "]"}], ",", "16^^7"}], "]"}], "\[Times]", 
+        
+        FractionBox["\[Pi]", "4"]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"center", "=", 
+      RowBox[{"cp", "+", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"r", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"startAngle", "-", "\[Pi]"}], "]"}]}], ",", 
+         RowBox[{"r", " ", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"startAngle", "-", "\[Pi]"}], "]"}]}]}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"AutoCAD`CurrentPoint", "=", 
+      RowBox[{"center", "+", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"r", " ", 
+          RowBox[{"Cos", "[", "endAngle", "]"}]}], ",", 
+         RowBox[{"r", " ", 
+          RowBox[{"Sin", "[", "endAngle", "]"}]}]}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{"AutoCAD`Drawing", ",", 
+       RowBox[{"Circle", "[", 
+        RowBox[{"center", ",", "r", ",", 
+         RowBox[{"{", 
+          RowBox[{"startAngle", ",", "endAngle"}], "}"}]}], "]"}]}], 
+      "]"}]}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.5614363168715477`*^9, 3.561436346517498*^9}, {
+   3.561436386428789*^9, 3.5614364580018578`*^9}, {3.561436540892187*^9, 
+   3.561436795785409*^9}, 3.561437037274218*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"FractionalArc", "[", 
+   RowBox[{
+   "startOffset_", ",", "endOffset_", ",", "highRadius_", ",", "lowRadius_", 
+    ",", "sc_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "cp", ",", "r", ",", "startAngle", ",", "endAngle", ",", "center"}], 
+     "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"r", "=", 
+      RowBox[{
+       RowBox[{"highRadius", "\[Times]", "256"}], "+", "lowRadius"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"cp", "=", "AutoCAD`CurrentPoint"}], ";", "\[IndentingNewLine]", 
+     
+     RowBox[{"startAngle", "=", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"BitShiftRight", "[", 
+          RowBox[{
+           RowBox[{"BitAnd", "[", 
+            RowBox[{
+             RowBox[{"Abs", "[", "sc", "]"}], ",", "16^^70"}], "]"}], ",", 
+           "4"}], "]"}], "+", 
+         FractionBox["startOffset", "256"]}], ")"}], "\[Times]", 
+       FractionBox["\[Pi]", "4"]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"endAngle", "=", 
+      RowBox[{"startAngle", "+", 
+       RowBox[{
+        RowBox[{"Sign", "[", "sc", "]"}], "\[Times]", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"BitAnd", "[", 
+           RowBox[{
+            RowBox[{"Abs", "[", "sc", "]"}], ",", "16^^7"}], "]"}], "+", 
+          FractionBox["endOffset", "256"]}], ")"}], "\[Times]", 
+        FractionBox["\[Pi]", "4"]}]}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"center", "=", 
+      RowBox[{"cp", "+", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"r", " ", 
+          RowBox[{"Cos", "[", 
+           RowBox[{"startAngle", "-", "\[Pi]"}], "]"}]}], ",", 
+         RowBox[{"r", " ", 
+          RowBox[{"Sin", "[", 
+           RowBox[{"startAngle", "-", "\[Pi]"}], "]"}]}]}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"AutoCAD`CurrentPoint", "=", 
+      RowBox[{"center", "+", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"r", " ", 
+          RowBox[{"Cos", "[", "endAngle", "]"}]}], ",", 
+         RowBox[{"r", " ", 
+          RowBox[{"Sin", "[", "endAngle", "]"}]}]}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"If", "[", 
+      RowBox[{"AutoCAD`Drawing", ",", 
+       RowBox[{"Circle", "[", 
+        RowBox[{"center", ",", "r", ",", 
+         RowBox[{"{", 
+          RowBox[{"startAngle", ",", "endAngle"}], "}"}]}], "]"}]}], 
+      "]"}]}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.561436797731326*^9, 3.561436854087552*^9}, {
+  3.561436927251955*^9, 3.5614370345938873`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"BulgeArc", "[", 
+   RowBox[{"x_", ",", "y_", ",", "bulgeFactor_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "ox", ",", "oy", ",", "qx", ",", "qy", ",", "b", ",", "d", ",", "r", ",",
+       "\[Alpha]", ",", "\[Beta]", ",", "\[Omega]", ",", "\[CapitalOmega]"}], 
+     "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{"bulgeFactor", "\[Equal]", "0"}], ",", 
+      RowBox[{"MoveTo", "[", 
+       RowBox[{"x", ",", "y"}], "]"}], ",", 
+      RowBox[{"(", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"qx", "=", 
+         RowBox[{
+          RowBox[{
+          "AutoCAD`CurrentPoint", "\[LeftDoubleBracket]", "1", 
+           "\[RightDoubleBracket]"}], "+", 
+          FractionBox["x", "2"]}]}], ";", 
+        RowBox[{"qy", "=", 
+         RowBox[{
+          RowBox[{
+          "AutoCAD`CurrentPoint", "\[LeftDoubleBracket]", "2", 
+           "\[RightDoubleBracket]"}], "+", 
+          FractionBox["y", "2"]}]}], ";", 
+        RowBox[{"d", "=", 
+         SqrtBox[
+          RowBox[{
+           SuperscriptBox[
+            RowBox[{"(", 
+             FractionBox["x", "2"], ")"}], "2"], "+", 
+           SuperscriptBox[
+            RowBox[{"(", 
+             FractionBox["y", "2"], ")"}], "2"]}]]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\[Omega]", "=", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{"x", ",", "y"}], "]"}]}], ";", 
+        RowBox[{"\[CapitalOmega]", "=", 
+         RowBox[{"\[Omega]", "+", 
+          FractionBox["\[Pi]", "2"]}]}], ";", 
+        RowBox[{"b", "=", 
+         RowBox[{
+          FractionBox["bulgeFactor", "127"], " ", "d"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"r", "=", 
+         FractionBox[
+          RowBox[{
+           SuperscriptBox["b", "2"], "+", 
+           SuperscriptBox["d", "2"]}], 
+          RowBox[{"2", "b"}]]}], ";", 
+        RowBox[{"ox", "=", 
+         RowBox[{"qx", "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"r", "-", "b"}], ")"}], 
+           RowBox[{"Cos", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+        RowBox[{"oy", "=", 
+         RowBox[{"qy", "+", 
+          RowBox[{
+           RowBox[{"(", 
+            RowBox[{"r", "-", "b"}], ")"}], 
+           RowBox[{"Sin", "[", "\[CapitalOmega]", "]"}]}]}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\[Alpha]", "=", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+            "AutoCAD`CurrentPoint", "\[LeftDoubleBracket]", "1", 
+             "\[RightDoubleBracket]"}], "-", "ox"}], ",", 
+           RowBox[{
+            RowBox[{
+            "AutoCAD`CurrentPoint", "\[LeftDoubleBracket]", "2", 
+             "\[RightDoubleBracket]"}], "-", "oy"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"\[Beta]", "=", 
+         RowBox[{"ArcTan", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+            "AutoCAD`CurrentPoint", "\[LeftDoubleBracket]", "1", 
+             "\[RightDoubleBracket]"}], "+", "x", "-", "ox"}], ",", 
+           RowBox[{
+            RowBox[{
+            "AutoCAD`CurrentPoint", "\[LeftDoubleBracket]", "2", 
+             "\[RightDoubleBracket]"}], "+", "y", "-", "oy"}]}], "]"}]}], ";",
+         "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"b", ">", "0"}], ",", 
+          RowBox[{"While", "[", 
+           RowBox[{
+            RowBox[{"\[Alpha]", ">", "\[Beta]"}], ",", 
+            RowBox[{"\[Alpha]", "=", 
+             RowBox[{"\[Alpha]", "-", 
+              RowBox[{"2", "\[Pi]"}]}]}]}], "]"}], ",", 
+          RowBox[{"While", "[", 
+           RowBox[{
+            RowBox[{"\[Alpha]", "<", "\[Beta]"}], ",", 
+            RowBox[{"\[Alpha]", "=", 
+             RowBox[{"\[Alpha]", "+", 
+              RowBox[{"2", "\[Pi]"}]}]}]}], "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"AutoCAD`CurrentPoint", "=", 
+         RowBox[{"AutoCAD`CurrentPoint", "+", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", "y"}], "}"}]}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{"AutoCAD`Drawing", ",", 
+          RowBox[{"Circle", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{"ox", ",", "oy"}], "}"}], ",", 
+            RowBox[{"Abs", "[", "r", "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"\[Alpha]", ",", "\[Beta]"}], "}"}]}], "]"}]}], "]"}]}], 
+       ")"}]}], "]"}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.561437030941374*^9, 3.5614371520713778`*^9}, {
+  3.56143718638221*^9, 3.561437252000914*^9}, {3.5614373479541893`*^9, 
+  3.561437374549172*^9}, {3.561437452344516*^9, 3.561437463427083*^9}, {
+  3.561437597231427*^9, 3.561437599420004*^9}, {3.561437675449916*^9, 
+  3.561437688824626*^9}, {3.561437718872361*^9, 3.561437755873617*^9}, {
+  3.561437904610215*^9, 3.561437911347095*^9}, {3.56143796802433*^9, 
+  3.5614379718590097`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Graphics", "[", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"AutoCADReset", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"DeactivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"11", ",", "1"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"ActivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{
+      RowBox[{"-", "7"}], ",", "11"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "4", ",", 
+      RowBox[{"-", "21"}]}], "]"}], ",", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{"3", ",", "3", ",", 
+      RowBox[{"-", "50"}]}], "]"}]}], "\[IndentingNewLine]", "}"}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.561437632941401*^9, 3.561437640717148*^9}, {
+   3.561437745347764*^9, 3.561437757921825*^9}, {3.561437846391271*^9, 
+   3.5614378505035553`*^9}, 3.5614379374108667`*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{LineBox[{{11, 1}, {-7, 11}}], 
    CircleBox[
-    NCache[{Rational[-245, 24] 
-      Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-      Rational[245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[
-        Rational[15, 11]]]}, {-8.893621024226094, -5.011344582234197}], 
-    NCache[Rational[-245, 24], -10.208333333333334`]], 
-   LineBox[{{0, 0}, {11, 15}}], 
-   LineBox[NCache[{{0, 0}, {
-      Rational[-245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {11, 
-      15}}, {{0, 0}, {-8.893621024226094, -5.011344582234197}, {11, 15}}]], 
-   LineBox[{{0, 0}, {11, 0}, {11, 15}}], 
-   LineBox[NCache[{{
-      Rational[-245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-      Rational[1, 692] (4950 + 
-        Rational[-29645, 12] 
-         Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-        Rational[-13475, 4] 
-         Sin[ArcSin[Rational[101, 245]] - ArcTan[
-           Rational[15, 11]]] - ((-1384) (27225 + 
-           Rational[-148225, 4] 
-            Sin[ArcSin[Rational[101, 245]] - ArcTan[
-              Rational[15, 11]]]) + (-4950 + 
-           Rational[29645, 12] 
-            Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-           Rational[13475, 4] 
-            Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])^2)^
-        Rational[1, 2]), 
-       Rational[1, 11] (Rational[19965, 346] + 
-        Rational[148225, 2768] 
-         Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-        Rational[202125, 2768] 
-         Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-        Rational[
-          15, 692] ((-1384) (27225 + 
-             Rational[-148225, 4] 
-              Sin[ArcSin[Rational[101, 245]] - ArcTan[
-                Rational[15, 11]]]) + (-4950 + 
-             Rational[29645, 12] 
-              Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]] + 
-             Rational[13475, 4] 
-              Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])^2)^
-          Rational[1, 2])}}, {{-8.893621024226094, -5.011344582234197}, {
-      Complex[6.432785295194465, -9.480501653028123], Complex[
-       6.2280200520075475`, 12.927956799583805`]}}]], 
-   LineBox[NCache[{{
-      Rational[-245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {11, 
-      0}}, {{-8.893621024226094, -5.011344582234197}, {11, 0}}]], 
-   LineBox[NCache[{{
-      Rational[-245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-       Rational[245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-      11, Rational[245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[
-         Rational[15, 11]]]}}, {{-8.893621024226094, -5.011344582234197}, {
-      11, -5.011344582234197}}]], InsetBox[
-    StyleBox["\<\"A\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {-0.5, -0.5}], InsetBox[
-    StyleBox["\<\"B\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, 15.5}], InsetBox[
-    StyleBox["\<\"O\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {-8.393621024226094, -4.711344582234197}], InsetBox[
-    StyleBox["\<\"P\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, -0.5}], InsetBox[
-    StyleBox["\<\"Q\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {5., 8.}], InsetBox[
-    StyleBox["\<\"R\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {11.5, -4.511344582234197}], InsetBox[
-    StyleBox["\<\"\[Beta]\"\>",
-     StripOnInput->False,
-     FontSize->14], {1.5, 1.3}], InsetBox[
-    StyleBox["\<\"\[Beta]\"\>",
-     StripOnInput->False,
-     FontSize->14], {9.9, 12.8}], InsetBox[
-    StyleBox["\<\"\[Alpha]\"\>",
-     StripOnInput->False,
-     FontSize->14], {10.7, 12}], InsetBox[
-    StyleBox["\<\"\[Gamma]\"\>",
-     StripOnInput->False,
-     FontSize->14], {2, 0.5}], InsetBox[
-    StyleBox["\<\"\[Delta]\"\>",
-     StripOnInput->False,
-     FontSize->14], 
-    NCache[{-1 + 
-      Rational[-245, 24] 
-       Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-      Rational[245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[
-        Rational[15, 11]]]}, {-9.893621024226094, -5.011344582234197}]], 
-   InsetBox[
-    StyleBox["\<\"\[Delta]\"\>",
-     StripOnInput->False,
-     FontSize->14], 
-    NCache[{-9.093621024226094, 1 + 
-      Rational[245, 24] 
-       Sin[ArcSin[Rational[101, 245]] - ArcTan[
-         Rational[15, 11]]]}, {-9.093621024226094, -4.011344582234197}]], 
-   InsetBox[
-    StyleBox["\<\"\[Phi]\"\>",
-     StripOnInput->False,
-     FontSize->14], {-7.693621024226094, -3.511344582234197}], 
-   GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"b\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], 
-     NCache[{Rational[9, 2], Rational[21, 2]}, {4.5, 10.5}]], {{{
-     0.6560339623055211, -0.7547313696287693}, {0.7547313696287693, 
-     0.6560339623055211}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->
-       Italic], {-4.446810512113047, -2.005672291117098}], \
-{{{-0.871211855434393, 
-     0.4909072243821254}, {-0.4909072243821254, -0.871211855434393}}, 
-     Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {0.6531894878869527, 4.994327708882901}], {{{
-     0.7050176790018967, -0.7091897294058753}, {0.7091897294058753, 
-     0.7050176790018967}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"b-r\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {7.4, 7.3}], {{{
-     0.5774091137772608, -0.8164549683399314}, {0.8164549683399314, 
-     0.5774091137772608}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"d/2\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {2.45, 4.15}], {{{
-     0.5913636636275174, -0.8064049958557055}, {0.8064049958557055, 
-     0.5913636636275174}}, Center}], GeometricTransformationBox[InsetBox[
-     StyleBox["\<\"d/2\"\>",
-      StripOnInput->False,
-      FontSize->14,
-      FontSlant->Italic], {7.95, 11.65}], {{{
-     0.5913636636275174, -0.8064049958557055}, {0.8064049958557055, 
-     0.5913636636275174}}, Center}], InsetBox[
-    StyleBox["\<\"x\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], {5.5, -0.5}], InsetBox[
-    StyleBox["\<\"y\"\>",
-     StripOnInput->False,
-     FontSize->14,
-     FontSlant->Italic], 
-    NCache[{13, Rational[245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]]}, {
-     13, -5.011344582234197}]], 
+    NCache[{Rational[-8629, 5334], Rational[
+      38593, 2667]}, {-1.617735283089614, 14.470566179227596`}], NCache[
+    Rational[8285, 5334] 17^Rational[1, 2], 6.404186371998935], 
+    NCache[{Pi + ArcTan[Rational[18512, 28709]], Pi - ArcTan[
+      Rational[2824, 34043]]}, {3.7143143945183104`, 3.0588282389150043`}]], 
    CircleBox[
-    NCache[{Rational[-245, 24] 
-      Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]], 
-      Rational[245, 24] 
-      Sin[ArcSin[Rational[101, 245]] - ArcTan[
-        Rational[15, 11]]]}, {-8.893621024226094, -5.011344582234197}], 1.5, 
-    NCache[{0, 
-      ArcTan[(11 + 
-         Rational[245, 24] 
-          Cos[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])^(-1) (
-        15 + Rational[-245, 24] 
-         Sin[ArcSin[Rational[101, 245]] - ArcTan[Rational[15, 11]]])]}, {
-     0, 0.78834825280867}]]},
-  Axes->True,
-  AxesOrigin->NCache[{Rational[-245, 24] Cos[ArcSin[
-         Rational[101, 245]] - ArcTan[
-        Rational[15, 11]]], Rational[245, 24] Sin[ArcSin[
-         Rational[101, 245]] - ArcTan[
-        Rational[15, 11]]]}, {-8.893621024226094, -5.011344582234197}],
-  Ticks->None]], "Output",
- CellChangeTimes->{
-  3.561241156479031*^9, 3.561241189454041*^9, {3.56124126872307*^9, 
-   3.561241282830632*^9}}]
-}, Open  ]]
+    NCache[{Rational[-13, 2] - 
+      2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+       Rational[75, 127] 2^Rational[1, 2]), Rational[33, 2] + 
+      2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+        Rational[75, 127] 2^Rational[1, 2])}, {-4.890275590551181, 
+     14.89027559055118}], NCache[
+    Rational[55887, 12700] 2^Rational[-1, 2], 3.1116595811159513`], 
+    NCache[{Pi + 
+      ArcTan[(Rational[-3, 2] - 
+         2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))/(Rational[-3, 2] + 
+        2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))], Pi + 
+      ArcTan[(Rational[3, 2] - 
+         2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))/(Rational[3, 2] + 
+        2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))]}, {3.1063229981286855`, 
+     1.606065982256004}]]},
+  ImageSize->{Automatic, 303.67346810618534`}]], "Output",
+ CellChangeTimes->{{3.5614376338892508`*^9, 3.561437641673081*^9}, 
+   3.561437691053237*^9, {3.561437738130561*^9, 3.561437758430317*^9}, 
+   3.561437851962082*^9, {3.561437912844212*^9, 3.561437937764493*^9}, 
+   3.561437973904273*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Graphics", "[", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"AutoCADReset", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"DeactivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"11", ",", "1"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"ActivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{
+      RowBox[{"-", "7"}], ",", "11"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", "4", ",", 
+      RowBox[{"-", "21"}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{"3", ",", "3", ",", 
+      RowBox[{"-", "50"}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{"3", ",", 
+      RowBox[{"-", "2"}], ",", 
+      RowBox[{"-", "44"}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", 
+      RowBox[{"-", "4"}], ",", 
+      RowBox[{"-", "37"}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{
+      RowBox[{"-", "6"}], ",", 
+      RowBox[{"-", "6"}], ",", "6"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{
+      RowBox[{"-", "1"}], ",", 
+      RowBox[{"-", "3"}], ",", "24"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{"1", ",", 
+      RowBox[{"-", "2"}], ",", "27"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{"5", ",", "0", ",", "46"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"BulgeArc", "[", 
+     RowBox[{"6", ",", "5", ",", "0"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"DeactivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"5", ",", 
+      RowBox[{"-", "7"}]}], "]"}]}], "}"}], "]"}]], "Input",
+ CellChangeTimes->{{3.561437274667879*^9, 3.561437343354402*^9}, {
+   3.5614373800638237`*^9, 3.5614374431214323`*^9}, {3.561437494410717*^9, 
+   3.5614375047460213`*^9}, {3.5614376071239023`*^9, 3.56143761202767*^9}, 
+   3.5614379246418552`*^9}],
+
+Cell[BoxData[
+ GraphicsBox[{LineBox[{{11, 1}, {4, 12}}], 
+   CircleBox[
+    NCache[{Rational[50045, 5334], Rational[41260, 2667]}, {9.382264716910386,
+      15.470566179227596`}], NCache[
+    Rational[8285, 5334] 17^Rational[1, 2], 6.404186371998935], 
+    NCache[{Pi + ArcTan[Rational[18512, 28709]], Pi - ArcTan[
+      Rational[2824, 34043]]}, {3.7143143945183104`, 3.0588282389150043`}]], 
+   CircleBox[
+    NCache[{Rational[9, 2] - 
+      2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+       Rational[75, 127] 2^Rational[1, 2]), Rational[35, 2] + 
+      2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+        Rational[75, 127] 2^Rational[1, 2])}, {6.109724409448819, 
+     15.89027559055118}], NCache[
+    Rational[55887, 12700] 2^Rational[-1, 2], 3.1116595811159513`], 
+    NCache[{Pi + 
+      ArcTan[(Rational[-3, 2] - 
+         2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))/(Rational[-3, 2] + 
+        2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))], Pi + 
+      ArcTan[(Rational[3, 2] - 
+         2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))/(Rational[3, 2] + 
+        2^Rational[-1, 2] (Rational[-55887, 12700] 2^Rational[-1, 2] + 
+          Rational[75, 127] 2^Rational[1, 2]))]}, {3.1063229981286855`, 
+     1.606065982256004}]], 
+   CircleBox[
+    NCache[{Rational[69627, 11176], Rational[359757, 22352]}, {
+     6.230046528274875, 16.09506979241231}], NCache[
+    Rational[18065, 22352] 13^Rational[1, 2], 2.9140248653926704`], 
+    NCache[{Pi - ArcTan[Rational[64931, 5142]], ArcTan[
+      Rational[20227, 61914]]}, {1.6498231583401308`, 0.3157642881545272}]], 
+   CircleBox[
+    NCache[{Rational[50363, 9398], Rational[74175, 4699]}, {5.358906150244733,
+      15.785273462438816`}], NCache[
+    Rational[8749, 9398] 17^Rational[1, 2], 3.838375305227592], 
+    NCache[{ArcTan[Rational[11416, 34219]], -
+      ArcTan[Rational[26176, 24821]]}, {
+     0.32200477756404594`, -0.8119621038177742}]], 
+   CircleBox[
+    NCache[{5 + 
+      2^Rational[-1, 2] (Rational[16165, 254] 2^Rational[-1, 2] + 
+        Rational[-18, 127] 2^Rational[1, 2]), 10 - 
+      2^Rational[-1, 2] (Rational[16165, 254] 2^Rational[-1, 2] + 
+       Rational[-18, 127] 2^Rational[1, 2])}, {
+     36.67913385826771, -21.67913385826771}], NCache[
+    Rational[16165, 254] 2^Rational[-1, 2], 45.001500464096615`], 
+    NCache[{Pi + 
+      ArcTan[(3 - 
+          2^Rational[-1, 2] (Rational[16165, 254] 2^Rational[-1, 2] + 
+           Rational[-18, 127] 2^Rational[1, 2]))^(-1) (3 + 
+         2^Rational[-1, 2] (Rational[16165, 254] 2^Rational[-1, 2] + 
+           Rational[-18, 127] 2^Rational[1, 2]))], Pi + 
+      ArcTan[(-3 - 
+          2^Rational[-1, 2] (Rational[16165, 254] 2^Rational[-1, 2] + 
+           Rational[-18, 127] 2^Rational[1, 2]))^(-1) (-3 + 
+         2^Rational[-1, 2] (Rational[16165, 254] 2^Rational[-1, 2] + 
+           Rational[-18, 127] 2^Rational[1, 2]))]}, {2.2617765065739164`, 
+     2.4506124738107733`}]], 
+   CircleBox[
+    NCache[{Rational[3, 2] + 
+      3 10^Rational[-1, 2] (
+        Rational[16705, 6096] Rational[5, 2]^Rational[1, 2] + 
+        Rational[-12, 127] 10^Rational[1, 2]), Rational[11, 2] - 
+      10^Rational[-1, 2] (Rational[16705, 6096] Rational[5, 2]^Rational[1, 2] + 
+       Rational[-12, 127] 10^Rational[1, 2])}, {5.327017716535433, 
+     4.224327427821522}], NCache[
+    Rational[16705, 6096] Rational[5, 2]^Rational[1, 2], 4.332828765839303], 
+    NCache[{-Pi + 
+      ArcTan[(Rational[1, 2] - 3 
+          10^Rational[-1, 2] (
+           Rational[16705, 6096] Rational[5, 2]^Rational[1, 2] + 
+           Rational[-12, 127] 10^Rational[1, 2]))^(-1) (Rational[3, 2] + 
+         10^Rational[-1, 2] (
+           Rational[16705, 6096] Rational[5, 2]^Rational[1, 2] + 
+           Rational[-12, 127] 10^Rational[1, 2]))], -Pi + 
+      ArcTan[(Rational[-1, 2] - 3 
+          10^Rational[-1, 2] (
+           Rational[16705, 6096] Rational[5, 2]^Rational[1, 2] + 
+           Rational[-12, 127] 10^Rational[1, 2]))^(-1) (Rational[-3, 2] + 
+         10^Rational[-1, 2] (
+           Rational[16705, 6096] Rational[5, 2]^Rational[1, 2] + 
+           Rational[-12, 127] 
+            10^Rational[
+              1, 2]))]}, {-3.8368908170718727`, -3.0897955989009978`}]], 
+   CircleBox[
+    NCache[{Rational[25687, 6858], Rational[14137, 3429]}, {
+     3.7455526392534266`, 4.1227763196267135`}], NCache[
+    Rational[8429, 6858] 5^Rational[1, 2], 2.7482964395371434`], 
+    NCache[{-Pi + ArcTan[Rational[842, 18829]], -Pi + 
+      ArcTan[Rational[
+        14558, 11971]]}, {-3.0969041721471777`, -2.258985917030796}]], 
+   CircleBox[
+    NCache[{Rational[9, 2], Rational[116801, 23368]}, {4.5, 
+     4.998331051009928}], NCache[Rational[91225, 23368], 3.9038428620335504`],
+     NCache[{-Pi + ArcTan[Rational[14013, 11684]], -
+      ArcTan[Rational[
+        14013, 11684]]}, {-2.265808291036528, -0.8757843625532649}]], 
+   LineBox[{{7, 2}, {13, 7}}]}]], "Output",
+ CellChangeTimes->{{3.561437603565144*^9, 3.561437612612172*^9}, 
+   3.561437925061499*^9, 3.561437976114627*^9, 3.561438173237906*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Graphics", "[", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"AutoCADReset", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"DeactivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"1", ",", "11"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"ActivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"5", ",", "0"}], "]"}]}], "}"}], "]"}]], "Input",
+ CellChangeTimes->{{3.561438127949539*^9, 3.561438128637438*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[LineBox[{{1, 11}, {6, 11}}]]], "Output",
+ CellChangeTimes->{3.5614381290755453`*^9, 3.5614381772020187`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Graphics", "[", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"AutoCADReset", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"DeactivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"1", ",", "11"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"ActivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"5", ",", "0"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"OctantArc", "[", 
+     RowBox[{"5", ",", 
+      RowBox[{"-", 
+       RowBox[{"(", "16^^24", ")"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{
+      RowBox[{"-", "5"}], ",", "0"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"0", ",", "18"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"5", ",", "0"}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"OctantArc", "[", 
+     RowBox[{"4", ",", 
+      RowBox[{"-", 
+       RowBox[{"(", "16^^24", ")"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"DeactivateDraw", "[", "]"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"MoveTo", "[", 
+     RowBox[{"10", ",", 
+      RowBox[{"-", "11"}]}], "]"}]}], "}"}], "]"}]], "Input",
+ CellChangeTimes->{{3.561437992921866*^9, 3.561438116430147*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[{LineBox[{{1, 11}, {6, 11}}], 
+   CircleBox[{6, 6}, 5, 
+    NCache[{Rational[1, 2] Pi, Rational[-1, 2] Pi}, {
+     1.5707963267948966`, -1.5707963267948966`}]], LineBox[{{6, 1}, {1, 1}}], 
+   LineBox[{{1, 1}, {1, 19}}], LineBox[{{1, 19}, {6, 19}}], 
+   CircleBox[{6, 15}, 4, 
+    NCache[{Rational[1, 2] Pi, Rational[-1, 2] Pi}, {
+     1.5707963267948966`, -1.5707963267948966`}]]}]], "Output",
+ CellChangeTimes->{3.5614381168510942`*^9, 3.561438183442348*^9}]
 }, Open  ]]
 }, Open  ]]
 },
 WindowToolbars->"RulerBar",
 WindowSize->{813, 855},
-WindowMargins->{{0, Automatic}, {Automatic, 0}},
+WindowMargins->{{0, Automatic}, {Automatic, 22}},
 PrintingCopies->1,
 PrintingPageRange->{1, Automatic},
 ShowSelection->True,
@@ -2441,134 +1191,57 @@ Notebook[{
 Cell[CellGroupData[{
 Cell[579, 22, 156, 2, 67, "Section"],
 Cell[738, 26, 514, 17, 26, "Text"],
+Cell[1255, 45, 3197, 89, 219, "Input"],
 Cell[CellGroupData[{
-Cell[1277, 47, 204, 3, 34, "Subsection"],
-Cell[1484, 52, 849, 16, 27, "Input"],
-Cell[2336, 70, 266, 5, 26, "Text"],
-Cell[2605, 77, 304, 7, 27, "Input"],
-Cell[2912, 86, 143, 3, 26, "Text"],
-Cell[3058, 91, 714, 20, 58, "Input"]
+Cell[4477, 138, 361, 9, 27, "Input"],
+Cell[4841, 149, 442, 10, 27, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3809, 116, 192, 3, 34, "Subsection"],
-Cell[4004, 121, 7738, 187, 379, "Input",
- Evaluatable->False],
-Cell[CellGroupData[{
-Cell[11767, 312, 525, 17, 41, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[12295, 331, 489, 11, 27, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}]
-}, Open  ]],
-Cell[12799, 345, 210, 4, 27, "Output"],
-Cell[CellGroupData[{
-Cell[13034, 353, 346, 13, 31, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[13383, 368, 441, 12, 46, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}]
-}, Open  ]],
-Cell[13839, 383, 252, 6, 44, "Output"]
+Cell[5320, 164, 8162, 208, 628, "Input"],
+Cell[13485, 374, 4960, 96, 717, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[14128, 394, 98, 1, 34, "Subsection"],
-Cell[CellGroupData[{
-Cell[14251, 399, 640, 16, 31, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[14894, 417, 1106, 19, 39, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}]
-}, Open  ]],
-Cell[16015, 439, 285, 7, 39, "Output"],
-Cell[CellGroupData[{
-Cell[16325, 450, 516, 13, 26, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[16844, 465, 1107, 24, 46, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}]
-}, Open  ]],
-Cell[17966, 492, 338, 9, 50, "Output"],
-Cell[CellGroupData[{
-Cell[18329, 505, 374, 7, 26, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[18706, 514, 833, 23, 57, "Input",
- Evaluatable->False,
- CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[19542, 539, 974, 19, 46, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}]
-}, Open  ]],
-Cell[20531, 561, 296, 7, 46, "Output"],
-Cell[CellGroupData[{
-Cell[20852, 572, 240, 5, 26, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[21095, 579, 683, 13, 44, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}]
-}, Open  ]],
-Cell[21793, 595, 255, 5, 44, "Output"],
-Cell[CellGroupData[{
-Cell[22073, 604, 317, 6, 26, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[22393, 612, 949, 20, 47, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}]
-}, Open  ]],
-Cell[23357, 635, 303, 7, 47, "Output"],
-Cell[CellGroupData[{
-Cell[23685, 646, 416, 8, 26, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}],
-Cell[24104, 656, 888, 16, 62, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10000.}]
-}, Open  ]],
-Cell[25007, 675, 802, 24, 65, "Output"],
-Cell[CellGroupData[{
-Cell[25834, 703, 256, 5, 26, "Text",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}],
-Cell[26093, 710, 813, 15, 43, "Input",
- CellGroupingRules->{GroupTogetherGrouping, 10001.}]
-}, Open  ]],
-Cell[26921, 728, 1492, 46, 75, "Output"]
+Cell[18482, 475, 134, 2, 27, "Input"],
+Cell[18619, 479, 73, 1, 27, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[28450, 779, 148, 2, 34, "Subsection"],
-Cell[CellGroupData[{
-Cell[28623, 785, 568, 13, 44, "Input"],
-Cell[29194, 800, 303, 7, 44, "Output"]
-}, Open  ]],
-Cell[29512, 810, 303, 7, 26, "Text"],
-Cell[CellGroupData[{
-Cell[29840, 821, 500, 11, 27, "Input"],
-Cell[30343, 834, 359, 9, 27, "Output"]
-}, Open  ]],
-Cell[30717, 846, 284, 9, 30, "Text"],
-Cell[CellGroupData[{
-Cell[31026, 859, 1436, 43, 88, "Input"],
-Cell[32465, 904, 2673, 79, 112, "Output"]
+Cell[18729, 485, 129, 2, 27, "Input"],
+Cell[18861, 489, 70, 1, 27, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[35175, 988, 1691, 44, 88, "Input"],
-Cell[36869, 1034, 3676, 105, 180, "Output"]
+Cell[18968, 495, 145, 3, 27, "Input"],
+Cell[19116, 500, 89, 2, 27, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[40582, 1144, 530, 11, 27, "Input"],
-Cell[41115, 1157, 365, 9, 27, "Output"]
+Cell[19242, 507, 181, 4, 27, "Input"],
+Cell[19426, 513, 115, 3, 27, "Output"]
 }, Open  ]],
-Cell[41495, 1169, 3016, 86, 73, "Input"],
+Cell[19556, 519, 507, 13, 43, "Input"],
+Cell[20066, 534, 233, 6, 27, "Input"],
+Cell[20302, 542, 239, 6, 27, "Input"],
+Cell[20544, 550, 240, 6, 27, "Input"],
+Cell[20787, 558, 237, 6, 27, "Input"],
+Cell[21027, 566, 353, 10, 27, "Input"],
+Cell[21383, 578, 531, 13, 43, "Input"],
+Cell[21917, 593, 857, 22, 73, "Input"],
+Cell[22777, 617, 2202, 59, 176, "Input"],
+Cell[24982, 678, 2598, 70, 213, "Input"],
+Cell[27583, 750, 5000, 129, 311, "Input"],
 Cell[CellGroupData[{
-Cell[44536, 1259, 183, 4, 27, "Input"],
-Cell[44722, 1265, 137, 3, 46, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[44896, 1273, 11439, 305, 523, "Input"],
-Cell[56338, 1580, 8088, 194, 379, "Output"]
-}, Open  ]],
-Cell[CellGroupData[{
-Cell[64463, 1779, 577, 12, 27, "Input"],
-Cell[65043, 1793, 239, 7, 27, "Output"]
-}, Open  ]],
-Cell[65297, 1803, 3016, 86, 73, "Input"],
-Cell[CellGroupData[{
-Cell[68338, 1893, 213, 5, 27, "Input"],
-Cell[68554, 1900, 374, 8, 27, "Output"]
+Cell[32608, 883, 984, 22, 133, "Input"],
+Cell[33595, 907, 1774, 32, 319, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[68965, 1913, 11140, 299, 523, "Input"],
-Cell[80108, 2214, 8069, 199, 361, "Output"]
-}, Open  ]]
+Cell[35406, 944, 2190, 50, 268, "Input"],
+Cell[37599, 996, 5251, 102, 447, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42887, 1103, 552, 11, 103, "Input"],
+Cell[43442, 1116, 135, 2, 447, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[43614, 1123, 1350, 30, 208, "Input"],
+Cell[44967, 1155, 486, 9, 447, "Output"]
 }, Open  ]]
 }, Open  ]]
 }

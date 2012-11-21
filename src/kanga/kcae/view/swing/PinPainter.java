@@ -8,6 +8,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import static java.lang.Math.atan2;
 import static java.lang.Math.cos;
 import static java.lang.Math.PI;
@@ -19,57 +21,73 @@ import kanga.kcae.object.PinStyle;
 import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Shape;
+import kanga.kcae.object.Symbol;
 import kanga.kcae.object.Typeface;
 import kanga.kcae.xchg.autocad.AutoCADShapeFile;
 
 import org.apache.commons.lang3.ObjectUtils;
 import static org.apache.commons.lang3.StringUtils.defaultString;
-import static org.apache.commons.lang3.StringUtils.join;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public abstract class PinPainter {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(PinPainter.class);
+    
     public static final Typeface labelTypeface = 
         AutoCADShapeFile.find("iso3098b").toTypeface();
     public static final Font labelFont = new Font(labelTypeface, 8000000);
+    
     public static final int NEGATED_SIZE =  5000000; // 5.0 mm
     public static final int NET_WIDTH =      500000; // 0.5 mm
     public static final int BUS_WIDTH =     2000000; // 2.0 mm
     public static final int MITER_LIMIT =   1000000; // 1.0 mm
     public static final int LABEL_OFFSET =  5000000; // 5.0 mm
     
-    public static void paint(final Graphics2D g, final Pin pin) {
-        Point conPoint = pin.getConnectionPoint();
+    /** Paint a symbol's pin on a canvas.
+     * 
+     *  @param  symbol  The symbol which owns the pin.
+     *  @param  pin     The pin to paint.
+     *  @param  g       The graphics context on the canvas to paint with.
+     */
+    public static void paint(
+        @Nonnull final Symbol symbol,
+        @Nonnull final Pin pin,
+        @Nonnull final Graphics2D g)
+    {
+        final Font nameFont = symbol.getPinNameFont(pin);
+        final Font numberFont = symbol.getPinNumberFont(pin);
+        final Point conPoint = pin.getConnectionPoint();
         Point endPoint = pin.getEndPoint();
         final Set<PinStyle> pinStyles = pin.getPinStyles();
-        boolean bus = pinStyles.contains(PinStyle.BUS);
-        boolean negated = pinStyles.contains(PinStyle.NEGATED);
+        final boolean bus = pinStyles.contains(PinStyle.BUS);
+        final boolean negated = pinStyles.contains(PinStyle.NEGATED);
         
         // For drawing the pin itself.
-        int lineWidth = (bus ? BUS_WIDTH : NET_WIDTH);
-        Stroke stroke = new BasicStroke(
+        final int lineWidth = (bus ? BUS_WIDTH : NET_WIDTH);
+        final Stroke stroke = new BasicStroke(
                 lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
                 MITER_LIMIT);
-        Path2D.Double awtPath = new Path2D.Double();
+        final Path2D.Double awtPath = new Path2D.Double();
 
         // If we need to draw the negated bubble at the endpoint.
         Ellipse2D negatedCircle = null;
         
-        // For drawing the labels.
-        Shape nameLabel = labelFont.render(defaultString(pin.getName()));
-        Shape numberLabel = labelFont.render(join(pin.getPinNumbers(), ";"));
-        assert nameLabel != null;
-        assert numberLabel != null;
-        
-        Rectangle nameLabelBBox = nameLabel.getBoundingBox();
-        Rectangle numberLabelBBox = numberLabel.getBoundingBox();
+        // Shapes which make up the labels.
+        final Shape nameLabel = nameFont.render(
+            defaultString(pin.getName()));
+        final Shape numberLabel = numberFont.render(
+            defaultString(pin.getPinNumber()));
 
-        long nameLabelWidth = (nameLabelBBox != null ?
-                               nameLabelBBox.getWidth() : 0);
-        long numberLabelWidth = (numberLabelBBox != null ?
-                                 numberLabelBBox.getWidth() : 0);
+        
+        final Rectangle nameLabelBBox = nameLabel.getBoundingBox();
+        final Rectangle numberLabelBBox = numberLabel.getBoundingBox();
+
+        final long nameLabelWidth = (nameLabelBBox != null ?
+                                     nameLabelBBox.getWidth() : 0);
+        final long numberLabelWidth = (numberLabelBBox != null ?
+                                       numberLabelBBox.getWidth() : 0);
 
         AffineTransform gTransform = g.getTransform();
         AffineTransform nameLabelTransform = ObjectUtils.clone(gTransform);
@@ -201,7 +219,7 @@ public abstract class PinPainter {
             ShapePainter.paint(g, nameLabel);
             
             g.setTransform(numberLabelTransform);
-            //ShapePainter.paint(g, numberLabel);
+            ShapePainter.paint(g, numberLabel);
         }
         finally {
             g.setTransform(gTransform);

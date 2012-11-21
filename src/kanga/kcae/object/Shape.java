@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.annotation.CheckForNull;
 
-public interface Shape extends Serializable {
+public interface Shape extends Serializable, Transformable<Shape> {
     @CheckForNull
     public Rectangle getBoundingBox();
     public void setLineStyle(LineStyle lineStyle);

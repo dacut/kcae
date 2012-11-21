@@ -1,38 +1,41 @@
 package kanga.kcae.object;
 
+import javax.annotation.Nonnull;
+
 public class MoveTo extends SinglePointInstruction {
-    public MoveTo(final long x, final long y) {
+    public MoveTo(long x, final long y) {
         super(new Point(x, y));
     }
     
-    public MoveTo(final Point point) {
+    public MoveTo(@Nonnull Point point) {
         super(point);
     }
-
+    
     @Override
-    public void paint(PathPainter pp) {
+    public void paint(@Nonnull PathPainter pp) {
         pp.moveTo(this.getPoint());
     }
     
-    /** Updates the bounding box.
-     * 
-     *  Since the moveto instruction does not lay down any artifacts, this
-     *  just returns the bounding box passed in.
-     *  
-     *  @param startPos     The current position when the moveTo instruction is
-     *                      executed.
-     *  @param bbox         The current bounding box.
-     *  @return The updated bounding box (in this case, just {@code bbox}).
-     */
     @Override
-    public Rectangle updateBoundingBox(
-        final Point startPos,
-        final Rectangle bbox)
-    {
-        return bbox;
+    @Nonnull
+    public MoveTo scale(double factor) {
+        return new MoveTo(this.getPoint().scale(factor));
     }
     
     @Override
+    @Nonnull
+    public MoveTo translate(long dx, long dy) {
+        return new MoveTo(this.getPoint().translate(dx, dy));
+    }
+    
+    @Override
+    @Nonnull
+    public MoveTo rotateQuadrant(int nQuadrants) {
+        return new MoveTo(this.getPoint().rotateQuadrant(nQuadrants));
+    }
+    
+    @Override
+    @Nonnull
     public String toString() {
         return "MoveTo[" + this.getPoint().toString() + "]";
     }

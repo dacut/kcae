@@ -119,6 +119,26 @@ public class QuadraticCurveTo implements PathInstruction {
     public Point updatePosition(final Point startPos) {
         return this.getTargetPoint();
     }
+    
+    @Override
+    public QuadraticCurveTo scale(double factor) {
+        return new QuadraticCurveTo(this.getControlPoint().scale(factor),
+                                    this.getTargetPoint().scale(factor));
+    }
+
+    @Override
+    public QuadraticCurveTo translate(long dx, long dy) {
+        return new QuadraticCurveTo(this.getControlPoint().translate(dx, dy),
+                                    this.getTargetPoint().translate(dx, dy));
+    }
+    
+    @Override
+    public QuadraticCurveTo rotateQuadrant(int nQuadrants) {
+        return new QuadraticCurveTo(
+            this.getControlPoint().rotateQuadrant(nQuadrants),
+            this.getTargetPoint().rotateQuadrant(nQuadrants));
+    }
+
 
     @Override
     public boolean equals(Object otherObj) {

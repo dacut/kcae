@@ -3,15 +3,19 @@ package kanga.kcae.xchg.autocad;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class DrawSubshape extends ShapeInstruction {
-    public DrawSubshape(int shapeId, boolean verticalOnly) {
+    public DrawSubshape(char shapeId, boolean verticalOnly) {
         super(verticalOnly);
-        this.shapeId = shapeId;
+        this.subshapeId = shapeId;
         this.baseX = this.baseY = this.width = this.height = -1;
     }
 
     public DrawSubshape(
-        int shapeId, 
+        char subshapeId, 
         int baseX,
         int baseY,
         int width,
@@ -19,7 +23,7 @@ public class DrawSubshape extends ShapeInstruction {
         boolean verticalOnly)
     {
         super(verticalOnly);
-        this.shapeId = shapeId;
+        this.subshapeId = subshapeId;
         this.baseX = baseX;
         this.baseY = baseY;
         this.width = width;
@@ -27,8 +31,8 @@ public class DrawSubshape extends ShapeInstruction {
     }
 
     
-    public int getShapeId() {
-        return this.shapeId;
+    public char getSubshapeId() {
+        return this.subshapeId;
     }
     
     public int getBaseX() {
@@ -47,6 +51,46 @@ public class DrawSubshape extends ShapeInstruction {
         return this.height;
     }
     
+    @Override
+    public void visit(ShapeInstructionHandler handler) {
+        handler.handle(this);
+    }
+    
+    @Override
+    public boolean equals(Object otherObj) {
+        if (! super.equals(otherObj)) { return false; }
+        
+        DrawSubshape other = DrawSubshape.class.cast(otherObj);
+        return new EqualsBuilder()
+            .append(this.getSubshapeId(), other.getSubshapeId())
+            .append(this.getBaseX(), other.getBaseX())
+            .append(this.getBaseY(), other.getBaseY())
+            .append(this.getWidth(), other.getWidth())
+            .append(this.getHeight(), other.getHeight())
+            .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(1641303973, 1506208421)
+            .append(this.getSubshapeId())
+            .append(this.getBaseX())
+            .append(this.getBaseY())
+            .append(this.getWidth())
+            .append(this.getHeight())
+            .toHashCode();
+    }
+
+    @Override
+    protected ToStringBuilder toStringBuilder() {
+        return super.toStringBuilder()
+            .append("subshapeId", this.getSubshapeId())
+            .append("baseX", this.getBaseX())
+            .append("baseY", this.getBaseY())
+            .append("width", this.getWidth())
+            .append("height", this.getHeight());
+    }
+    
     public static class Parser extends ShapeInstructionParser<DrawSubshape> {
         @Override
         public DrawSubshape parse(
@@ -55,39 +99,39 @@ public class DrawSubshape extends ShapeInstruction {
             int shapeId)
             throws IOException
         {
-            int op1, op2, op3, op4, op5, op6;
+            int subshapeIdHigh;
+            int subshapeIdLow;
+            int baseX;
+            int baseY;
+            int width;
+            int height;
             
-            op1 = is.read();
-            if (op1 == -1) {
+            subshapeIdHigh = is.read();
+            if (subshapeIdHigh == -1) {
                 throw new InvalidShapeFileException(
                     "Shape " + shapeId + " truncated");
             }
             
-            if (op1 != 0) {
-                return new DrawSubshape(op1, verticalOnly);
+            if (subshapeIdHigh != 0) {
+                return new DrawSubshape((char) subshapeIdHigh, verticalOnly);
             }
             
             // Bigfont subshape.
-            op1 = is.read();
-            op2 = is.read();
-            op3 = is.read();
-            op4 = is.read();
-            op5 = is.read();
-            op6 = is.read();
+            subshapeIdHigh = is.read();
+            subshapeIdLow = is.read();
+            baseX = is.read();
+            baseY = is.read();
+            width = is.read();
+            height = is.read();
 
-            if (op1 == -1 || op2 == -1 || op3 == -1 ||
-                op4 == -1 || op5 == -1 || op6 == -1)
+            if (subshapeIdHigh == -1 || subshapeIdLow == -1 || baseX == -1 ||
+                baseY == -1 || width == -1 || height == -1)
             {
                 throw new InvalidShapeFileException(
                     "Shape " + shapeId + " truncated");
             }
                 
-            int subshapeId = op1 * 256 + op2;
-            int baseX = op3;
-            int baseY = op4;
-            int width = op5;
-            int height = op6;
-            
+            char subshapeId = (char) (subshapeIdHigh * 256 + subshapeIdLow);
             return new DrawSubshape(
                 subshapeId, baseX, baseY, width, height, verticalOnly);
         }
@@ -95,7 +139,7 @@ public class DrawSubshape extends ShapeInstruction {
         private static final long serialVersionUID = 1L;
     }
 
-    private final int shapeId;
+    private final char subshapeId;
     private final int baseX;
     private final int baseY;
     private final int width;

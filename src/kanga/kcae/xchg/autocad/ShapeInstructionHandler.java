@@ -1,5 +1,7 @@
 package kanga.kcae.xchg.autocad;
 
+/** An interface for handling the types of AutoCAD shape directives.
+ */
 public interface ShapeInstructionHandler {
     void handle(ActivateDraw instruction);
     void handle(DeactivateDraw instruction);

@@ -45,7 +45,6 @@ public class TestNet {
         n.getConnections().add(p1);
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testComparisons() {
         Net n1a = new Net("net1");
@@ -70,20 +69,8 @@ public class TestNet {
         assertTrue(n2.compareTo(n1a) > 0);
 
         Net n1c = new Net("net1");
-        assertFalse(n1a.equals(n1c));
-        assertFalse(n1c.equals(n1a));
-        
-        Port p1a = new Port("port1", SignalDirection.INPUT, n1a);
-        Port p1b = new Port("port1", SignalDirection.INPUT, n1b);
-        
-        n1a.addConnection(p1a);
-        assertTrue(n1a.equals(n1b));
-        assertTrue(n1a.compareTo(n1b) == 0);
-        assertTrue(((Comparable) n1a).compareTo((Object) n1b) == 0);
-
-        n1b.addConnection(p1b);
-        assertTrue(n1a.equals(n1b));
-        assertTrue(n1a.compareTo(n1b) == 0);
+        assertTrue(n1a.equals(n1c));
+        assertTrue(n1c.equals(n1a));
     }
 
     @Test

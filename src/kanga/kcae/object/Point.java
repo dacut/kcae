@@ -1,6 +1,10 @@
 package kanga.kcae.object;
 
 import java.io.Serializable;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import static java.lang.Math.round;
+import static java.lang.Math.sqrt;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -17,7 +21,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *  
  *  <p>Points are immutable and thread-safe.</p>
  */
-public final class Point implements Comparable<Point>, Serializable {
+public final class Point
+    implements Comparable<Point>, Transformable<Point>, Serializable
+{
     /** Create a new point at the specified coordinates.
      * 
      *  @param x	The x (or horizontal) coordinate, in nanometers.
@@ -39,14 +45,28 @@ public final class Point implements Comparable<Point>, Serializable {
      *  @return	The y (or vertical) coordinate, in nanometers.
      */    
     public long getY() { return this.y; }
+    
+    /** Return the distance between this point and another point.
+     * 
+     *  @param other    The other point.
+     *  @return The distance between the points, in nanometers.
+     *  @throws NullPointerException if {@code other} is @{code null}.
+     */
+    public double getDistance(@Nonnull final Point other) {
+        final long dx = this.getX() - other.getX();
+        final long dy = this.getY() - other.getY();
+        
+        return sqrt(dx * dx + dy * dy);
+    }
 
     /** Return the smallest rectangle encompassing both this and another point.
      * 
      *  @param other	The other point. 
      *  @return	The smallest rectangle enclosing this and the other point.
-     *  @throws NullPointerException if {@code other} is null.
+     *  @throws NullPointerException if {@code other} is {@code null}.
      */
-    public Rectangle union(final Point other) {
+    @Nonnull
+    public Rectangle union(@Nonnull Point other) {
         if (other == null) {
             throw new NullPointerException("other cannot be null.");
         }
@@ -54,6 +74,61 @@ public final class Point implements Comparable<Point>, Serializable {
         return new Rectangle(this.getX(), this.getY(),
                              other.getX(), other.getY());
     }
+    
+    /** Scales the point by the specified amount from the origin.
+     *
+     *  @param factor   The amount to scale by.
+     *  @return This point, scaled by the specified amount from the origin.
+     */
+    @Override
+    @Nonnull
+    public Point scale(double factor) {
+        return new Point(round(this.getX() * factor),
+                         round(this.getY() * factor));
+    }
+    
+    /** Translates this point by the specified amount in the x and y directions.
+     * 
+     *  @param  dx       The amount to translate in the x direction.
+     *  @param  dy       The amount to translate in the y direction.
+     *  @return A copy of this point translated by (dx, dy).  
+     */
+    @Override
+    @Nonnull
+    public Point translate(long dx, long dy) {
+        return new Point(this.getX() + dx, this.getY() + dy);
+    }
+    
+    /** Rotates this point through the specified number of quadrants.
+     * 
+     *  Positive values rotate the positive x-axis toward the positive y-axis.
+     * 
+     *  @param nQuadrants       The number of quadrants to rotate through.
+     *  @return A copy of this point rotated by the specified number of
+     *          quadrants.
+     */
+    @Override
+    @Nonnull
+    public Point rotateQuadrant(int nQuadrants) {
+        nQuadrants = nQuadrants % 4;
+        if (nQuadrants < 0)
+            nQuadrants += 4;
+        
+        switch (nQuadrants) {
+            case 0:
+            return this;
+            
+            case 1:
+            return new Point(-this.getY(), this.getX());
+            
+            case 2:
+            return new Point(-this.getX(), -this.getY());
+            
+            default: // 3
+            return new Point(this.getY(), -this.getX());
+        }
+    }
+
 
     /** Indicates whether this point represents the same coordinate as another.
      *
@@ -63,16 +138,13 @@ public final class Point implements Comparable<Point>, Serializable {
      *  		otherwise.
      */
     @Override
-    public boolean equals(final Object otherObj) {
-        if (otherObj == null) { return false; }
+    public boolean equals(@Nullable Object otherObj) {
+        if (otherObj == null)                       { return false; }
+        if (this == otherObj)                       { return true; }
+        if (this.getClass() != otherObj.getClass()) { return false; }
 
-        try {
-            final Point other = (Point) otherObj;
-            return this.x == other.x && this.y == other.y;
-        }
-        catch (final ClassCastException e) {
-            return false;
-        }
+        Point other = Point.class.cast(otherObj);
+        return this.x == other.x && this.y == other.y;
     }
 
     /** {@inheritDoc} */
@@ -95,14 +167,14 @@ public final class Point implements Comparable<Point>, Serializable {
      *  		represent the same coordinate.
      */
     @Override
-    public int compareTo(final Point other) {
-        final long xdiff = this.x - other.x;
+    public int compareTo(@Nonnull Point other) {
+        long xdiff = this.x - other.x;
         if (xdiff < 0)
             return -1;
         else if (xdiff > 0)
             return +1;
 
-        final long ydiff = this.y - other.y;
+        long ydiff = this.y - other.y;
         if (ydiff < 0)
             return -1;
         else if (ydiff > 0)
@@ -116,6 +188,7 @@ public final class Point implements Comparable<Point>, Serializable {
      *  @return A string in the form {@code "Point(x, y)"}.
      */
     @Override
+    @Nonnull
     public String toString() {
         return "Point(" + this.x + ", " + this.y + ")";
     }

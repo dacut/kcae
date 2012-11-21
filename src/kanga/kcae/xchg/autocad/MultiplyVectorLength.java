@@ -3,6 +3,9 @@ package kanga.kcae.xchg.autocad;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class MultiplyVectorLength extends ShapeInstruction {
     public MultiplyVectorLength(int factor, boolean verticalOnly) {
         super(verticalOnly);
@@ -11,6 +14,32 @@ public class MultiplyVectorLength extends ShapeInstruction {
 
     public int getFactor() {
         return this.factor;
+    }
+    
+    @Override
+    public boolean equals(Object otherObj) {
+        if (! super.equals(otherObj)) { return false; }
+        
+        MultiplyVectorLength other = MultiplyVectorLength.class.cast(otherObj);
+        return this.getFactor() == other.getFactor();
+    }
+
+    @Override
+    public void visit(ShapeInstructionHandler handler) {
+        handler.handle(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17156089, 687512491)
+            .appendSuper(super.hashCode())
+            .append(this.getFactor())
+            .toHashCode();
+    }
+    
+    @Override
+    protected ToStringBuilder toStringBuilder() {
+        return super.toStringBuilder().append("factor", this.getFactor());
     }
     
     public static class Parser

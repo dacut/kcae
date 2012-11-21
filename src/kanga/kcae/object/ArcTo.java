@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class ArcTo implements PathInstruction {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ArcTo.class);
     public static final double PI_2 = 0.5 * PI;
     public static final double PI_4 = 0.25 * PI;
@@ -132,10 +133,6 @@ public class ArcTo implements PathInstruction {
                                           round(k * sin(a + dir * PI_2)));
         final Point cp2 = end.translate(round(k * cos(b - dir * PI_2)),
                                         round(k * sin(b - dir * PI_2)));
-        
-        log.debug("paintAsBezier: start=" + start + " center=" + center +
-            " includedAngle=" + includedAngleRadians + " cp1=" + cp1 + 
-            " cp2=" + cp2 + " end=" + end + " a=" + a + " b=" + b + " k=" + k);
         
         pp.bezierCurveTo(cp1, cp2, end);
         

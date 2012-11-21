@@ -10,7 +10,6 @@ public class Color implements Serializable {
         MIN_VALUE, MIN_VALUE, MIN_VALUE, MIN_VALUE);
     public static final Color white = new Color(
         MAX_VALUE, MAX_VALUE, MAX_VALUE, MIN_VALUE);
-    
 
     public Color() {
         this(MIN_VALUE, MIN_VALUE, MIN_VALUE, MIN_VALUE);

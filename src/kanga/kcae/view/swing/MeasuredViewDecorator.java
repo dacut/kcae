@@ -14,8 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import kanga.kcae.object.BaseUnit;
 import kanga.kcae.object.Rectangle;
 
-/** A component which places rulers around a MeasuredView, attaches a 
- *  MeasuredViewTool to it, and dispatches input events to the tool.
+/** A component which places rulers around a MeasuredView.
  * 
  *  This component ensures that the view areas of the {@link MeasuredView}
  *  and the surrounding {@link Ruler} objects stay in sync.
@@ -30,15 +29,15 @@ public abstract class MeasuredViewDecorator<T extends Component & MeasuredView>
     
     /** Create a new MeasuredViewer container with a null view area.
      * 
-     *  @param view     The interior view.
+     *  @param view   The interior view.
      *  @param baseUnit The base units to use for drawing ruler ticks and
      *      labels.
      */
     protected MeasuredViewDecorator(
-        final T viewer,
+        final T view,
         final BaseUnit baseUnit)
     {
-        this(viewer, null, baseUnit);
+        this(view, null, baseUnit);
     }
 
     /** Create a new MeasuredViewer container.
@@ -110,6 +109,10 @@ public abstract class MeasuredViewDecorator<T extends Component & MeasuredView>
         return this.vRuler;
     }
 
+    /** Handles changes in the view area. 
+     *  
+     *  This implementation updates the rulers to match the new view.
+     */
     @Override
     public void viewAreaChanged(ViewAreaChangeEvent evt) {
         final Rectangle viewArea = evt.getNewViewArea();
@@ -123,6 +126,10 @@ public abstract class MeasuredViewDecorator<T extends Component & MeasuredView>
         }
     }
     
+    /** Returns the interior view being decorated.
+     * 
+     *  @return The interior view being decorated.
+     */
     public T getViewer() {
         return this.viewer;
     }

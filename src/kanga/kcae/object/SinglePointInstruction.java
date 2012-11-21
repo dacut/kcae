@@ -2,6 +2,9 @@ package kanga.kcae.object;
 
 import java.io.Serializable;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public abstract class SinglePointInstruction
@@ -18,19 +21,30 @@ public abstract class SinglePointInstruction
     public Point getPoint() { return this.point; }
 
     @Override
-    public Rectangle updateBoundingBox(Point startPos, Rectangle bbox) {
+    @Nonnull
+    public Rectangle updateBoundingBox(
+        @CheckForNull Point startPos,
+        @CheckForNull Rectangle bbox)
+    {
+        Point endPos = this.getPoint();
+        
         if (bbox == null) {
-            bbox = Rectangle.fromPoints(startPos, this.getPoint());
+            if (startPos == null) {
+                bbox = Rectangle.fromPoints(endPos, endPos);
+            } else {
+                bbox = Rectangle.fromPoints(startPos, endPos);
+            }
         } else {
             bbox = bbox.union(startPos);
-            bbox = bbox.union(this.getPoint());
+            bbox = bbox.union(endPos);
         }
         
         return bbox;
     }
     
     @Override
-    public Point updatePosition(final Point startPos) {
+    @Nonnull
+    public Point updatePosition(@CheckForNull Point startPos) {
         return this.getPoint();
     }
 

@@ -8,6 +8,11 @@ public class PopLocation extends ShapeInstruction {
         super(verticalOnly);
     }
     
+    @Override
+    public void visit(ShapeInstructionHandler handler) {
+        handler.handle(this);
+    }
+    
     public static class Parser extends ShapeInstructionParser<PopLocation> {
         @Override
         public PopLocation parse(

@@ -5,189 +5,84 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.CheckForNull;
 import javax.swing.JPanel;
 import static java.lang.Math.pow;
 import static java.lang.Math.round;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import kanga.kcae.object.BaseUnit;
+import kanga.kcae.object.Dimension;
 import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 
-/** A panel implementing the basic tools needed to interact with a MeasuredView.
+/** A panel which handles the core events needed to interact with a
+ *  {@link MeasuredView}.
  * 
+ *  <p>Unfortunately, it's impossible to make a usable modeless interface here
+ *  with standard human interface devices (mouse and keyboard).  Thus, this
+ *  class introduces the concept of {@linkplain MeasuredViewTool tools} which
+ *  can handle the HID events coming in to manipulate the underlying view.
+ *  At any given instant, one tool is designated the current tool; this is the
+ *  tool to which all HID events are dispatched.</p>
  *  
+ *  <p>Indicating to the user which tool is currently active is typically done
+ *  via cursor shapes (implemented by the tool) and button indicators
+ *  (implemented by the surrounding frame components).</p>
  */
 public class MeasuredViewPanel
     extends JPanel
     implements MeasuredView
 {
-    static final Log log = LogFactory.getLog(MeasuredViewPanel.class);
+    private static final Log log = LogFactory.getLog(MeasuredViewPanel.class);
     private static final long serialVersionUID = 1L;
 
-    /** Dispatch events to the current tool. */
-    class InputEventDispatcher
-        implements FocusListener, KeyListener, MouseListener,
-                   MouseMotionListener, MouseWheelListener
-    {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.focusGained(e);
-            }
-        }
-
-        @Override
-        public void focusLost(final FocusEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.focusLost(e);
-            }
-        }
-
-        @Override
-        public void keyTyped(final KeyEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.keyTyped(e);
-            }
-        }
-
-        @Override
-        public void keyPressed(final KeyEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.keyPressed(e);
-            }
-        }
-
-        @Override
-        public void keyReleased(final KeyEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.keyReleased(e);
-            }
-        }
-
-        @Override
-        public void mouseClicked(final MouseEvent e) {
-            final MeasuredViewTool tool =
-                    MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mouseClicked(e);
-            }
-        }
-
-        @Override
-        public void mousePressed(final MouseEvent e) {
-            log.debug("mousePressed: " + e);
-            final MeasuredViewTool tool =
-                    MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mousePressed(e);
-            }
-        }
-
-        @Override
-        public void mouseReleased(final MouseEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mouseReleased(e);
-            }
-        }
-
-        @Override
-        public void mouseEntered(final MouseEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mouseEntered(e);
-            }
-        }
-
-        @Override
-        public void mouseExited(final MouseEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mouseExited(e);
-            }
-        }
-
-        @Override
-        public void mouseDragged(final MouseEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mouseDragged(e);
-            }
-        }
-
-        @Override
-        public void mouseMoved(final MouseEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mouseMoved(e);
-            }
-        }
-
-        @Override
-        public void mouseWheelMoved(final MouseWheelEvent e) {
-            final MeasuredViewTool tool =
-                MeasuredViewPanel.this.getCurrentTool();
-            if (tool != null) {
-                tool.mouseWheelMoved(e);
-            }
-        }
-        
-    }
-    
+    /** Create a new MeasuredViewPanel using a
+     *  {@link java.awt.FlowLayout FlowLayout} manager, with double-buffering
+     *  enabled, and with a {@code null} view area.
+     * 
+     *  <p>Since the initial view area is null, the display will be empty
+     *  until the view area is set.</p>
+     */
     protected MeasuredViewPanel() {
-        this(null, true, null, BaseUnit.meter);
+        this(null, true, null);
     }
 
-    protected MeasuredViewPanel(final BaseUnit baseUnit) {
-        this(null, true, null, baseUnit);
-    }
-
+    /** Create a new MeasuredViewPanel with a {@code null} view area.
+     * 
+     *  <p>Since the initial view area is null, the display will be empty
+     *  until the view area is set.</p>
+     * 
+     *  @param  layoutManager The layout manager to use.  If {@code null}, a
+     *          {@link java.awt.FlowLayout} is used.
+     *  @param  isDoubleBuffered If {@code true}, additional memory will be used
+     *          for fast, flicker-free updates.
+     */
     protected MeasuredViewPanel(
         final LayoutManager layoutManager,
-        final boolean isDoubleBuffered,
-        final BaseUnit baseUnit)
+        final boolean isDoubleBuffered)
     {
-        this(layoutManager, isDoubleBuffered, null, baseUnit);
+        this(layoutManager, isDoubleBuffered, null);
     }
     
+    /** Create a new MeasuredViewPanel.
+     * 
+     *  @param  layoutManager The layout manager to use.  If {@code null}, a
+     *          {@link java.awt.FlowLayout} is used.
+     *  @param  isDoubleBuffered If {@code true}, additional memory will be used
+     *          for fast, flicker-free updates.
+     *  @param  viewArea The initial view area to show.  If {@code null},
+     *          nothing will be drawn. 
+     */
     protected MeasuredViewPanel(
-        final LayoutManager layoutManager,
+        @CheckForNull final LayoutManager layoutManager,
         final boolean isDoubleBuffered,
-        final Rectangle viewArea,
-        final BaseUnit baseUnit)
+        @CheckForNull final Rectangle viewArea)
     {
         super(layoutManager, isDoubleBuffered);
         this.viewAreaChangeListeners = new ArrayList<ViewAreaChangeListener>();
@@ -198,7 +93,7 @@ public class MeasuredViewPanel
         this.openGrabCursor = Resource.getCursor(
             this, Resource.openGrabImage, 6, 6, "MeasuredViewPanelOpenGrab");
         
-        final InputEventDispatcher ied = new InputEventDispatcher();
+        final MeasuredViewPanelEventDispatcher ied = new MeasuredViewPanelEventDispatcher(this);
         
         this.addFocusListener(ied);
         this.addKeyListener(ied);
@@ -207,7 +102,6 @@ public class MeasuredViewPanel
         this.addMouseWheelListener(ied);
         
         this.setViewArea(viewArea, Rectangle.FitMethod.NEAREST);
-        this.setBaseUnit(baseUnit);
         this.setCurrentTool(this.panZoomTool);
         this.setCursor(this.openGrabCursor);
 
@@ -216,22 +110,30 @@ public class MeasuredViewPanel
         return;
     }
     
-    public Pair<Long, Long> getQuantaPerPixel() {
+    /** Returns the number of nanometers represented by the distance between
+     *  pixel centers (in the x and y directions).
+     *  
+     *  <p>If the view area is {@code null}, the return value here is also
+     *  {@code null}.</p>
+     * 
+     *  @return The number of nanometers represented by the distance between
+     *          pixel centers.
+     */
+    @CheckForNull
+    public Dimension getNanometersPerPixel() {
         final Rectangle viewArea = this.getViewArea();
         if (viewArea == null) {
             return null;
         }
         
-        final long quantaWidth = viewArea.getWidth();
-        final long quantaHeight = viewArea.getHeight();
-        final long pixelWidth = this.getWidth();
-        final long pixelHeight = this.getHeight();
-        final long xQPP = round(((double) quantaWidth) /
-                                ((double) pixelWidth));
-        final long yQPP = round(((double) quantaHeight) /
-                                ((double) pixelHeight));
+        final double nmWidth = viewArea.getWidth();
+        final double nmHeight = viewArea.getHeight();
+        final double pixelWidth = this.getWidth();
+        final double pixelHeight = this.getHeight();
+        final long xNmPP = round(nmWidth / pixelWidth);
+        final long yNmPP = round(nmHeight / pixelHeight);
         
-        return new ImmutablePair<Long, Long>(xQPP, yQPP);
+        return new Dimension(xNmPP, yNmPP);
     }
     
     @Override
@@ -330,9 +232,9 @@ public class MeasuredViewPanel
         }
         
         final Graphics2D g = (Graphics2D) graphics;
-        final Pair<Long, Long> qpp = this.getQuantaPerPixel();
-        final double ppqX = 1.0 / qpp.getLeft().doubleValue();
-        final double ppqY = 1.0 / qpp.getRight().doubleValue();
+        final Dimension nmpp = this.getNanometersPerPixel();
+        final double ppnmX = 1.0 / nmpp.getWidth();
+        final double ppnmY = 1.0 / nmpp.getHeight();
         final java.awt.Rectangle bounds = this.getBounds();
         java.awt.Rectangle clip = g.getClipBounds();
 
@@ -344,7 +246,7 @@ public class MeasuredViewPanel
         g.fillRect(clip.x, clip.y, clip.width, clip.height);
 
         g.translate(0, bounds.getHeight());
-        g.scale(ppqX, -ppqY);
+        g.scale(ppnmX, -ppnmY);
         g.translate(-viewArea.getLeft(), -viewArea.getBottom());
     }
     
@@ -388,17 +290,6 @@ public class MeasuredViewPanel
         }
     }
     
-    public BaseUnit getBaseUnit() {
-        return this.baseUnit;
-    }
-    
-    public void setBaseUnit(BaseUnit baseUnit) {
-        if (baseUnit == null) {
-            throw new NullPointerException("baseUnit cannot be null");
-        }
-        
-        this.baseUnit = baseUnit;
-    }
     /** Sets the tool to receive input events.
      * 
      *  @param tool     The tool to receive input events.
@@ -426,8 +317,7 @@ public class MeasuredViewPanel
         return this.panZoomTool;
     }
     
-    private Rectangle viewArea;
-    private BaseUnit baseUnit;
+    @CheckForNull private Rectangle viewArea;
     protected Color backgroundColor;
     private final List<ViewAreaChangeListener> viewAreaChangeListeners;
     private transient MeasuredViewTool currentTool;

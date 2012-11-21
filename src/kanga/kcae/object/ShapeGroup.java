@@ -30,15 +30,30 @@ public class ShapeGroup implements Shape, Cloneable, Serializable {
     public List<Shape> getShapes() {
         return unmodifiableList(this.shapes);
     }
-
+    
+    protected int indexOf(final Shape shape) {
+        for (int i = 0; i < this.shapes.size(); ++i) {
+            if (this.shapes.get(i) == shape) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+    
+    public boolean contains(final Shape shape) {
+        return this.indexOf(shape) != -1;
+    }
+    
     public void addShape(final Shape shape) {
         if (shape == null) {
             throw new NullPointerException("shape cannot be null.");
         }
 
-        if (this.shapes.contains(shape)) {
+        if (this.contains(shape)) {
             throw new IllegalArgumentException(
-                "shape is already present in this sybol");
+                "shape " + System.identityHashCode(shape) +
+                " is already present in this shape group");
         }
 
         this.shapes.add(shape);
@@ -55,12 +70,12 @@ public class ShapeGroup implements Shape, Cloneable, Serializable {
             throw new NullPointerException("above cannot be null.");
         }
 
-        if (this.shapes.contains(shape)) {
+        if (this.contains(shape)) {
             throw new IllegalArgumentException(
                 "shape is already present in this sybol");
         }
 
-        if ((aboveIndex = this.shapes.indexOf(above)) == -1) {
+        if ((aboveIndex = this.indexOf(above)) == -1) {
             throw new IllegalArgumentException(
                 "above is not contained in this symbol.");
         }
@@ -70,6 +85,7 @@ public class ShapeGroup implements Shape, Cloneable, Serializable {
 
     public void raiseShape(final Shape shape, final Shape above) {
         final int aboveIndex;
+        final int shapeIndex;
 
         if (shape == null) {
             throw new NullPointerException("shape cannot be null.");
@@ -79,17 +95,24 @@ public class ShapeGroup implements Shape, Cloneable, Serializable {
             throw new NullPointerException("above cannot be null.");
         }
 
-        if ((aboveIndex = this.shapes.indexOf(above)) == -1) {
+        if ((aboveIndex = this.indexOf(above)) == -1) {
             throw new IllegalArgumentException(
                 "above is not contained in this symbol.");
         }
-
-        if (! this.shapes.remove(shape)) {
+        
+        if ((shapeIndex = this.indexOf(shape)) == 1) {
             throw new IllegalArgumentException(
                 "Shape " + shape + " was not present in this symbol.");
         }
+        
+        if (shapeIndex <= aboveIndex) {
+            // Nothing to do.
+            return;
+        }
 
+        this.shapes.remove(shapeIndex);
         this.shapes.add(aboveIndex + 1, shape);
+        
         return;
     }
 
@@ -121,6 +144,37 @@ public class ShapeGroup implements Shape, Cloneable, Serializable {
             shape.setFillStyle(fillStyle);
         }
     }
+    
+    @Override
+    public ShapeGroup scale(double factor) {
+        ShapeGroup newSG = new ShapeGroup();
+        for (Shape shape : this.getShapes()) {
+            newSG.addShape(shape.scale(factor));
+        }
+        
+        return newSG;
+    }
+
+    @Override
+    public ShapeGroup translate(long dx, long dy) {
+        ShapeGroup newSG = new ShapeGroup();
+        for (Shape shape : this.getShapes()) {
+            newSG.addShape(shape.translate(dx, dy));
+        }
+        
+        return newSG;
+    }
+    
+    @Override
+    public ShapeGroup rotateQuadrant(int nQuadrants) {
+        ShapeGroup newSG = new ShapeGroup();
+        for (Shape shape : this.getShapes()) {
+            newSG.addShape(shape.rotateQuadrant(nQuadrants));
+        }
+        
+        return newSG;
+    }
+
 
     @Override
     public boolean equals(final Object otherObj) {

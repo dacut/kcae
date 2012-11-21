@@ -2,6 +2,8 @@ package kanga.kcae.object;
 
 import java.io.Serializable;
 
+import javax.annotation.CheckForNull;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -29,12 +31,12 @@ public class Dimension implements Serializable {
     }
     
     @Override
-    public boolean equals(final Object otherObj) {
-        if (otherObj == null) { return false; }
-        if (otherObj == this) { return true; }
+    public boolean equals(@CheckForNull Object otherObj) {
+        if (otherObj == null)                       { return false; }
+        if (otherObj == this)                       { return true; }
         if (this.getClass() != otherObj.getClass()) { return false; }
         
-        final Dimension other = (Dimension) otherObj;
+        final Dimension other = Dimension.class.cast(otherObj);
         
         return new EqualsBuilder()
             .append(this.getWidth(), other.getWidth())

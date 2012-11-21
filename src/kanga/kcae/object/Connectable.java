@@ -2,9 +2,17 @@ package kanga.kcae.object;
 
 import java.io.Serializable;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 public interface Connectable extends Serializable {
+    @Nonnull
     public SignalDirection getSignalDirection();
-    public void setSignalDirection(SignalDirection direction);
+    
+    public void setSignalDirection(@Nonnull SignalDirection direction);
+    
+    @CheckForNull
     public Net getNet();
-    public void setNet(Net net);
+    
+    public void setNet(@CheckForNull Net net);
 }

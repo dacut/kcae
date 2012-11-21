@@ -4,5 +4,6 @@ dist/*
 ext/cachedir/*
 kcae-findbugs.fbp
 jython-2.7a2/*
+cachedir/*
 .#*
 #*#

@@ -56,7 +56,7 @@ public class PinEditorTableModel
             return pin.getSignalDirection().toString();
         }
         else if (column == 2) {
-            return pin.getPinNumbers();
+            return pin.getPinNumber();
         }
         else {
             return null;

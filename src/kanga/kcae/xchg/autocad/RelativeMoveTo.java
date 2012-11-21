@@ -3,6 +3,10 @@ package kanga.kcae.xchg.autocad;
 import java.io.InputStream;
 import java.io.IOException;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class RelativeMoveTo extends ShapeInstruction {
     public RelativeMoveTo(int x, int y, boolean verticalOnly) {
         super(verticalOnly);
@@ -19,6 +23,38 @@ public class RelativeMoveTo extends ShapeInstruction {
         return this.y;
     }
     
+    @Override
+    public void visit(ShapeInstructionHandler handler) {
+        handler.handle(this);
+    }
+
+    @Override
+    public boolean equals(Object otherObj) {
+        if (! super.equals(otherObj)) { return false; }
+        
+        RelativeMoveTo other = RelativeMoveTo.class.cast(otherObj);
+        return new EqualsBuilder()
+            .append(this.getX(), other.getX())
+            .append(this.getY(), other.getX())
+            .isEquals();
+    }
+    
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(695564491, 97721467)
+            .appendSuper(super.hashCode())
+            .append(this.getX())
+            .append(this.getY())
+            .toHashCode();
+    }
+    
+    @Override
+    protected ToStringBuilder toStringBuilder() {
+        return super.toStringBuilder()
+            .append("x", this.getX())
+            .append("y", this.getY());
+    }
+
     public static class Parser
         extends ShapeInstructionParser<RelativeMoveTo>
     {

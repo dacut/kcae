@@ -6,6 +6,9 @@ import static java.lang.Math.round;
 
 import java.io.Serializable;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /** A rectangle in Cartesian 2-D space whose points lie on an (integral)
@@ -15,7 +18,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  *  
  *  @see Point
  */
-public final class Rectangle implements Comparable<Rectangle>, Serializable {
+public final class Rectangle
+    implements Comparable<Rectangle>, Serializable, Transformable<Rectangle>
+{
     private static final long serialVersionUID = 1L;
     
     /** How the fitting algorithm should work. */
@@ -106,8 +111,8 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *              {@code vExtents} is {@code null}.  
      */
     public static Rectangle fromExtents(
-        final Extents.Long hExtents,
-        final Extents.Long vExtents)
+        @Nonnull Extents.Long hExtents,
+        @Nonnull Extents.Long vExtents)
     {
         if (hExtents == null) {
             throw new NullPointerException("hExtents cannot be null");
@@ -127,7 +132,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @param size     The size of the rectangle.
      *  @throws NullPointerException if {@code size} is {@code null}.
      */
-    public static Rectangle atOrigin(final Dimension size) {
+    public static Rectangle atOrigin(@Nonnull Dimension size) {
         if (size == null) {
             throw new NullPointerException("size cannot be null");
         }
@@ -141,7 +146,8 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @return	The smallest rectangle encompassing this and {@code other}.
      *  @throws NullPointerException if {@code other} is {@code null}.
      */
-    public Rectangle union(Rectangle other) {
+    @Nonnull
+    public Rectangle union(@Nonnull Rectangle other) {
         if (other == null) {
             throw new NullPointerException("other cannot be null.");
         }
@@ -159,7 +165,8 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *                  point {@code other}.
      *  @throws NullPointerException if {@code other} is {@code null}.
      */
-    public Rectangle union(Point other) {
+    @Nonnull
+    public Rectangle union(@Nonnull Point other) {
         if (other == null) {
             throw new NullPointerException("other cannot be null.");
         }
@@ -170,6 +177,21 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
                 max(this.getTop(), other.getY()));
     }
     
+    @Override
+    @Nonnull
+    public Rectangle scale(double factor) {
+        return new Rectangle(
+            round(this.getLeft() * factor), round(this.getBottom() * factor),
+            round(this.getRight() * factor), round(this.getTop() * factor));
+    }
+
+    @Override
+    @Nonnull
+    public Rectangle rotateQuadrant(int nQuadrants) {
+        return fromPoints(this.getBottomLeft().rotateQuadrant(nQuadrants),
+                          this.getTopRight().rotateQuadrant(nQuadrants));
+    }
+    
     /** Returns the translation of this rectangle by the specified amount.
      * 
      *  @param dx       The horizontal translation.
@@ -177,20 +199,23 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  
      *  @return This rectangle translated by {@code (dx, dy)}.
      */
+    @Override
+    @Nonnull
     public Rectangle translate(final long dx, final long dy) {
-        return new Rectangle(this.left + dx, this.bottom + dy,
-                             this.right + dx, this.top + dy);
+        return new Rectangle(this.getLeft() + dx, this.getBottom() + dy,
+                             this.getRight() + dx, this.getTop() + dy);
     }
 
     @Override
+    @Nonnull
     public String toString() {
         return
-                "Rectangle[(" + this.getLeft() + ", " + this.getTop() + "), " +
-                "(" + this.getRight() + ", " + this.getBottom() + ")]";
+            "Rectangle[(" + this.getLeft() + ", " + this.getBottom() + "), " +
+            "(" + this.getRight() + ", " + this.getTop() + ")]";
     }
 
     @Override
-    public boolean equals(Object otherObj) {
+    public boolean equals(@CheckForNull Object otherObj) {
         if (otherObj == null) { return false; }
         if (otherObj == this) { return true; }
         if (otherObj.getClass() != this.getClass()) { return false; }
@@ -213,7 +238,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
     }
 
     @Override
-    public int compareTo(Rectangle other) {        
+    public int compareTo(@Nonnull Rectangle other) {
         if      (this.left < other.left)     { return -1; }
         else if (this.left > other.left)     { return +1; }
         else if (this.right < other.right)   { return -1; }
@@ -292,6 +317,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
     /** Returns the center of the rectangle.
      *  The returned value is within a quanta of the actual center.
      */
+    @Nonnull
     public Point getCenter() {
         return new Point((this.left + this.right) / 2,
                          (this.top + this.bottom) / 2);
@@ -301,6 +327,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      * 
      *  @return The horizontal extents of the rectangle.
      */
+    @Nonnull
     public Extents.Long getHorizontalExtents() {
         return new Extents.Long(this.left, this.right);
     }
@@ -309,6 +336,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      * 
      *  @return The vertical extents of the rectangle.
      */
+    @Nonnull
     public Extents.Long getVerticalExtents() {
         return new Extents.Long(this.bottom, this.top);
     }
@@ -348,6 +376,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @return A copy of this rectangle with its coordinates adjusted to meet
      *          the specified aspectRatio (to the nearest quanta).
      */
+    @Nonnull
     public Rectangle adjustAspectRatio(
         final double aspectRatio,
         final FitMethod fitMethod)
@@ -381,6 +410,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @return A copy of this rectangle with its coordinates adjusted to meet
      *          the specified aspectRatio (to the nearest quanta).
      */
+    @Nonnull
     public Rectangle fitToAspect(final double aspectRatio) {
         /*  Skip this section if you're not interested in the mathematical 
          *  details.
@@ -443,6 +473,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @return A copy of this rectangle with its coordinates adjusted to meet
      *          the specified aspectRatio (to the nearest quanta).
      */
+    @Nonnull
     public Rectangle shrinkToAspect(final double aspectRatio) {
         final double currentAspect = this.getAspectRatio();
         double width, height;
@@ -473,6 +504,7 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
      *  @return A copy of this rectangle with its coordinates adjusted to meet
      *          the specified aspectRatio (to the nearest quanta).
      */
+    @Nonnull
     public Rectangle expandToAspect(final double aspectRatio) {
         final double currentAspect = this.getAspectRatio();
         double width, height;
@@ -497,9 +529,15 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
 
     /** Returns a new rectangle zoomed by the specified amount.
      *  
-     *  The center of the zoomed rectangle is coincident (within a quanta) with
-     *  this rectangle.
+     *  The center of the zoomed rectangle is the same as the center of the
+     *  original rectangle.
+     *  
+     *  @param factor   The amount to zoom in by.
+     *                  
+     *  @return A rectangle whose width and height are multiplied by
+     *          <i>factor</i>.
      */
+    @Nonnull
     public Rectangle zoom(final double factor) {
         final Point center = this.getCenter();
         final long xc = center.getX();
@@ -514,9 +552,22 @@ public final class Rectangle implements Comparable<Rectangle>, Serializable {
     }
     
     /** Returns a new rectangle zoomed by the specified amount while keeping an
-     *  arbitrary point coincident between this and the zoomed rectangle.
+     *  arbitrary point the same relative distance from the edges.
+     *  
+     *  @param factor   The amount to zoom in by.
+     *  @param point    The point to keep coincident between the old and new
+     *                  rectangles.
+     *                  
+     *  @return A rectangle whose width and height are multiplied by
+     *          <i>factor</i>, with <i>point</i> maintaining its proportional
+     *          distance from each edge.
      */
-    public Rectangle zoom(final double factor, final Point point) {
+    @Nonnull
+    public Rectangle zoom(final double factor, @Nonnull Point point) {
+        if (point == null) {
+            throw new NullPointerException("point cannot be null");
+        }
+        
         final long xc = point.getX();
         final long yc = point.getY();
         final long xoffset = xc - this.getLeft();

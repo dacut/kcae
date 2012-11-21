@@ -5,9 +5,6 @@
   <!-- Where the unit test code lives -->
   <property name="test.dir" location="test" />
 
-  <!-- Where images and other resources live -->
-  <property name="res.dir" location="res" />
-
   <!-- Top level directory where build artifacts go -->
   <property name="build.dir" location="build" />
 
@@ -87,7 +84,7 @@
   <target name="jar" depends="fast-jar" />
   <target name="fast-jar" depends="compile">
     <jar destfile="${jar.file}" basedir="${class.dir}"
-         includes="**/*.class,**/*.properties,**/*.png" />
+         includes="**/*.class,**/*.properties,**/*.fnt,**/*.png,**/*.shx" />
   </target>
 
   <target name="coverage" depends="test,coverage-report">
@@ -170,6 +167,8 @@
     <copy todir="${instclass.dir}" force="true" includeEmptyDirs="false">
       <fileset dir="${src.dir}">
         <include name="**/*.properties" />
+        <include name="**/*.fnt" />
+        <include name="**/*.shx" />
       </fileset>
     </copy>
   </target>
@@ -189,12 +188,22 @@
         <include name="**/*.properties" />
       </fileset>
     </copy>
-    <copy todir="${class.dir}/kanga/kcae/res" force="true"
+    <copy todir="${class.dir}" force="true"
           includeEmptyDirs="false">
-      <fileset dir="${res.dir}">
+      <fileset dir="${src.dir}">
+        <include name="**/*.fnt" />
         <include name="**/*.png" />
+        <include name="**/*.shx" />
       </fileset>
     </copy>
+  </target>
+
+  <target name="javadoc" depends="init">
+    <javadoc destdir="${javadoc.dir}" sourcepath="${src.dir}" version="true"
+             failonerror="true" source="1.6" classpathref="ext.class.path">
+      <link href="http://docs.oracle.com/javase/6/docs/api/" offline="true"
+            packagelistLoc="misc/docs.oracle.com" />
+    </javadoc>
   </target>
 
   <target name="init">
@@ -216,6 +225,8 @@
            checksum="f1e52edb3419a56f42949aecd27720cd" />
     <ckget dir="${ext.dir}" url="${ext.url}/cobertura-1.9.4.1.jar"
            checksum="312cc39a5dbedccc17c3a3855732044e" />
+    <ckget dir="${ext.dir}" url="${ext.url}/commons-io-2.3.jar"
+           checksum="132db2975a086024994c920769b900db" />
     <ckget dir="${ext.dir}" url="${ext.url}/commons-lang3-3.1.jar"
            checksum="71b48e6b3e1b1dc73fe705604b9c7584" />
     <ckget dir="${ext.dir}" url="${ext.url}/commons-logging-1.1.1.jar"

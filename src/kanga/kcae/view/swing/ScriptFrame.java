@@ -4,10 +4,12 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Rectangle;
 
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -22,6 +24,7 @@ import org.python.core.PyObject;
 
 import kanga.kcae.object.ScriptInterpreter;
 
+@SuppressWarnings("unused")
 public class ScriptFrame extends JSplitPane implements DocumentListener {
     protected static final Log log = LogFactory.getLog(ScriptFrame.class);
     public static final int DEBUGGER_MARGIN = 2;
@@ -34,7 +37,7 @@ public class ScriptFrame extends JSplitPane implements DocumentListener {
         this(interp, new ScriptInterpreterHistory(interp), new JTextArea());
     }
     
-    private class ClearCurrentEntry implements Runnable {
+    private static class ClearCurrentEntry implements Runnable {
         ClearCurrentEntry(final Document doc) {
             this.doc = doc;
         }
@@ -68,11 +71,11 @@ public class ScriptFrame extends JSplitPane implements DocumentListener {
     }
     
     private ScriptFrame(
-            final ScriptInterpreter interp,
-            final ScriptInterpreterHistory history,
-            final JTextArea currentEntry,
-            final JScrollPane historyScroll,
-            final JScrollPane entryScroll)
+        final ScriptInterpreter interp,
+        final ScriptInterpreterHistory history,
+        final JTextArea currentEntry,
+        final JScrollPane historyScroll,
+        final JScrollPane entryScroll)
     {
         super(JSplitPane.VERTICAL_SPLIT, false, historyScroll, entryScroll);
         this.interp = interp;
@@ -82,7 +85,7 @@ public class ScriptFrame extends JSplitPane implements DocumentListener {
         this.entryScroll = entryScroll;
         
         this.currentEntry.setBackground(Color.YELLOW);
-        this.currentEntry.setRows(5);
+        // this.currentEntry.setRows(5);
         this.currentEntry.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 10));
         this.currentEntry.getDocument().addDocumentListener(this);
         return;
@@ -167,6 +170,16 @@ public class ScriptFrame extends JSplitPane implements DocumentListener {
     
     public ScriptInterpreter getInterpreter() {
         return this.interp;
+    }
+    
+    public static void main(String[] args) {
+        JFrame mainWindow = new JFrame("Script frame");
+        ScriptFrame sf = new ScriptFrame();
+        mainWindow.add(sf);
+        mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainWindow.setVisible(true);
+        mainWindow.setSize(1000, 800);
+        sf.setDividerLocation(400);
     }
     
     private final ScriptInterpreter interp;

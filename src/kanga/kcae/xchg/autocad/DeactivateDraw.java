@@ -8,6 +8,11 @@ public class DeactivateDraw extends ShapeInstruction {
         super(verticalOnly);
     }
     
+    @Override
+    public void visit(ShapeInstructionHandler handler) {
+        handler.handle(this);
+    }
+    
     public static class Parser
         extends ShapeInstructionParser<DeactivateDraw>
     {

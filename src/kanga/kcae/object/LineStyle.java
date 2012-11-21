@@ -5,7 +5,15 @@ import java.util.Arrays;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 
-public class LineStyle implements Serializable {
+import org.apache.commons.lang3.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
+public class LineStyle implements Comparable<LineStyle>, Serializable {
+    public static final int DEFAULT_MITER_LIMIT = 1000;
+    
     public enum CapStyle {
         butt, round, square;
     }
@@ -15,11 +23,18 @@ public class LineStyle implements Serializable {
     }
 
     public LineStyle() {
-        this(0, null, null, CapStyle.butt, JoinStyle.bevel, 1000);
+        this(0, null, null, CapStyle.butt, JoinStyle.bevel,
+             DEFAULT_MITER_LIMIT);
+    }
+    
+    public LineStyle(final int width) {
+        this(width, null, null, CapStyle.butt, JoinStyle.bevel,
+             DEFAULT_MITER_LIMIT);
     }
 
     public LineStyle(final int width, final Color color) {
-        this(width, color, null, CapStyle.butt, JoinStyle.bevel, 1000);
+        this(width, color, null, CapStyle.butt, JoinStyle.bevel,
+             DEFAULT_MITER_LIMIT);
     }
 
     public LineStyle(
@@ -117,15 +132,60 @@ public class LineStyle implements Serializable {
 
         this.miterLimit = miterLimit;
     }
+    
+    @Override
+    public boolean equals(Object otherObj) {
+        if (otherObj == null) { return false; }
+        if (this == otherObj) { return true; }
+        if (this.getClass() != otherObj.getClass()) { return false; }
+        
+        LineStyle other = LineStyle.class.cast(otherObj);
+        return new EqualsBuilder()
+            .append(this.getWidth(), other.getWidth())
+            .append(this.getColor(), other.getColor())
+            .append(this.stipple, other.stipple)
+            .append(this.getCapStyle(), other.getCapStyle())
+            .append(this.getJoinStyle(), other.getJoinStyle())
+            .append(this.getMiterLimit(), other.getMiterLimit())
+            .isEquals();
+    }
+
+    @Override
+    public int compareTo(LineStyle other) {
+        return new CompareToBuilder()
+            .append(this.getWidth(), other.getWidth())
+            .append(this.getColor(), other.getColor())
+            .append(this.stipple, other.stipple)
+            .append(this.getCapStyle(), other.getCapStyle())
+            .append(this.getJoinStyle(), other.getJoinStyle())
+            .append(this.getMiterLimit(), other.getMiterLimit())
+            .toComparison();
+    }
+    
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+            .append(this.getWidth())
+            .append(this.getColor())
+            .append(this.stipple)
+            .append(this.getCapStyle())
+            .append(this.getJoinStyle())
+            .append(this.getMiterLimit())
+            .toHashCode();
+    }
 
     @Override
     public String toString() {
-        return ("LineStyle(" + this.getWidth() + ", " +
-                String.valueOf(this.getColor()) + ", " +
-                Arrays.toString(this.stipple) + ", " +
-                this.getCapStyle() + ", " +
-                this.getJoinStyle() + ", " +
-                this.getMiterLimit() + ")");
+        return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
+            .append("width", this.getWidth())
+            .append("color", this.getColor())
+            .append("stipple", this.stipple)
+            .append("capStyle", this.getCapStyle())
+            .append("joinStyle", this.getJoinStyle())
+            .append("miterLimit", this.getMiterLimit())
+            .toString();
+        
     }
 
     private int width;

@@ -8,6 +8,11 @@ public class PushLocation extends ShapeInstruction {
         super(verticalOnly);
     }
     
+    @Override
+    public void visit(ShapeInstructionHandler handler) {
+        handler.handle(this);
+    }
+
     public static class Parser extends ShapeInstructionParser<PushLocation> {
         @Override
         public PushLocation parse(

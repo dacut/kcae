@@ -2,46 +2,160 @@ package kanga.kcae.xchg.autocad;
 
 import java.io.IOException;
 import java.io.InputStream;
-import static java.lang.Math.asin;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import static java.lang.Math.abs;
 import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
 import static java.lang.Math.PI;
 import static java.lang.Math.round;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
 import static java.lang.Math.toDegrees;
 
+/** AutoCAD instruction to draw an arc in the current path.
+ *  
+ *  <p>Unlike KCAE arcs, AutoCAD arcs are more naturally represented by their
+ *  start and end angles (in degrees instead of radians) and length.  This
+ *  handles octant arcs (where the arc must start on a multiple of 45º) and
+ *  fractional arcs (where the arc must start on a multiple of 45/256º)
+ *  nicely.</p>
+ *  
+ *  <p>The one exception are bulge-specified arcs.  These arcs are encoded by
+ *  their endpoint, bulge factor, and direction.  It would be cumbersome to
+ *  have a special representation for them in memory, so we just perform the
+ *  mathematical gymnastics to convert them to our standard representation
+ *  during the parse phase.</p>
+ */
 public class DrawArc extends ShapeInstruction {
+    @SuppressWarnings("unused")
+    private static final Log log = LogFactory.getLog(DrawArc.class);
+    
+    /** Create a new DrawArc instruction.
+     * 
+     *  <p>Unlike AutoCAD, we do not store the direction separately.  Arcs are
+     *  always drawn from their start point to their end point.  Thus, if
+     *  {@code startAngleDegrees < endAngleDegrees}, the arc is drawn
+     *  counterclockwise; otherwise, it is drawn clockwise.</p>
+     *  
+     *  <p>This class is immutable.</p>
+     * 
+     *  @param radius   The radius of the arc in arbitrary AutoCAD units.
+     *  @param startAngleDegrees The start angle of the arc in degrees.
+     *  @param endAngleDegrees The end angle of the arc.
+     *  @param verticalOnly If true, this instruction applies only when the
+     *         shape is being drawn in a vertical orientation.
+     */
     public DrawArc(
-        int radius,
-        boolean counterClockwise,
-        double startAngleDegrees,
-        double endAngleDegrees,
-        boolean verticalOnly)
+        final int radius,
+        final double startAngleDegrees,
+        final double endAngleDegrees,
+        final boolean verticalOnly)
     {
         super(verticalOnly);
         this.radius = radius;
-        this.counterClockwise = counterClockwise;
         this.startAngleDegrees = startAngleDegrees;
         this.endAngleDegrees = endAngleDegrees;
     }
+
+    @Override
+    public void visit(ShapeInstructionHandler handler) {
+        handler.handle(this);
+    }
     
+    /** Returns the radius of the arc.
+     * 
+     *  @return The radius of the arc.
+     */
     public int getRadius() {
         return this.radius;
     }
-
-    public boolean isCounterClockwise() {
-        return this.counterClockwise;
-    }
-
+    
+    /** The starting angle of the arc in degrees.
+     * 
+     *  @return The starting angle of the arc in degrees.
+     */
     public double getStartAngleDegrees() {
         return this.startAngleDegrees;
     }
-
+    
+    /** The ending angle of the arc in degrees.
+     * 
+     *  @return The ending angle of the arc in degrees.
+     */
     public double getEndAngleDegrees() {
         return this.endAngleDegrees;
     }
+
+    @Override
+    public boolean equals(Object otherObj) {
+        if (! super.equals(otherObj)) { return false; }
+        
+        DrawArc other = DrawArc.class.cast(otherObj);
+        return new EqualsBuilder()
+            .append(this.getRadius(), other.getRadius())
+            .append(this.getStartAngleDegrees(), other.getStartAngleDegrees())
+            .append(this.getEndAngleDegrees(), other.getEndAngleDegrees())
+            .isEquals();
+    }
     
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(434086357, 1262819003)
+            .appendSuper(super.hashCode())
+            .append(this.getRadius())
+            .append(this.getStartAngleDegrees())
+            .append(this.getEndAngleDegrees())
+            .toHashCode();
+    }
+    
+    @Override
+    protected ToStringBuilder toStringBuilder() {
+        return super.toStringBuilder()
+            .append("radius", this.getRadius())
+            .append("startAngleDegrees", this.getStartAngleDegrees())
+            .append("endAngleDegrees", this.getEndAngleDegrees());
+    }
+    
+    /** Parses an octant arc directive from a SHX file.
+     *  
+     *  <p>Octant arcs are encoded in three bytes as follows:<br>
+     *  <tt>0x0A <i>radius</i> <i>dsc</i></tt><br>
+     *  The <i>dsc</i> byte is further broken down into the following bits:
+     *  <table border="1" cellpadding="1" cellspacing="0">
+     *  <thead>
+     *    <tr>
+     *      <th>7</th><th>6</th><th>5</th><th>4</th><th>3</th><th>2</th>
+     *      <th>1</th><th>0</th></tr>
+     *  </thead>
+     *  <tbody>
+     *    <tr>
+     *      <td><i>dir</i></td>
+     *      <td colspan="3"><i>startOctant</i></td>
+     *      <td>0</td>
+     *      <td colspan="3"><i>spanOctants</i></td>
+     *    </tr>
+     *  </tbody>
+     *  </table></p>
+     */
     public static class OctantArcParser
         extends ShapeInstructionParser<DrawArc>
     {
+        /** Parse an octant arc directive from a SHX file.
+         * 
+         *  This assumes the octant arc instruction has already been read
+         *  from the stream.
+         * 
+         *  @param is   The stream to read the bytes from.
+         *  @param verticalOnly Whether a vertical-only prefix preceded this
+         *              instruction.
+         *  @param shapeId The id of the shape this directive is a part of.
+         */
         @Override
         public DrawArc parse(
             InputStream is,
@@ -60,18 +174,39 @@ public class DrawArc extends ShapeInstruction {
                     "Shape " + shapeId + " truncated");
             }
             
-            if (op2 >= 128) {
-                ccw = false;
-                op2 = 256 - op2;
-            } else {
-                ccw = true;
-            }
+            // This appears to be a bug in the AutoCAD spec.  The high bit is
+            // *not* used as a sign bit here, despite what AutoCAD claims.
+            // It's actually a clockwise bit; the other bits are *not*
+            // in 2's complement format.
+            ccw = ((op2 & 0x80) == 0);
+            op2 = op2 & 0x7f;
 
-            startAngleDegrees = 45.0 * ((op2 & 0x70) >> 4);
-            endAngleDegrees =   45.0 *  (op2 & 0x07);
+            startAngleDegrees = 45 * ((op2 & 0x70) >> 4);
+            endAngleDegrees = startAngleDegrees + 
+                45 * (ccw ? 1 : -1) * (op2 & 0x07);
+            
+            if (ccw) {
+                // startAngle must be less than endAngle
+                while (startAngleDegrees > endAngleDegrees) {
+                    if (endAngleDegrees < 0) {
+                        endAngleDegrees += 360.0;
+                    } else {
+                        startAngleDegrees -= 360.0;
+                    }
+                }
+            } else {
+                // startAngle must be greater than endAngle
+                while (startAngleDegrees < endAngleDegrees) {
+                    if (startAngleDegrees < 0) {
+                        startAngleDegrees += 360.0;
+                    } else {
+                        endAngleDegrees -= 360.0;
+                    }
+                }            
+            }
                 
             return new DrawArc(
-                radius, ccw, startAngleDegrees,
+                radius, startAngleDegrees,
                 endAngleDegrees, verticalOnly);
         }
         
@@ -114,10 +249,21 @@ public class DrawArc extends ShapeInstruction {
             endAngleDegrees =   45.0 * (
                 (op2 & 0x07) + op2 / 256.0);
             radius = op3 * 256 + op4;
+
+            if (ccw) {
+                // startAngle must be less than endAngle
+                while (startAngleDegrees > endAngleDegrees) {
+                    startAngleDegrees -= 360.0;
+                }
+            } else {
+                // startAngle must be greater than endAngle
+                while (startAngleDegrees < endAngleDegrees) {
+                    startAngleDegrees += 360.0;
+                }            
+            }            
             
             return new DrawArc(
-                radius, ccw, startAngleDegrees,
-                endAngleDegrees, verticalOnly);
+                radius, startAngleDegrees, endAngleDegrees, verticalOnly);
         }
     
         private static final long serialVersionUID = 1L;
@@ -126,10 +272,10 @@ public class DrawArc extends ShapeInstruction {
     private static final double HALF_PI = 0.5 * PI;
     
     public static class BulgeArcParser
-        extends ShapeInstructionParser<DrawArc>
+        extends ShapeInstructionParser<ShapeInstruction>
     {
         @Override
-        public DrawArc parse(
+        public ShapeInstruction parse(
             InputStream is,
             boolean verticalOnly,
             int shapeId)
@@ -144,36 +290,50 @@ public class DrawArc extends ShapeInstruction {
                     "Shape " + shapeId + " truncated");
             }
             
+            if (dx > 127)
+                dx -= 256;
+            
+            if (dy > 127)
+                dy -= 256;
+            
+            if (b > 127)
+                b -= 256;
+                
+            if (b == 0) {
+                // Degenerate arc -- this is actually a straight line.
+                return new RelativeMoveTo(dx, dy, verticalOnly);
+            }
+            
             return generateBulgeArc(dx, dy, b, verticalOnly);
         }
 
         public DrawArc generateBulgeArc(
-            int dx,
-            int dy,
-            int b,
-            boolean verticalOnly)
+            final int dx,
+            final int dy,
+            final int bulgeFactor,
+            final boolean verticalOnly)
         {
-            boolean ccw;
-            if (b >= 128) {
-                ccw = false;
-                b = 256 - b;
+            final double qx = 0.5 * dx;
+            final double qy = 0.5 * dy;
+            final double d = sqrt(qx * qx + qy * qy);
+            final double b = bulgeFactor * d / 127.0;
+            final double r = (b * b + d * d) / (2.0 * b);
+            final double omega = atan2(dy, dx) + HALF_PI;
+            final double ox = qx + (r - b) * cos(omega);
+            final double oy = qy + (r - b) * sin(omega);
+            double startAngle = atan2(-oy, -ox);
+            double endAngle = atan2(dy - oy, dx - ox);
+            
+            if (bulgeFactor > 0) {
+                while (startAngle > endAngle)
+                    startAngle -= 2.0 * PI;
             } else {
-                ccw = true;
+                while (startAngle < endAngle)
+                    startAngle += 2.0 * PI;
             }
-
-            // See the "AutoCAD Bulge Arc Analysis" Mathematica notebook for
-            // details on the following computation.
-            int d2 = dx * dx + dy * dy;
-            double r = ((double) 4 * b * b + d2) / (double)(8 * b);
-            double beta = asin(((double)(r - b)) / (double) r);
-            double delta = HALF_PI - beta;
-            double alpha = atan2(dy, dx) - beta;
-            double endAngle = HALF_PI - alpha;
-            double startAngle = endAngle + 2.0 * delta;
-
-            return new DrawArc(
-                (int) round(r), ccw, toDegrees(startAngle), toDegrees(endAngle),
-                verticalOnly);
+            
+            return new DrawArc((int) abs(round(r)), toDegrees(startAngle),
+                               toDegrees(endAngle), verticalOnly);
         }
 
         private static final long serialVersionUID = 1L;
@@ -202,14 +362,27 @@ public class DrawArc extends ShapeInstruction {
                     "Shape " + shapeId + " truncated");
             }
             
+            if (dx > 127)
+                dx -= 256;
+            
+            if (dy > 127)
+                dy -= 256;
+            
+            if (b > 127)
+                b -= 256;
+            
             return generateBulgeArc(dx, dy, b, verticalOnly);
+        }
+        
+        @Override
+        public boolean isArray() {
+            return true;
         }
         
         private static final long serialVersionUID = 1L;
     }
 
     private final int radius;
-    private final boolean counterClockwise;
     private final double startAngleDegrees;
     private final double endAngleDegrees;
     private static final long serialVersionUID = 1L;

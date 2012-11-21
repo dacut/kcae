@@ -11,7 +11,6 @@ import static java.lang.Math.round;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import kanga.kcae.object.BaseUnit;
 import kanga.kcae.object.Pin;
 import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
@@ -22,38 +21,31 @@ public class SymbolView extends MeasuredViewPanel {
     static final Log log = LogFactory.getLog(SymbolView.class);
 
     public SymbolView() {
-        this(null, null, true, BaseUnit.meter);
-    }
-
-    public SymbolView(final Symbol symbol) {
-        this(symbol, null, true, BaseUnit.meter);
+        this(null, null, true);
     }
 
     public SymbolView(
-        final Symbol symbol,
-        final BaseUnit baseUnit)
+        final Symbol symbol)
     {
-        this(symbol, null, true, baseUnit);
+        this(symbol, null, true);
     }
     
     public SymbolView(
         final Symbol symbol,
         final LayoutManager layoutManager,
-        final boolean isDoubleBuffered,
-        final BaseUnit baseUnit)
+        final boolean isDoubleBuffered)
     {
         this(symbol, layoutManager, isDoubleBuffered,
-             (symbol != null ? symbol.getBoundingBox() : null), baseUnit);
+             (symbol != null ? symbol.getBoundingBox() : null));
     }
 
     public SymbolView(
         final Symbol symbol,
         final LayoutManager layoutManager,
         final boolean isDoubleBuffered,
-        final Rectangle viewArea,
-        final BaseUnit baseUnit)
+        final Rectangle viewArea)
     {
-        super(layoutManager, isDoubleBuffered, viewArea, baseUnit);
+        super(layoutManager, isDoubleBuffered, viewArea);
         this.symbol = symbol;
         this.backgroundColor = WHITE;
         this.lineTool = new LineTool(this);
@@ -84,7 +76,7 @@ public class SymbolView extends MeasuredViewPanel {
         
             ShapePainter.paint(g, symbol.getShapes());
             for (final Pin pin : symbol.getPins()) {
-                ShapePainter.paint(g, pin);
+                PinPainter.paint(symbol, pin, g);
             }
         }
 

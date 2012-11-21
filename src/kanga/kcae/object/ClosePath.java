@@ -2,6 +2,9 @@ package kanga.kcae.object;
 
 import java.io.Serializable;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
+
 public class ClosePath implements PathInstruction, Serializable {
     public ClosePath() { }
     
@@ -11,16 +14,33 @@ public class ClosePath implements PathInstruction, Serializable {
     }
     
     @Override
+    @Nullable
     public Rectangle updateBoundingBox(
-        final Point startPos,
-        final Rectangle bbox)
+        @Nullable @CheckForNull Point startPos,
+        @Nullable @CheckForNull Rectangle bbox)
     {
         return bbox;
     }
     
     @Override
-    public Point updatePosition(final Point startPos) {
+    @Nullable
+    public Point updatePosition(@Nullable @CheckForNull Point startPos) {
         return null;
+    }
+    
+    @Override
+    public ClosePath scale(double factor) {
+        return this;
+    }
+    
+    @Override
+    public ClosePath translate(long dx, long dy) {
+        return this;
+    }
+    
+    @Override
+    public ClosePath rotateQuadrant(int nQuadrants) {
+        return this;
     }
 
     @Override

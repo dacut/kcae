@@ -6,19 +6,39 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import kanga.kcae.object.Glyph;
+import kanga.kcae.object.Path;
+import kanga.kcae.object.Typeface;
+import kanga.kcae.object.UnknownTypefaceException;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import static org.apache.commons.io.Charsets.US_ASCII;
 import static org.apache.commons.io.EndianUtils.readSwappedShort;
 import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.lang3.StringEscapeUtils.escapeJava;
 
 public class AutoCADShapeFile {
+    @SuppressWarnings("unused")
+    private static final Log log = LogFactory.getLog(AutoCADShapeFile.class);
     public static final int HEADER_LENGTH = 0x18;
     public static final int MAX_DESCRIPTION_LENGTH = 128;
     
     public enum ShapeFileType {
-        NORMAL("AutoCAD-86 Shapes 1.0\r\n\u001a"),
+        NORMAL("AutoCAD-86 shapes 1.0\r\n\u001a"),
         BIGFONT("AutoCAD-86 bigfont 1.0\r\n"),
         UNIFONT("AutoCAD-86 unifont 1.0\r\n");
         
@@ -35,25 +55,157 @@ public class AutoCADShapeFile {
     }
     
 
-    public AutoCADShapeFile(Map<Integer, AutoCADShape> shapes) {
+    public AutoCADShapeFile(Map<Character, AutoCADShape> shapes) {
         this(null, 0, 0, 0, shapes, false);
     }
     
     AutoCADShapeFile(
-        String fontName,
-        int above,
-        int below,
-        int modes,
-        Map<Integer, AutoCADShape> shapes, boolean takeOwnership)
+        @Nullable final String fontName,
+        final int above,
+        final int below,
+        final int modes,
+        @Nonnull final Map<Character, AutoCADShape> shapes,
+        final boolean takeOwnership)
     {
         this.fontName = fontName;
         this.above = above;
         this.below = below;
         this.modes = modes;
         this.shapes = (takeOwnership ? shapes :
-                       new HashMap<Integer, AutoCADShape>(shapes));
+                       new TreeMap<Character, AutoCADShape>(shapes));
     }
     
+    public boolean isFont() {
+        return this.fontName != null;
+    }
+    
+    public String getFontName() {
+        return this.fontName;
+    }
+
+    public int getAbove() {
+        if (! this.isFont()) {
+            throw new UnsupportedOperationException(
+                "Non-font shape file does not support getAbove()");
+        }
+        
+        return this.above;
+    }
+
+    public int getBelow() {
+        if (! this.isFont()) {
+            throw new UnsupportedOperationException(
+                "Non-font shape file does not support getBelow()");
+        }
+
+        return this.below;
+    }
+
+    public int getModes() {
+        if (! this.isFont()) {
+            throw new UnsupportedOperationException(
+                "Non-font shape file does not support getModes()");
+        }
+
+        return this.modes;
+    }
+
+    public Map<Character, AutoCADShape> getShapes() {
+        return this.shapes;
+    }
+    
+    public Typeface toTypeface() {
+        final Map<Character, AutoCADShape> shapes = this.getShapes();
+        final Map<Character, Glyph> glyphs = new HashMap<Character, Glyph>();
+        final Glyph replacement = new Glyph(new Path(), 0, null);
+        
+        for (final Map.Entry<Character, AutoCADShape> entry : shapes.entrySet())
+        {
+            glyphs.put(entry.getKey(), entry.getValue().toGlyph(shapes));
+        }
+        
+        return new Typeface(
+            this.getFontName(),
+            this.getBelow(),
+            5,
+            this.getAbove(),
+            this.getAbove(),
+            5,
+            glyphs,
+            replacement);
+    }
+
+    @Override
+    public boolean equals(Object otherObj) {
+        if (otherObj == null) { return false; }
+        else if (otherObj == this) { return true; }
+        else if (otherObj.getClass() != this.getClass()) { return false; }
+        
+        AutoCADShapeFile other = AutoCADShapeFile.class.cast(otherObj);
+
+        EqualsBuilder eb = new EqualsBuilder();
+
+        if (this.isFont()) {
+            if (! other.isFont()) { return false; }
+            eb.append(this.getFontName(), other.getFontName())
+                .append(this.getAbove(), other.getAbove())
+                .append(this.getBelow(), other.getBelow())
+                .append(this.getModes(), other.getModes());
+        }
+        
+        eb.append(this.getShapes(), other.getShapes());
+        
+        return eb.isEquals();
+    }
+    
+    @Override
+    public int hashCode() {
+        boolean isFont = this.isFont();
+        
+        HashCodeBuilder hb = new HashCodeBuilder(686498797, 507758837);
+        hb.append(isFont);
+        if (isFont) {
+            hb.append(this.getFontName()).append(this.getAbove())
+                .append(this.getBelow()).append(this.getModes());
+        }
+        
+        hb.append(this.getShapes());
+        return hb.toHashCode();
+    }
+    
+    @Override
+    public String toString() {
+        ToStringBuilder sb = new ToStringBuilder(this, SHORT_PREFIX_STYLE);
+        if (this.isFont()) {
+            sb.append("fontName", this.getFontName())
+              .append("above", this.getAbove())
+              .append("below", this.getBelow())
+              .append("modes", this.getModes());
+        }
+        
+        sb.append("shapes", this.getShapes());
+        return sb.toString();
+    }
+    
+    private static String resourcePackage = "kanga/kcae/res/";
+    public static AutoCADShapeFile find(String name) {
+        InputStream typefaceStream = ClassLoader.getSystemResourceAsStream(
+            resourcePackage + name + ".shx");
+        if (typefaceStream == null) {
+            throw new UnknownTypefaceException("Unknown typeface " + name);
+        }
+        
+        try {
+            return fromCompiledFile(typefaceStream);
+        }
+        catch (Exception e) {
+            throw new UnknownTypefaceException("Unknown typeface " + name, e);
+        }
+        finally {
+            closeQuietly(typefaceStream);
+        }
+    }
+
     public static AutoCADShapeFile fromCompiledFile(InputStream is)
         throws IOException
     {
@@ -87,7 +239,7 @@ public class AutoCADShapeFile {
         }
         
         throw new UnknownShapeFileTypeException(
-            "Unknown shape file type (header='" + header + "'");
+            "Unknown shape file type (header=\"" + escapeJava(header) + "\")");
     }
     
     static class ShapeEntryHeader {
@@ -106,7 +258,8 @@ public class AutoCADShapeFile {
         long skipBytes;
         int numChars;
         ShapeEntryHeader[] shapeHeaders;
-        Map<Integer, AutoCADShape> shapes;
+        Map<Character, AutoCADShape> shapes =
+            new TreeMap<Character, AutoCADShape>();
         String fontName = null;
         int above = 0;
         int below = 0;
@@ -119,7 +272,6 @@ public class AutoCADShapeFile {
         
         numChars = readSwappedUShort(is);
         shapeHeaders = new ShapeEntryHeader[numChars];
-        shapes = new HashMap<Integer, AutoCADShape>(numChars);
         
         // Read the character names and the byte lengths they occupy.
         for (int i = 0; i < numChars; ++i) {
@@ -132,7 +284,7 @@ public class AutoCADShapeFile {
                 // Font header; read data about the font.
                 ByteArrayInputStream bais = readDataBlock(
                     is, shapeHeader.byteLength, 0);
-                readTerminatedString(bais, bais.available());
+                fontName = readTerminatedString(bais, bais.available());
                 above = bais.read();
                 below = bais.read();
                 modes = bais.read();
@@ -146,7 +298,8 @@ public class AutoCADShapeFile {
                 }
             } else {
                 // Normal shape entry.
-                shapes.put(shapeHeader.shapeId, readShape(is, shapeHeader));
+                shapes.put(Character.valueOf((char) shapeHeader.shapeId),
+                           readShape(is, shapeHeader));
             }
         }
         
@@ -184,6 +337,7 @@ public class AutoCADShapeFile {
                 }
                 else if (icode < 15) {
                     ShapeInstructionParser<?> parser = parsers.get(icode);
+                    
                     try {
                         do {
                             ShapeInstruction si = parser.parse(
@@ -199,11 +353,15 @@ public class AutoCADShapeFile {
                             ("Parser threw ArrayDone but we weren't reading " +
                              "an array");
                     }
+                    
+                    verticalOnly = false;
                 }
                 else {
                     instructions.add(
                         ddlParser.parse(bais, verticalOnly,
                                         shapeHeader.shapeId));
+
+                    verticalOnly = false;
                 }
             }
             
@@ -248,7 +406,7 @@ public class AutoCADShapeFile {
     
     public static int readSwappedUShort(InputStream is) throws IOException {
         short result = readSwappedShort(is);
-        if (result > 0)
+        if (result >= 0)
             return result;
         else
             return 65536 + (int) result;
@@ -293,31 +451,11 @@ public class AutoCADShapeFile {
         return new String(str, US_ASCII);
     }
     
-    public String getFontName() {
-        return this.fontName;
-    }
-
-    public int getAbove() {
-        return this.above;
-    }
-
-    public int getBelow() {
-        return this.below;
-    }
-
-    public int getModes() {
-        return this.modes;
-    }
-
-    public Map<Integer, AutoCADShape> getShapes() {
-        return this.shapes;
-    }
-
     private final String fontName;
     private final int above;
     private final int below;
     private final int modes;
-    private final Map<Integer, AutoCADShape> shapes;
+    private final Map<Character, AutoCADShape> shapes;
     private static final
         List<ShapeInstructionParser<? extends ShapeInstruction>> parsers;
     private static final DrawDirectionalLine.Parser ddlParser =

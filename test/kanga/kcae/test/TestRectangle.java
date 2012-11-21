@@ -59,15 +59,15 @@ public class TestRectangle extends TestCase {
             
         for (Rectangle r1 : rects) {
             assertEquals(0, r1.getLeft());
-            assertEquals(2, r1.getTop());
+            assertEquals(10, r1.getTop());
             assertEquals(5, r1.getRight());
-            assertEquals(10, r1.getBottom());
+            assertEquals(2, r1.getBottom());
             assertEquals(5, r1.getWidth());
             assertEquals(8, r1.getHeight());
-            assertEquals(new Point(0, 2), r1.getTopLeft());
-            assertEquals(new Point(0, 10), r1.getBottomLeft());
-            assertEquals(new Point(5, 2), r1.getTopRight());
-            assertEquals(new Point(5, 10), r1.getBottomRight());
+            assertEquals(new Point(0, 10), r1.getTopLeft());
+            assertEquals(new Point(0, 2), r1.getBottomLeft());
+            assertEquals(new Point(5, 10), r1.getTopRight());
+            assertEquals(new Point(5, 2), r1.getBottomRight());
             assertEquals(5.0 / 8.0, r1.getAspectRatio());
             assertEquals(new Point(2, 6), r1.getCenter());
             assertFalse(r1.equals(null));
@@ -78,9 +78,9 @@ public class TestRectangle extends TestCase {
             
             Rectangle rt = r1.translate(5, 2);
             assertEquals(5, rt.getLeft());
-            assertEquals(4, rt.getTop());
+            assertEquals(12, rt.getTop());
             assertEquals(10, rt.getRight());
-            assertEquals(12, rt.getBottom());
+            assertEquals(4, rt.getBottom());
         
             for (Rectangle r2 : rects) {
                 assertEquals(r1, r2);
@@ -168,6 +168,23 @@ public class TestRectangle extends TestCase {
     }
     
     @Test
+    public void testScale() {
+        Rectangle r1 = Rectangle.fromPoints(1, 3, 7, 13);
+        Rectangle r2 = r1.scale(2.0);
+        
+        assertFalse(r1.equals(r2));
+        assertFalse(r2.equals(r1));
+        assertEquals(r2.getLeft(), 2);
+        assertEquals(r2.getBottom(), 6);
+        assertEquals(r2.getRight(), 14);
+        assertEquals(r2.getTop(), 26);
+        
+        Rectangle r3 = r2.scale(0.5);
+        assertEquals(r1, r3);
+        assertEquals(r3, r1);
+    }
+    
+    @Test
     public void testWeirdAspectRatios() {
         assertEquals(Double.POSITIVE_INFINITY,
                      Rectangle.fromPoints(0, 0, 1, 0).getAspectRatio());
@@ -178,8 +195,18 @@ public class TestRectangle extends TestCase {
     @Test
     public void testFitToAspectRatio() {
         Rectangle r1 = Rectangle.fromPoints(-10, -10, 10, 10);
-        Rectangle r2 = r1.fitToAspect(2.0);
-        assertEquals(Rectangle.fromPoints(-12, -6, 12, 6), r2);
+        Rectangle r2a = r1.fitToAspect(2.0);
+        Rectangle r2b = r1.adjustAspectRatio(2.0, Rectangle.FitMethod.NEAREST);
+        assertEquals(Rectangle.fromPoints(-12, -6, 12, 6), r2a);
+        assertEquals(r2a, r2b);
+        Rectangle r3 = r1.adjustAspectRatio(3.0, Rectangle.FitMethod.EXPAND);
+        assertEquals(Rectangle.fromPoints(-30, -10, 30, 10), r3);
+        Rectangle r4 = r1.adjustAspectRatio(0.5, Rectangle.FitMethod.EXPAND);
+        assertEquals(Rectangle.fromPoints(-10, -20, 10, 20), r4);
+        Rectangle r5 = r1.adjustAspectRatio(2.0, Rectangle.FitMethod.SHRINK);
+        assertEquals(Rectangle.fromPoints(-10, -5, 10, 5), r5);
+        Rectangle r6 = r1.adjustAspectRatio(0.5, Rectangle.FitMethod.SHRINK);
+        assertEquals(Rectangle.fromPoints(-5, -10, 5, 10), r6);
     }
     
     @Test

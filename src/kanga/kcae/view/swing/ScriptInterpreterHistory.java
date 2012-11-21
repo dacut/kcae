@@ -53,6 +53,7 @@ public class ScriptInterpreterHistory
 
     public ScriptInterpreterHistory(final ScriptInterpreter interp) {
         super();
+        this.setEditable(false);
         interp.addCompilationListener(this);
         
         this.baseStyle = this.addStyle("base", null);
@@ -117,8 +118,11 @@ public class ScriptInterpreterHistory
     }
     
     @Override
-    public void sourceCompilationError(String source, String filename,
-                                       PyException error) {
+    public void sourceCompilationError(
+        String source,
+        String filename,
+        PyException error)
+    {
         this.writeStdin(source);
         this.commandHistory.add(source);
     }

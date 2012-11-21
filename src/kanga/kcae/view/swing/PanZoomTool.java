@@ -3,9 +3,8 @@ package kanga.kcae.view.swing;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
+import kanga.kcae.object.Dimension;
 import kanga.kcae.object.Rectangle;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 /** A tool for handling pan/zoom requests.
  * 
@@ -39,12 +38,12 @@ public class PanZoomTool extends MeasuredViewToolAdapter {
             int dyPix = y - this.lastY;
             
             // Convert from pixels to quanta.
-            final Pair<Long, Long> qpp = this.panel.getQuantaPerPixel();
-            final long dxQua = -qpp.getLeft() * dxPix;
-            final long dyQua =  qpp.getRight() * dyPix;
+            final Dimension nmpp = this.panel.getNanometersPerPixel();
+            final long dxNm = -nmpp.getWidth() * dxPix;
+            final long dyNm =  nmpp.getHeight() * dyPix;
          
             final Rectangle originalView = this.panel.getViewArea();
-            final Rectangle newView = originalView.translate(dxQua, dyQua);
+            final Rectangle newView = originalView.translate(dxNm, dyNm);
             this.panel.setViewArea(newView, Rectangle.FitMethod.EXPAND);
         }
         

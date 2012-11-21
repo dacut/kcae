@@ -6,6 +6,9 @@ import static java.lang.Math.sqrt;
 
 import java.io.Serializable;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /** Draws a cubic Bézier curve segment of a path.
@@ -54,7 +57,10 @@ public class BezierCurveTo implements PathInstruction, Serializable {
     }
     
     @Override
-    public Rectangle updateBoundingBox(final Point p0, Rectangle bbox) {
+    public Rectangle updateBoundingBox(
+        @Nullable @CheckForNull Point p0,
+        @Nullable @CheckForNull Rectangle bbox)
+    {
         final Point p1 = this.getControlPoint1();
         final Point p2 = this.getControlPoint2();
         final Point p3 = this.getTargetPoint();
@@ -170,7 +176,31 @@ public class BezierCurveTo implements PathInstruction, Serializable {
     public Point updatePosition(final Point startPos) {
         return this.getTargetPoint();
     }
+    
+    @Override
+    public BezierCurveTo scale(double factor) {
+        return new BezierCurveTo(
+            this.getControlPoint1().scale(factor),
+            this.getControlPoint2().scale(factor),
+            this.getTargetPoint().scale(factor));
+    }
+    
+    @Override
+    public BezierCurveTo translate(long dx, long dy) {
+        return new BezierCurveTo(
+                this.getControlPoint1().translate(dx, dy),
+                this.getControlPoint2().translate(dx, dy),
+                this.getTargetPoint().translate(dx, dy));
+    }
 
+    @Override
+    public BezierCurveTo rotateQuadrant(int nQuadrants) {
+        return new BezierCurveTo(
+                this.getControlPoint1().rotateQuadrant(nQuadrants),
+                this.getControlPoint2().rotateQuadrant(nQuadrants),
+                this.getTargetPoint().rotateQuadrant(nQuadrants));
+    }
+    
     @Override
     public boolean equals(Object otherObj) {
         if (otherObj == null) { return false; }

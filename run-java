@@ -3,6 +3,7 @@ root=`dirname $0`;
 classpath="$root/dist/kcae.jar"
 classpath="${classpath}:$root/ext/asm-3.0.jar"
 classpath="${classpath}:$root/ext/asm-tree-3.0.jar"
+classpath="${classpath}:$root/ext/commons-io-2.3.jar"
 classpath="${classpath}:$root/ext/commons-lang3-3.1.jar"
 classpath="${classpath}:$root/ext/commons-logging-1.1.1.jar"
 classpath="${classpath}:$root/ext/commons-logging-adapters-1.1.1.jar"
@@ -16,17 +17,41 @@ classpath="${classpath}:$root/ext/jsr305.jar"
 classpath="${classpath}:$root/ext/jython-2.7a2.jar"
 classpath="${classpath}:$root/ext/log4j-1.2.9.jar"
 logger="org.apache.commons.logging.impl.Log4JLogger"
-java=java
+log_property="-Dorg.apache.commons.logging.Log=$logger"
+#python_properties="-Dpython.verbose=debug"
+tool=java
+assertions="-enableassertions"
 use_gui=1
 
 while [ $# -gt 0 ]; do
     case "$1" in
+        -classpath )
+            shift;
+            if [ $# -eq 0 ]; then
+                echo "-classpath requires a path argument" 1>&2;
+                exit 1;
+            fi;
+            classpath="${classpath}:$1";
+            shift;;
+
         -debug )
-            java=jdb;
+            tool=jdb;
             shift;;
 
         -nw )
             use_gui=0;
+            shift;;
+
+        -disableassertions )
+            assertions="";
+            shift;;
+
+        -compile )
+            tool=javac;
+            use_gui=0;
+            assertions="";
+            log_property="";
+            python_properties="";
             shift;;
 
         * )
@@ -35,18 +60,17 @@ while [ $# -gt 0 ]; do
 done;
 
 if [ $use_gui -ne 0 ]; then
-    $java -Dapple.awt.application.name="Kanga CAE" \
+    $tool -Dapple.awt.application.name="Kanga CAE" \
         -Dapple.laf.useScreenMenuBar=true \
         -Dapple.awt.graphics.UseQuartz=true \
-        -Dorg.apache.commons.logging.Log="$logger" \
-        -Dpython.verbose=debug \
-        -enableassertions \
+        $log_property \
+        $python_properties \
+        $assertions \
         -classpath "$classpath" \
         "$@"
 else
-    $java -Dorg.apache.commons.logging.Log="$logger" \
-        -Dpython.verbose=debug \
-        -enableassertions \
+    $tool $log_property $python_properties \
+        $assertions \
         -classpath "$classpath" \
         "$@"
 fi;
