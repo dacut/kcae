@@ -233,6 +233,12 @@ public class MeasuredViewPanel
         
         final Graphics2D g = (Graphics2D) graphics;
         final Dimension nmpp = this.getNanometersPerPixel();
+        
+        if (nmpp == null) {
+            log.warn("Cannot paint: nanometersPerPixel is null");
+            return;
+        }
+        
         final double ppnmX = 1.0 / nmpp.getWidth();
         final double ppnmY = 1.0 / nmpp.getHeight();
         final java.awt.Rectangle bounds = this.getBounds();

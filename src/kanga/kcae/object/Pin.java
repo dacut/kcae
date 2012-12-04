@@ -18,6 +18,8 @@ import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 /** A pin on a {@link Symbol symbol}.
@@ -69,6 +71,8 @@ public class Pin implements Comparable<Pin>, Serializable {
              null, null, null);
     }
     
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(
+        "NP_NONNULL_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR")
     public Pin(
         @CheckForNull final String name,
         @CheckForNull final String pinNumber,
@@ -84,7 +88,7 @@ public class Pin implements Comparable<Pin>, Serializable {
                                     EnumSet.noneOf(PinStyle.class));
 
         this.setName(name);
-        this.setPinNumber(pinNumber);
+        this.setPinNumber(defaultIfNull(pinNumber, ""));
         this.setSignalDirection(signalDirection);
         this.setConnectionPoint(connectionPoint);
         this.setEndPoint(endPoint);

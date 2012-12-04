@@ -174,7 +174,7 @@ public class SymbolEditorFrame extends JFrame {
         sym.setShapes(sg);
         sym.setLineStyle(new LineStyle(500000, Color.black));
         
-        final Pin p1 = new Pin("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "1", SignalDirection.PASSIVE,
+        final Pin p1 = new Pin("S", "1", SignalDirection.PASSIVE,
             new Point(-10000000, 5000000), new Point(0, 5000000),
             EnumSet.of(PinStyle.BUS));
         sym.addPin(p1);

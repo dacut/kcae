@@ -22,6 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class ArcTo implements PathInstruction {
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(
+        {"MS_CANNOT_BE_FINAL", "MS_SHOULD_BE_FINAL"})
+    public static boolean enableDebug = false;
+    
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(ArcTo.class);
     public static final double PI_2 = 0.5 * PI;
@@ -153,6 +157,9 @@ public class ArcTo implements PathInstruction {
         
         final Point endPos = this.updatePosition(startPos);
         final Rectangle myBBox = Rectangle.fromPoints(startPos, endPos);
+        
+        if (enableDebug)
+            log.debug("updateBoundingBox: startPos=" + startPos + " endPos=" + endPos + " bbox=" + bbox + " myBBox=" + myBBox);
         
         if (bbox == null) {
             return myBBox;

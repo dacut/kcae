@@ -11,9 +11,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 
 import static java.lang.Math.atan2;
-import static java.lang.Math.cos;
-import static java.lang.Math.PI;
-import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
 
 import kanga.kcae.object.Font;
 import kanga.kcae.object.Pin;
@@ -22,10 +20,7 @@ import kanga.kcae.object.Point;
 import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Shape;
 import kanga.kcae.object.Symbol;
-import kanga.kcae.object.Typeface;
-import kanga.kcae.xchg.autocad.AutoCADShapeFile;
 
-import org.apache.commons.lang3.ObjectUtils;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 
 import org.apache.commons.logging.Log;
@@ -34,11 +29,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class PinPainter {
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(PinPainter.class);
-    
-    public static final Typeface labelTypeface = 
-        AutoCADShapeFile.find("iso3098b").toTypeface();
-    public static final Font labelFont = new Font(labelTypeface, 8000000);
-    
+        
     public static final int NEGATED_SIZE =  5000000; // 5.0 mm
     public static final int NET_WIDTH =      500000; // 0.5 mm
     public static final int BUS_WIDTH =     2000000; // 2.0 mm
@@ -56,173 +47,89 @@ public abstract class PinPainter {
         @Nonnull final Pin pin,
         @Nonnull final Graphics2D g)
     {
-        final Font nameFont = symbol.getPinNameFont(pin);
-        final Font numberFont = symbol.getPinNumberFont(pin);
-        final Point conPoint = pin.getConnectionPoint();
-        Point endPoint = pin.getEndPoint();
-        final Set<PinStyle> pinStyles = pin.getPinStyles();
-        final boolean bus = pinStyles.contains(PinStyle.BUS);
-        final boolean negated = pinStyles.contains(PinStyle.NEGATED);
+        // Restore the graphics transformation to its original state after
+        // we're done.
+        final AffineTransform originalTransform = g.getTransform();
+        try {
+            final Font nameFont = symbol.getPinNameFont(pin);
+            final Font numberFont = symbol.getPinNumberFont(pin);
+            final Point conPoint = pin.getConnectionPoint();
+            Point endPoint = pin.getEndPoint();
+            final Set<PinStyle> pinStyles = pin.getPinStyles();
+            final boolean bus = pinStyles.contains(PinStyle.BUS);
+            final boolean negated = pinStyles.contains(PinStyle.NEGATED);
+            final long dX = endPoint.getX() - conPoint.getX();
+            final long dY = endPoint.getY() - conPoint.getY();
+            final double angle = atan2(dY, dX);
+            final double pinLength = sqrt(dX * dX + dY * dY);
+            
+            // Draw everything relative to the end point.
+            g.translate(endPoint.getX(), endPoint.getY());
+            g.rotate(angle);
         
-        // For drawing the pin itself.
-        final int lineWidth = (bus ? BUS_WIDTH : NET_WIDTH);
-        final Stroke stroke = new BasicStroke(
+            // For drawing the pin itself.
+            final int lineWidth = (bus ? BUS_WIDTH : NET_WIDTH);
+            final Stroke stroke = new BasicStroke(
                 lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
                 MITER_LIMIT);
-        final Path2D.Double awtPath = new Path2D.Double();
+            final Path2D.Double awtPinPath = new Path2D.Double();
 
-        // If we need to draw the negated bubble at the endpoint.
-        Ellipse2D negatedCircle = null;
+            // If we need to draw the negated bubble at the endpoint.
+            Ellipse2D negatedCircle = null;
         
-        // Shapes which make up the labels.
-        final Shape nameLabel = nameFont.render(
-            defaultString(pin.getName()));
-        final Shape numberLabel = numberFont.render(
-            defaultString(pin.getPinNumber()));
+            // Shapes which make up the labels.
+            final Shape nameLabel = nameFont.render(
+                defaultString(pin.getName()));
+            final Shape numberLabel = numberFont.render(
+                defaultString(pin.getPinNumber()));
 
-        
-        final Rectangle nameLabelBBox = nameLabel.getBoundingBox();
-        final Rectangle numberLabelBBox = numberLabel.getBoundingBox();
-
-        final long nameLabelWidth = (nameLabelBBox != null ?
-                                     nameLabelBBox.getWidth() : 0);
-        final long numberLabelWidth = (numberLabelBBox != null ?
-                                       numberLabelBBox.getWidth() : 0);
-
-        AffineTransform gTransform = g.getTransform();
-        AffineTransform nameLabelTransform = ObjectUtils.clone(gTransform);
-        AffineTransform numberLabelTransform = ObjectUtils.clone(gTransform);
-        
-        // Compute positions of the pin name and number labels, as well as the
-        // negated bubble.
-        if (conPoint.getX() == endPoint.getX()) {
-            // Vertical line (would result in infinite slope); compute the
-            // offsets directly.
-            long endPointDY, nameLabelDY, numberLabelDY;
+            Rectangle nameLabelBBox = nameLabel.getBoundingBox();
+            Rectangle numberLabelBBox = numberLabel.getBoundingBox();
             
-            if (conPoint.getY() < endPoint.getY()) {
-                endPointDY = -NEGATED_SIZE;
-                nameLabelDY = -LABEL_OFFSET - nameLabelWidth;
-                numberLabelDY = +LABEL_OFFSET;
-            } else {
-                endPointDY = +NEGATED_SIZE;
-                nameLabelDY = +LABEL_OFFSET;
-                numberLabelDY = -LABEL_OFFSET - numberLabelWidth;
-            }
-
-            nameLabelTransform.translate(
-                endPoint.getX(), endPoint.getY() + nameLabelDY);
-            nameLabelTransform.quadrantRotate(1);
-            numberLabelTransform.translate(
-                endPoint.getX(), endPoint.getY() + numberLabelDY);
-            numberLabelTransform.quadrantRotate(1);
-
+            final long nameLabelHeight = (nameLabelBBox != null ?
+                nameLabelBBox.getHeight() : 0);
+            final long numberLabelWidth = (numberLabelBBox != null ?
+                numberLabelBBox.getWidth() : 0);
+            
+            // Draw the pin itself.
             if (negated) {
-                endPoint = new Point(
-                    endPoint.getX(), endPoint.getY() + endPointDY);
+                awtPinPath.moveTo(-NEGATED_SIZE, 0);
+                awtPinPath.lineTo(-NEGATED_SIZE - pinLength, 0);
                 negatedCircle = new Ellipse2D.Double(
-                    endPoint.getX() - NEGATED_SIZE / 2,
-                    endPoint.getY() + endPointDY,
-                    NEGATED_SIZE, NEGATED_SIZE);
-            }
-        }
-        else if (conPoint.getY() == endPoint.getY()) {
-            // Horizontal line; compute the offset directly for accuracy,
-            // avoiding the trig functions.
-            long endPointDX, nameLabelDX, numberLabelDX;
-            
-            if (conPoint.getX() < endPoint.getX()) {
-                endPointDX = -NEGATED_SIZE;
-                nameLabelDX = +LABEL_OFFSET;
-                numberLabelDX = -LABEL_OFFSET - numberLabelWidth;
+                    -NEGATED_SIZE * 0.5, 0, NEGATED_SIZE, NEGATED_SIZE);
             } else {
-                endPointDX = +NEGATED_SIZE;
-                nameLabelDX = -LABEL_OFFSET - nameLabelWidth;
-                numberLabelDX = +LABEL_OFFSET;
+                awtPinPath.moveTo(0, 0);
+                awtPinPath.lineTo(-pinLength, 0);
             }
-            
-            nameLabelTransform.translate(
-                endPoint.getX() + nameLabelDX, endPoint.getY());
-            numberLabelTransform.translate(
-                endPoint.getX() + numberLabelDX, endPoint.getY());
-            
-            if (negated) {
-                endPoint = new Point(
-                    endPoint.getX() + endPointDX, endPoint.getY());
-                negatedCircle = new Ellipse2D.Double(
-                    endPoint.getX() + endPointDX,
-                    endPoint.getY() - NEGATED_SIZE / 2,
-                    NEGATED_SIZE,
-                    NEGATED_SIZE);
-            }
-        }
-        else {
-            // Sloped; compute the slope and end the line early.
-            // angle is between -pi and pi (see Math.atan2 docs)
-            double angle = atan2(endPoint.getY() - conPoint.getY(),
-                                 endPoint.getX() - conPoint.getX());
-            double cosAngle = cos(angle);
-            double sinAngle = sin(angle);
-            double endPointX = NEGATED_SIZE * cosAngle;
-            double endPointY = NEGATED_SIZE * sinAngle;
-            
-            if (angle > -0.5 * PI && angle < 0.5 * PI) {
-                nameLabelTransform.translate(endPoint.getX(), endPoint.getY());
-                nameLabelTransform.rotate(angle);
-                nameLabelTransform.translate(LABEL_OFFSET, 0);
-                numberLabelTransform.translate(endPoint.getX(), endPoint.getY());
-                numberLabelTransform.rotate(angle);
-                numberLabelTransform.translate(
-                    -LABEL_OFFSET -numberLabelWidth, 0);
+            if (pinStyles.contains(PinStyle.BUS)) {
+                g.setPaint(java.awt.Color.BLUE);
             } else {
-                nameLabelTransform.translate(endPoint.getX(), endPoint.getY());
-                nameLabelTransform.rotate(angle + PI);
-                nameLabelTransform.translate(
-                    -LABEL_OFFSET - nameLabelWidth, 0);
-                numberLabelTransform.translate(endPoint.getX(), endPoint.getY());
-                numberLabelTransform.rotate(angle + PI);
-                numberLabelTransform.translate(LABEL_OFFSET, 0);                
+                g.setPaint(java.awt.Color.BLACK);
+            }
+            g.setStroke(stroke);
+            g.draw(awtPinPath);
+            
+            // Draw the negated circle.
+            if (negatedCircle != null) {
+                g.draw(negatedCircle);
             }
             
-            if (negated) {
-                endPoint = new Point((long) endPointX, (long) endPointY);
-            
-                // You need to work the trigonometry out here to understand the
-                // significance of (1 - cos) and (1 - sin).
-                negatedCircle = new Ellipse2D.Double(
-                    endPointX - NEGATED_SIZE * (1.0 - cosAngle),
-                    endPointY + NEGATED_SIZE * (1.0 - sinAngle),
-                    NEGATED_SIZE,
-                    NEGATED_SIZE);
-            }
-        }
-        
-        if (negated) {
-            final Stroke negatedStroke = new BasicStroke(
-                    NET_WIDTH, BasicStroke.CAP_BUTT,
-                    BasicStroke.JOIN_MITER, MITER_LIMIT);
-
-            g.setStroke(negatedStroke);
-            g.draw(negatedCircle);
-        }
-        
-        awtPath.moveTo((double) conPoint.getX(), (double) conPoint.getY());
-        awtPath.lineTo((double) endPoint.getX(), (double) endPoint.getY());
-        if (pinStyles.contains(PinStyle.BUS)) {
-            g.setPaint(java.awt.Color.BLUE);
-        }
-        g.setStroke(stroke);
-        g.draw(awtPath);
-        
-        try {
-            g.setTransform(nameLabelTransform);
+            // Draw the pin name.
+            g.setPaint(java.awt.Color.BLACK);
+            g.translate(LABEL_OFFSET, - nameLabelHeight * 0.5);
             ShapePainter.paint(g, nameLabel);
+            g.setPaint(java.awt.Color.RED);
             
-            g.setTransform(numberLabelTransform);
+            if (nameLabelBBox != null) {
+                ShapePainter.paint(g, nameLabelBBox);
+            }
+                        
+            g.translate(-LABEL_OFFSET * 2 - numberLabelWidth,
+                        (nameLabelHeight - LABEL_OFFSET) * 0.5);
             ShapePainter.paint(g, numberLabel);
         }
         finally {
-            g.setTransform(gTransform);
+            g.setTransform(originalTransform);
         }
     }
 }

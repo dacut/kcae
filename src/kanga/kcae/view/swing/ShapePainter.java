@@ -3,7 +3,10 @@ package kanga.kcae.view.swing;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -12,6 +15,7 @@ import kanga.kcae.object.Color;
 import kanga.kcae.object.LineStyle;
 import kanga.kcae.object.Path;
 import kanga.kcae.object.PathInstruction;
+import kanga.kcae.object.Rectangle;
 import kanga.kcae.object.Shape;
 import kanga.kcae.object.ShapeGroup;
 
@@ -35,6 +39,7 @@ public abstract class ShapePainter {
         return;
     }
     
+    
     public static void paint(final Graphics2D g, final Path path) {
         log.debug("Painting path " + path);
         
@@ -55,6 +60,19 @@ public abstract class ShapePainter {
         return;
     }
 
+    public static void paint(
+        @Nonnull final Graphics2D g,
+        @Nonnull final Rectangle rect)
+    {
+        Rectangle2D.Double awtRect = new Rectangle2D.Double(
+            rect.getLeft(), rect.getTop(), rect.getWidth(), rect.getHeight());
+                
+        g.draw(awtRect);
+
+        return;
+    }
+
+    
     public static void setLineStyle(final Graphics2D g, final LineStyle ls) {
         if (ls != null) {
             final Color c = ls.getColor();

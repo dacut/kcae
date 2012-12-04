@@ -61,6 +61,10 @@ public class BezierCurveTo implements PathInstruction, Serializable {
         @Nullable @CheckForNull Point p0,
         @Nullable @CheckForNull Rectangle bbox)
     {
+        if (p0 == null) {
+            throw new UnsupportedOperationException(
+                "Cannot update bounding box without current point.");
+        }
         final Point p1 = this.getControlPoint1();
         final Point p2 = this.getControlPoint2();
         final Point p3 = this.getTargetPoint();

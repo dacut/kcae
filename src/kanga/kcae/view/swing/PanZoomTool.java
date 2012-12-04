@@ -39,6 +39,12 @@ public class PanZoomTool extends MeasuredViewToolAdapter {
             
             // Convert from pixels to quanta.
             final Dimension nmpp = this.panel.getNanometersPerPixel();
+            
+            // Make sure a grid is set up.
+            if (nmpp == null) {
+                return;
+            }
+            
             final long dxNm = -nmpp.getWidth() * dxPix;
             final long dyNm =  nmpp.getHeight() * dyPix;
          

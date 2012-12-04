@@ -5,11 +5,14 @@ import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import static java.lang.Math.cos;
 import static java.lang.Math.round;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -24,23 +27,45 @@ import kanga.kcae.object.PathInstruction;
 import kanga.kcae.object.Point;
 
 public class ShapeToGlyph implements ShapeInstructionHandler {
-    private static final Log log = LogFactory.getLog(ShapeToGlyph.class);
     private static final LineStyle defaultLineStyle =
         new LineStyle(100000, Color.black);
-        
-    public ShapeToGlyph(final Map<Character, AutoCADShape> shapes) {
-        this.path = new Path();
-        this.path.setLineStyle(defaultLineStyle);
+    
+    /** Create a new ShapeToGlyph translator to convert an AutoCAD shape into
+     *  a KCAE shape.
+     * 
+     *  @param  shapes      A map of the other AutoCAD shapes in the shape file.
+     *                      This is needed to draw subshapes embedded within a
+     *                      shape.
+     *  @param  lineStyle   The initial line style to use.
+     *  @param  conversionScale The conversion scale to use for translating
+     *                      AutoCAD's arbitrary coordinate system into
+     *                      nanometers.
+     */
+    public ShapeToGlyph(final Map<Character, AutoCADShape> shapes,
+                        @Nullable LineStyle lineStyle,
+                        final double conversionScale)
+    {
         this.shapes = shapes;
-        this.pointStack = new ArrayDeque<Point>();
-        this.currentPoint = new Point(0, 0);
-        this.scaleFactor = 1;
+        this.lineStyle = defaultIfNull(lineStyle, defaultLineStyle);
+        this.pointStack = new ArrayDeque<Point>();        
+        this.conversionScale = conversionScale;
         this.drawing = true;
-        
-        this.path.addInstruction(new MoveTo(0, 0));
+        this.log = staticLog;
     }
     
-    
+    public void startTranslation(char c) {
+        this.log = LogFactory.getLog(
+            ShapeToGlyph.class.getName() + "." +
+            String.format("%04x", (int) c));
+        this.path = new Path();
+        this.path.setLineStyle(this.lineStyle);
+        this.pointStack.clear();
+        this.currentPoint = new Point(0, 0);
+        this.scaleFactor = 1;
+        this.path.addInstruction(new MoveTo(0, 0));
+        
+        this.log.debug("Translating " + c);
+    }
     
     @Override
     public void handle(ActivateDraw inst) {
@@ -69,7 +94,7 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
         double endAngle = toRadians(inst.getEndAngleDegrees());
         
         final double includedAngle = endAngle - startAngle;
-        final long radius = inst.getRadius() * this.scaleFactor;
+        final long radius = round(inst.getRadius() * this.conversionScale);
         final Point startPoint = this.currentPoint;
         final Point center = new Point(
             startPoint.getX() - round(radius * cos(startAngle)),
@@ -86,7 +111,8 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
             caeInst = new MoveTo(this.currentPoint);
         }
         
-        log.debug("Converting " + inst + " to " + caeInst);
+        this.log.debug("Converting " + inst + " to " + caeInst);
+        
         this.path.addInstruction(caeInst);
         
     }
@@ -97,8 +123,10 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
         
         final DirectionCode dc = inst.getDirectionCode();
         final int length = inst.getLength() * this.scaleFactor;
-        final long x = this.currentPoint.getX() + round(dc.relX * length);
-        final long y = this.currentPoint.getY() + round(dc.relY * length);
+        final long x = this.currentPoint.getX() +
+            round(dc.relX * length * this.conversionScale);
+        final long y = this.currentPoint.getY() +
+            round(dc.relY * length * this.conversionScale);
         final PathInstruction caeInst;
         
         if (this.drawing) {
@@ -107,7 +135,7 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
             caeInst = new MoveTo(x, y);
         }
         
-        log.debug("Converting " + inst + " to " + caeInst);
+        this.log.debug("Converting " + inst + " to " + caeInst);
         this.path.addInstruction(caeInst);
         
         this.currentPoint = new Point(x, y);
@@ -119,7 +147,8 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
         
         final char subshapeId = inst.getSubshapeId();
         final AutoCADShape subshape = this.shapes.get(subshapeId);
-        log.debug("Converting subshape " + inst);
+
+        this.log.debug("Converting subshape " + inst);
         
         if (subshape != null) {
             List<ShapeInstruction> subinstrs = subshape.getInstructions();
@@ -133,8 +162,8 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
     public void handle(MultiplyVectorLength inst) {
         if (inst.verticalOnly()) { return; }
         
-        log.debug("ScaleFactor changing from " + this.scaleFactor + " to " +
-                  (this.scaleFactor * inst.getFactor()));
+        this.log.debug("ScaleFactor changing from " + this.scaleFactor +
+                       " to " + (this.scaleFactor * inst.getFactor()));
         this.scaleFactor *= inst.getFactor();
     }
 
@@ -144,7 +173,9 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
         
         this.currentPoint = this.pointStack.pop();
         final MoveTo caeInst = new MoveTo(this.currentPoint);
-        log.debug("Converting " + inst + " to " + caeInst);
+        
+        this.log.debug("Converting " + inst + " to " + caeInst);
+        
         this.path.addInstruction(caeInst);
     }
 
@@ -160,7 +191,8 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
         if (inst.verticalOnly()) { return; }
         
         this.currentPoint = this.currentPoint.translate(
-            inst.getX(), inst.getY());
+            round(inst.getX() * this.conversionScale),
+            round(inst.getY() * this.conversionScale));
         final PathInstruction caeInst;
         
         if (this.drawing) {
@@ -169,7 +201,8 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
             caeInst = new MoveTo(this.currentPoint);
         }
         
-        log.debug("Converting " + inst + " to " + caeInst);
+        this.log.debug("Converting " + inst + " to " + caeInst);
+        
         this.path.addInstruction(caeInst);
     }
 
@@ -178,13 +211,26 @@ public class ShapeToGlyph implements ShapeInstructionHandler {
     }
     
     public Glyph getGlyph() {
+        this.log = staticLog;
         return new Glyph(this.path, this.currentPoint.getX(), null);
     }
     
-    private final Path path;
+    public int getScaleFactor() {
+        return this.scaleFactor;
+    }
+    
+    public void setScaleFactor(int scaleFactor) {
+        this.scaleFactor = scaleFactor;
+    }
+    
+    private static final Log staticLog = LogFactory.getLog(ShapeToGlyph.class);
+    private Log log;
+    private Path path;
+    private LineStyle lineStyle;
     private final Map<Character, AutoCADShape> shapes;
     private final Deque<Point> pointStack;
     private Point currentPoint;
     private int scaleFactor;
+    private double conversionScale;
     private boolean drawing;
 }

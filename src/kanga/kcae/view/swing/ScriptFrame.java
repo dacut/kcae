@@ -5,6 +5,7 @@ import static javax.swing.SwingUtilities.invokeLater;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Rectangle;
@@ -172,14 +173,20 @@ public class ScriptFrame extends JSplitPane implements DocumentListener {
         return this.interp;
     }
     
-    public static void main(String[] args) {
-        JFrame mainWindow = new JFrame("Script frame");
-        ScriptFrame sf = new ScriptFrame();
+    public static void main(String[] args) throws Exception {
+        final JFrame mainWindow = new JFrame("Script frame");
+        final ScriptFrame sf = new ScriptFrame();
         mainWindow.add(sf);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainWindow.setVisible(true);
-        mainWindow.setSize(1000, 800);
-        sf.setDividerLocation(400);
+        
+        EventQueue.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                mainWindow.setVisible(true);
+                mainWindow.setSize(1000, 800);
+                sf.setDividerLocation(400);
+            }
+        });
     }
     
     private final ScriptInterpreter interp;

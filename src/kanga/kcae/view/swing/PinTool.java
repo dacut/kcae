@@ -26,6 +26,7 @@ public class PinTool
     extends MeasuredViewToolAdapter
     implements KeyEventDispatcher
 {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(PinTool.class);
     
     public PinTool(final SymbolView symView) {
@@ -35,7 +36,6 @@ public class PinTool
     
     @Override
     public void enabled() {
-        log.debug("enabled");
         this.pin = new Pin(null, (String) null, SignalDirection.PASSIVE,
                            new Point(-30000000, 0), new Point(0, 0));
         this.symView.setCursor(
@@ -75,8 +75,6 @@ public class PinTool
         final Point newConPoint = new Point(oldConPoint.getX() + dX,
                                             oldConPoint.getY() + dY);
         
-        log.debug("newEndPoint=" + newEndPoint);
-        
         this.pin.setEndPoint(newEndPoint);
         this.pin.setConnectionPoint(newConPoint);
         
@@ -99,7 +97,6 @@ public class PinTool
     
     @Override
     public void keyPressed(final KeyEvent e) {
-        log.debug("KeyPressed: " + e);
         int c = e.getKeyCode();
         
         if (c == KeyEvent.VK_TAB) {
@@ -120,7 +117,6 @@ public class PinTool
     
     @Override
     public void keyTyped(final KeyEvent e) {
-        log.debug("KeyTyped: " + e);
         char c = e.getKeyChar();
         
         if (c == '\u0009') {

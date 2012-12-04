@@ -139,7 +139,7 @@ public class TestAutoCADShapeFile extends TestCase {
         assertEquals(-129.8212522621428, da.getStartAngleDegrees(), 1e-9);
         assertEquals(-50.17874773785721, da.getEndAngleDegrees(), 1e-9);
         
-        Typeface tf = sf.toTypeface();
+        Typeface tf = sf.toTypeface(null);
         
         Glyph ampGly = tf.getGlyph('&');
         System.out.println("tf capHeight=" + tf.getCapitalHeight());

@@ -41,7 +41,7 @@ public class PyObjectDebugTableModel
                     this.addField(keyStr, value);
                 }
             }
-            catch (Exception e) {
+            catch (RuntimeException e) {
                 // Ignore write-only attributes
             }
         }
@@ -56,7 +56,7 @@ public class PyObjectDebugTableModel
                     this.addField(keyStr, value);
                 }
             }
-            catch (Exception e) {
+            catch (RuntimeException e) {
                 // Ignore write-only attributes
             }
         }

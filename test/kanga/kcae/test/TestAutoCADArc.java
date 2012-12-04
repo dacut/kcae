@@ -18,6 +18,7 @@ import kanga.kcae.xchg.autocad.RelativeMoveTo;
 import kanga.kcae.xchg.autocad.ShapeInstruction;
 import kanga.kcae.xchg.autocad.ShapeToGlyph;
 
+@edu.umd.cs.findbugs.annotations.SuppressWarnings("BC_UNCONFIRMED_CAST")
 public class TestAutoCADArc extends TestCase {
     public static void checkArc(
         ShapeInstruction si,
@@ -62,7 +63,7 @@ public class TestAutoCADArc extends TestCase {
     @Test
     public void testGlyph() throws Exception {
         DrawArc da = new DrawArc(20, 10, 30, false);
-        ShapeToGlyph stg = new ShapeToGlyph(null);
+        ShapeToGlyph stg = new ShapeToGlyph(null, null, 1);
         
         stg.handle(da);
         Glyph g = stg.getGlyph();

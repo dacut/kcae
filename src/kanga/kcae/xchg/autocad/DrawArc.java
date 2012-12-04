@@ -33,9 +33,6 @@ import static java.lang.Math.toDegrees;
  *  during the parse phase.</p>
  */
 public class DrawArc extends ShapeInstruction {
-    @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(DrawArc.class);
-    
     /** Create a new DrawArc instruction.
      * 
      *  <p>Unlike AutoCAD, we do not store the direction separately.  Arcs are
@@ -163,13 +160,18 @@ public class DrawArc extends ShapeInstruction {
             int shapeId)
             throws IOException
         {
+            final Log log = LogFactory.getLog(
+                OctantArcParser.class.getName() + "." +
+                String.format("%04x", shapeId));
             int op1 = is.read(); // radius
             int op2 = is.read(); // start/end octant, direction
             boolean ccw;
             int radius = op1;
+            int startOctant, nOctants;
             double startAngleDegrees, endAngleDegrees;
             
             if (op1 == -1 || op2 == -1) {
+                log.error("Truncated octantarc; op1=" + op1 + " op2=" + op2);
                 throw new InvalidShapeFileException(
                     "Shape " + shapeId + " truncated");
             }
@@ -180,29 +182,29 @@ public class DrawArc extends ShapeInstruction {
             // in 2's complement format.
             ccw = ((op2 & 0x80) == 0);
             op2 = op2 & 0x7f;
-
-            startAngleDegrees = 45 * ((op2 & 0x70) >> 4);
-            endAngleDegrees = startAngleDegrees + 
-                45 * (ccw ? 1 : -1) * (op2 & 0x07);
             
-            if (ccw) {
-                // startAngle must be less than endAngle
-                while (startAngleDegrees > endAngleDegrees) {
-                    if (endAngleDegrees < 0) {
-                        endAngleDegrees += 360.0;
-                    } else {
-                        startAngleDegrees -= 360.0;
-                    }
-                }
-            } else {
-                // startAngle must be greater than endAngle
-                while (startAngleDegrees < endAngleDegrees) {
-                    if (startAngleDegrees < 0) {
-                        startAngleDegrees += 360.0;
-                    } else {
-                        endAngleDegrees -= 360.0;
-                    }
-                }            
+            startOctant = ((op2 & 0x70) >> 4);
+            
+            // If nOctants == 0, this actually indicates a full circle
+            // (i.e. should be 8).
+            nOctants = op2 & 0x07;
+            if (nOctants == 0) {
+                nOctants = 8;
+            }
+
+            startAngleDegrees = 45 * startOctant;
+            endAngleDegrees = startAngleDegrees + 
+                45 * (ccw ? 1 : -1) * nOctants;
+            
+            log.debug("op1=" + op1 + " op2=" + op2 + " ccw=" + ccw +
+                      " startOctant=" + startOctant + " nOctants=" + nOctants +
+                      " startAngle=" + startAngleDegrees + "º endAngle=" +
+                      endAngleDegrees + "º");
+            
+            // Normalize to be in the range -360 to +360.
+            if (ccw && endAngleDegrees > 360.0) {
+                endAngleDegrees -= 360.0;
+                startAngleDegrees -= 360.0;
             }
                 
             return new DrawArc(
@@ -223,6 +225,9 @@ public class DrawArc extends ShapeInstruction {
             int shapeId)
             throws IOException
         {
+            final Log log = LogFactory.getLog(
+                FractionalArcParser.class.getName() + "." +
+                String.format("%04x", shapeId));
             int op1 = is.read(); // startOffset
             int op2 = is.read(); // endOffset
             int op3 = is.read(); // highRadius
@@ -233,6 +238,8 @@ public class DrawArc extends ShapeInstruction {
             double startAngleDegrees, endAngleDegrees;
         
             if (op1 == -1 || op2 == -1 || op3 == -1 || op4 == -1 || op5 == -1) {
+                log.error("Truncated fractionalarc; op1=" + op1 + " op2=" +
+                          op2 + " op3=" + op3 + " op4=" + op4 + " op5=" + op5);
                 throw new InvalidShapeFileException(
                     "Shape " + shapeId + " truncated");
             }
@@ -250,6 +257,11 @@ public class DrawArc extends ShapeInstruction {
                 (op2 & 0x07) + op2 / 256.0);
             radius = op3 * 256 + op4;
 
+            log.debug("op1=" + op1 + " op2=" + op2 + " op3=" + op3 + " op4=" +
+                      op4 + " op5=" + op5 + " ccw=" + ccw + " startAngle=" + 
+                      startAngleDegrees + "º endAngle=" + endAngleDegrees +
+                      "º");
+            
             if (ccw) {
                 // startAngle must be less than endAngle
                 while (startAngleDegrees > endAngleDegrees) {
@@ -281,11 +293,17 @@ public class DrawArc extends ShapeInstruction {
             int shapeId)
             throws IOException
         {
+            final Log log = LogFactory.getLog(
+                BulgeArcParser.class.getName() +
+                "." + String.format("%04x", shapeId));
+            
             int dx = is.read();
             int dy = is.read();
             int b = is.read();
 
             if (dx == -1 || dy == -1 || b == -1) {
+                log.error("Truncated bulgearc; dx=" + dx + " dy=" + dy +
+                          " b=" + b);
                 throw new InvalidShapeFileException(
                     "Shape " + shapeId + " truncated");
             }
@@ -341,7 +359,7 @@ public class DrawArc extends ShapeInstruction {
     
     public static class ArrayBulgeArcParser extends BulgeArcParser {
         @Override
-        public DrawArc parse(
+        public ShapeInstruction parse(
             InputStream is,
             boolean verticalOnly,
             int shapeId)
@@ -370,6 +388,10 @@ public class DrawArc extends ShapeInstruction {
             
             if (b > 127)
                 b -= 256;
+            
+            if (b == 0) {
+                return new RelativeMoveTo(dx, dy, verticalOnly);
+            }
             
             return generateBulgeArc(dx, dy, b, verticalOnly);
         }

@@ -70,6 +70,10 @@ public class Typeface implements Comparable<Typeface>, Serializable {
         return this.replacementGlyph;
     }
     
+    public Map<Character, Glyph> stealGlyphs() {
+        return this.glyphs;
+    }
+    
     @Override
     public boolean equals(Object otherObj) {
         if (otherObj == null)                       { return false; }

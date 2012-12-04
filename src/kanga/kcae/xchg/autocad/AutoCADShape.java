@@ -13,6 +13,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import kanga.kcae.object.Glyph;
+import kanga.kcae.object.LineStyle;
 
 public class AutoCADShape implements Serializable {
     public AutoCADShape(String shapeName, List<ShapeInstruction> instructions) {
@@ -38,8 +39,11 @@ public class AutoCADShape implements Serializable {
         return unmodifiableList(this.instructions);
     }
     
-    public Glyph toGlyph(final Map<Character, AutoCADShape> shapes) {
-        ShapeToGlyph stg = new ShapeToGlyph(shapes);
+    public Glyph toGlyph(
+        final Map<Character, AutoCADShape> shapes,
+        final LineStyle lineStyle,
+        final ShapeToGlyph stg)
+    {
         for (ShapeInstruction si : this.getInstructions()) {
             si.visit(stg);
         }

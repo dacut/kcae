@@ -14,6 +14,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import kanga.kcae.object.Glyph;
+import kanga.kcae.object.LineStyle;
 import kanga.kcae.object.Path;
 import kanga.kcae.object.Typeface;
 import kanga.kcae.object.UnknownTypefaceException;
@@ -32,8 +33,6 @@ import static org.apache.commons.io.IOUtils.closeQuietly;
 import static org.apache.commons.lang3.StringEscapeUtils.escapeJava;
 
 public class AutoCADShapeFile {
-    @SuppressWarnings("unused")
-    private static final Log log = LogFactory.getLog(AutoCADShapeFile.class);
     public static final int HEADER_LENGTH = 0x18;
     public static final int MAX_DESCRIPTION_LENGTH = 128;
     
@@ -114,14 +113,20 @@ public class AutoCADShapeFile {
         return this.shapes;
     }
     
-    public Typeface toTypeface() {
+    public Typeface toTypeface(@Nullable final LineStyle lineStyle) {
         final Map<Character, AutoCADShape> shapes = this.getShapes();
         final Map<Character, Glyph> glyphs = new HashMap<Character, Glyph>();
         final Glyph replacement = new Glyph(new Path(), 0, null);
-        
+        final ShapeToGlyph stg = new ShapeToGlyph(shapes, lineStyle, 1e6);
+
         for (final Map.Entry<Character, AutoCADShape> entry : shapes.entrySet())
         {
-            glyphs.put(entry.getKey(), entry.getValue().toGlyph(shapes));
+            final Character key = entry.getKey();
+            final AutoCADShape shape = entry.getValue();
+            
+            stg.startTranslation(key);
+            stg.setScaleFactor(1);
+            glyphs.put(key, shape.toGlyph(shapes, lineStyle, stg));
         }
         
         return new Typeface(
@@ -229,7 +234,12 @@ public class AutoCADShapeFile {
         byte[] headerBytes = new byte[HEADER_LENGTH];
         String header;
         
-        is.read(headerBytes);
+        int nBytes = is.read(headerBytes);
+        if (nBytes != HEADER_LENGTH) {
+            throw new UnknownShapeFileTypeException(
+                "Could not identify shape file");
+        }
+        
         header = new String(headerBytes, US_ASCII);
         
         for (ShapeFileType sft : ShapeFileType.values()) {
@@ -310,6 +320,11 @@ public class AutoCADShapeFile {
     static AutoCADShape readShape(InputStream is, ShapeEntryHeader shapeHeader)
         throws IOException
     {
+        final Log log = LogFactory.getLog(
+            AutoCADShapeFile.class.getName() +
+            String.format("%04x", shapeHeader.shapeId));
+        log.debug("Reading shape id=" + shapeHeader.shapeId + " size=" +
+            shapeHeader.byteLength + " bytes");
         List<ShapeInstruction> instructions = new ArrayList<ShapeInstruction>();
 
         // Read the entire record; this prevents the shape from reading beyond
@@ -320,7 +335,7 @@ public class AutoCADShapeFile {
         try {
             // Shape name starts the record, followed by a nul.
             String shapeName = readTerminatedString(bais, bais.available());
-            
+                        
             boolean verticalOnly = false;
             while (true) {
                 int icode = bais.read();

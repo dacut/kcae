@@ -3,6 +3,8 @@ package kanga.kcae.object;
 import static java.lang.Math.pow;
 import static java.lang.Math.round;
 
+import javax.annotation.CheckForNull;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /** Draws a quadratic curve segment of a path.
@@ -38,9 +40,14 @@ public class QuadraticCurveTo implements PathInstruction {
     
     @Override
     public Rectangle updateBoundingBox(
-        final Point p0,
-        Rectangle bbox)
+        @CheckForNull final Point p0,
+        @CheckForNull Rectangle bbox)
     {
+        if (p0 == null) {
+            throw new UnsupportedOperationException(
+                "Cannot compute bounding box without a starting point.");
+        }
+        
         final Point p1 = this.getControlPoint();
         final Point p2 = this.getTargetPoint();
         final Rectangle endpointRect = Rectangle.fromPoints(p0, p2);
